@@ -9,6 +9,10 @@ class LoginRequest(BaseModel):
     cnpj: str
     password: str
 
+class AccessLevelItem(BaseModel):
+    id: int
+    name: str
+
 class UserCreate(BaseModel):
     cnpj: str
     name: str
@@ -17,6 +21,17 @@ class UserCreate(BaseModel):
     access_level_ids: List[int]
     is_admin: bool = False
 
+class UserAccessUpdate(BaseModel):
+    access_level_ids: List[int]
+
+class UserItem(BaseModel):
+    id: int
+    cnpj: str
+    name: str
+    email: Optional[str] = None
+    is_admin: bool
+    access_levels: List[AccessLevelItem]
+
 class SpreadsheetCreate(BaseModel):
     title: str
     access_level_ids: List[int]
@@ -24,6 +39,11 @@ class SpreadsheetCreate(BaseModel):
 class SpreadsheetItem(BaseModel):
     id: int
     title: str
+
+class SpreadsheetItemAdmin(BaseModel):
+    id: int
+    title: str
+    access_levels: List[AccessLevelItem]
 
 class SpreadsheetData(BaseModel):
     columns: List[str]

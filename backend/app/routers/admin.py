@@ -9,6 +9,26 @@ import uuid
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
+@router.get("/access-levels", response_model=list[schemas.AccessLevelItem])
+def list_access_levels(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    levels = db.query(models.AccessLevel).order_by(models.AccessLevel.name.asc()).all()
+    return [{"id": l.id, "name": l.name} for l in levels]
+
+@router.get("/users", response_model=list[schemas.UserItem])
+def list_users(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    users = db.query(models.User).all()
+    return [
+        {
+            "id": u.id,
+            "cnpj": u.cnpj,
+            "name": u.name,
+            "email": u.email,
+            "is_admin": u.is_admin,
+            "access_levels": [{"id": al.id, "name": al.name} for al in u.access_levels],
+        }
+        for u in users
+    ]
+
 @router.post("/users")
 def create_user(payload: schemas.UserCreate, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     if db.query(models.User).filter(models.User.cnpj == payload.cnpj).first():
@@ -27,6 +47,33 @@ def create_user(payload: schemas.UserCreate, db: Session = Depends(get_db), admi
     db.commit()
     db.refresh(user)
     return {"id": user.id}
+
+@router.put("/users/{user_id}/access-levels")
+def update_user_access_levels(
+    user_id: int,
+    payload: schemas.UserAccessUpdate,
+    db: Session = Depends(get_db),
+    admin=Depends(get_current_admin),
+):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    access_levels = db.query(models.AccessLevel).filter(models.AccessLevel.id.in_(payload.access_level_ids)).all()
+    user.access_levels = access_levels
+    db.commit()
+    return {"status": "ok"}
+
+@router.get("/spreadsheets", response_model=list[schemas.SpreadsheetItemAdmin])
+def list_spreadsheets_admin(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    items = db.query(models.Spreadsheet).all()
+    return [
+        {
+            "id": s.id,
+            "title": s.title,
+            "access_levels": [{"id": al.id, "name": al.name} for al in s.access_levels],
+        }
+        for s in items
+    ]
 
 @router.post("/spreadsheets")
 def upload_spreadsheet(

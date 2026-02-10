@@ -21,16 +21,16 @@ EasyPanel deploy (Git source):
 
 Backend app
 1) Source: Git repo URL, branch main
-2) Build path (context): backend (or /backend if EasyPanel requires)
-3) Dockerfile: backend/Dockerfile
+2) Dockerfile: backend/Dockerfile
+3) If a build path/context field exists: backend (or /backend if required)
 4) Env vars: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS, JWT_SECRET, UPLOAD_DIR
 5) Expose port: 8000
 6) Volume: /app/uploads (persist)
 
 Frontend app
 1) Source: Git repo URL, branch main
-2) Build path (context): frontend (or /frontend if required)
-3) Dockerfile: frontend/Dockerfile
+2) Dockerfile: frontend/Dockerfile
+3) If a build path/context field exists: keep empty or repo root
 4) Build arg: VITE_API_URL=https://<backend-domain>
 5) Expose port: 80
 
