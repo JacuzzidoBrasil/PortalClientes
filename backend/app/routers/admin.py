@@ -63,6 +63,17 @@ def update_user_access_levels(
     db.commit()
     return {"status": "ok"}
 
+@router.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.id == admin.id:
+        raise HTTPException(status_code=400, detail="Cannot delete yourself")
+    db.delete(user)
+    db.commit()
+    return {"status": "deleted"}
+
 @router.get("/spreadsheets", response_model=list[schemas.SpreadsheetItemAdmin])
 def list_spreadsheets_admin(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     items = db.query(models.Spreadsheet).all()
@@ -78,7 +89,7 @@ def list_spreadsheets_admin(db: Session = Depends(get_db), admin=Depends(get_cur
 @router.post("/spreadsheets")
 def upload_spreadsheet(
     title: str = Form(...),
-    access_level_ids: str = Form(...),
+    access_level_ids: str = Form(""),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     admin=Depends(get_current_admin),
@@ -94,10 +105,31 @@ def upload_spreadsheet(
         f.write(file.file.read())
 
     spreadsheet = models.Spreadsheet(title=title, file_path=file_path, uploaded_by=admin.id)
-    access_ids = [int(x) for x in access_level_ids.split(",") if x.strip()]
-    access_levels = db.query(models.AccessLevel).filter(models.AccessLevel.id.in_(access_ids)).all()
+    access_ids = []
+    if access_level_ids:
+        try:
+            access_ids = [int(x) for x in access_level_ids.split(",") if x.strip()]
+        except ValueError:
+            raise HTTPException(status_code=400, detail="access_level_ids must be comma-separated integers")
+
+    access_levels = db.query(models.AccessLevel).filter(models.AccessLevel.id.in_(access_ids)).all() if access_ids else []
     spreadsheet.access_levels = access_levels
     db.add(spreadsheet)
     db.commit()
     db.refresh(spreadsheet)
     return {"id": spreadsheet.id}
+
+@router.delete("/spreadsheets/{spreadsheet_id}")
+def delete_spreadsheet(spreadsheet_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    s = db.query(models.Spreadsheet).filter(models.Spreadsheet.id == spreadsheet_id).first()
+    if not s:
+        raise HTTPException(status_code=404, detail="Spreadsheet not found")
+    file_path = s.file_path
+    db.delete(s)
+    db.commit()
+    if file_path and os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except OSError:
+            pass
+    return {"status": "deleted"}
