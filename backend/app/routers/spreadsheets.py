@@ -70,8 +70,7 @@ def get_spreadsheet_data(
 
     df = df.iloc[offset:offset + limit]
     # sanitize to JSON-safe values
-    df = df.replace([np.inf, -np.inf], None)
-    df = df.where(pd.notnull(df), None)
+    df = df.replace({np.inf: None, -np.inf: None, np.nan: None})
     return {
         "columns": list(df.columns),
         "rows": df.to_dict(orient="records"),
