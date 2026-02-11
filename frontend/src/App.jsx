@@ -487,9 +487,6 @@ export default function App() {
       <div className="app-shell">
         <header className="topbar">
           <div className="topbar-left">
-            <div className="jacuzzi-banner-wrap">
-              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
-            </div>
             <div className="topbar-main">
               <div>
                 <h1 className="title">Portal Clientes</h1>
@@ -502,6 +499,8 @@ export default function App() {
                   </div>
                 </div>
               </div>
+              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+              <div className="topbar-main-spacer" aria-hidden="true" />
             </div>
             <div className="row top-load-actions">
               <button className="btn load-sheets" onClick={loadSpreadsheets}>
