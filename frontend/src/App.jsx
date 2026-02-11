@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import brandLogo from "../brand.png";
+import jacuzziLogo from "../Jacuzzi.png";
 import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
 import grow2getherLogo from "../Grow2Gether.png";
@@ -354,8 +354,8 @@ export default function App() {
         <div className="login-wrap">
           <section className="login-card">
             <div className="login-brand">
+              <img src={jacuzziLogo} alt="Jacuzzi" className="login-jacuzzi" />
               <h1>Portal Clientes Jacuzzi</h1>
-              <img src={brandLogo} alt="Brand" />
             </div>
 
             <div className="login-side">
@@ -488,13 +488,18 @@ export default function App() {
             <div className="topbar-main">
               <div>
                 <h1 className="title">Portal Clientes</h1>
-                <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
+                <div className="welcome-row">
+                  <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
+                  <div className="access-logo-row">
+                    {visibleLogoKeys.map((key) => (
+                      <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="access-logo-row">
-                {visibleLogoKeys.map((key) => (
-                  <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
-                ))}
-              </div>
+            </div>
+            <div className="jacuzzi-banner-wrap">
+              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
             </div>
             <div className="row top-load-actions">
               <button className="btn load-sheets" onClick={loadSpreadsheets}>
@@ -516,7 +521,7 @@ export default function App() {
 
         {message && <div className={`message ${messageTone}`}>{message}</div>}
 
-        <div className="grid-main">
+        <div className={`grid-main ${me?.is_admin ? "" : "single-column"}`}>
           <section className="card">
             <h2>Planilhas</h2>
             <div className="row">

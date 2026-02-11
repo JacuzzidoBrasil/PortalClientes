@@ -75,6 +75,12 @@ select {
   border-radius: 0;
 }
 
+.login-jacuzzi {
+  width: min(320px, 84%);
+  max-width: 320px;
+  margin-bottom: 4px;
+}
+
 .login-brand h1 {
   margin: 0;
   font-size: 2rem;
@@ -167,7 +173,7 @@ select {
 
 .btn.first-access {
   background: var(--primary);
-  color: var(--accent-yellow);
+  color: #ffffff;
 }
 
 .btn.reset-access {
@@ -177,7 +183,7 @@ select {
 
 .btn.load-sheets {
   background: var(--primary);
-  color: var(--accent-yellow);
+  color: #ffffff;
 }
 
 .btn.load-admin {
@@ -251,9 +257,15 @@ select {
 
 .topbar-main {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+.welcome-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .topbar-right {
@@ -269,17 +281,29 @@ select {
 .access-logo-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .access-logo {
-  height: 36px;
+  height: 30px;
   width: auto;
   border-radius: 8px;
   border: 1px solid #d7e6f6;
   background: #fff;
   padding: 2px 6px;
+}
+
+.jacuzzi-banner-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.jacuzzi-banner {
+  height: 54px;
+  width: auto;
 }
 
 .title {
@@ -296,6 +320,10 @@ select {
   display: grid;
   gap: 16px;
   grid-template-columns: 1.05fr 1fr;
+}
+
+.grid-main.single-column {
+  grid-template-columns: 1fr;
 }
 
 .card {
@@ -408,6 +436,11 @@ th {
   }
 
   .topbar-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .welcome-row {
     flex-direction: column;
     align-items: flex-start;
   }
