@@ -12,6 +12,7 @@
   --ok: #57d9a3;
   --shadow: 0 14px 36px rgba(4, 20, 36, 0.22);
   --radius: 16px;
+  --accent-yellow: #f6cc44;
 }
 
 * {
@@ -60,6 +61,8 @@ select {
   padding: 38px;
   display: grid;
   align-content: center;
+  justify-items: center;
+  text-align: center;
   gap: 18px;
   border-right: 1px solid var(--line);
 }
@@ -157,6 +160,36 @@ select {
   background: #c93a3a;
 }
 
+.btn.login-enter {
+  background: var(--accent-yellow);
+  color: var(--bg);
+}
+
+.btn.first-access {
+  background: var(--primary);
+  color: var(--accent-yellow);
+}
+
+.btn.reset-access {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn.load-sheets {
+  background: var(--primary);
+  color: var(--accent-yellow);
+}
+
+.btn.load-admin {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn.logout-btn {
+  background: var(--accent-yellow);
+  color: var(--bg);
+}
+
 .message {
   margin-top: 2px;
   border-radius: 12px;
@@ -194,7 +227,7 @@ select {
 }
 
 .app-shell {
-  max-width: 1280px;
+  max-width: 1520px;
   margin: 0 auto;
   display: grid;
   gap: 16px;
@@ -206,10 +239,47 @@ select {
   background: var(--panel);
   box-shadow: var(--shadow);
   padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+
+.topbar-left {
+  display: grid;
+  gap: 10px;
+}
+
+.topbar-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+.topbar-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.top-load-actions {
+  margin-top: 2px;
+}
+
+.access-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.access-logo {
+  height: 36px;
+  width: auto;
+  border-radius: 8px;
+  border: 1px solid #d7e6f6;
+  background: #fff;
+  padding: 2px 6px;
 }
 
 .title {
@@ -331,5 +401,18 @@ th {
 
   .grid-main {
     grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topbar-right {
+    justify-content: flex-start;
   }
 }

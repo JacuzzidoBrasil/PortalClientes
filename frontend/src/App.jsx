@@ -2,11 +2,25 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import brandLogo from "../brand.png";
+import deepDiveLogo from "../DeepDive.png";
+import expressLogo from "../Express.png";
+import grow2getherLogo from "../Grow2Gether.png";
+import restoreYouLogo from "../RestoreYou.jpg";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function authHeaders(token) {
   return { headers: { Authorization: `Bearer ${token}` } };
+}
+
+function getLogoKeysByAccess(accessLevels = []) {
+  const levels = accessLevels.map((level) => String(level || "").toLowerCase());
+  const keys = new Set();
+  if (levels.some((level) => level.includes("deep dive"))) keys.add("deepdive");
+  if (levels.some((level) => level.includes("express"))) keys.add("express");
+  if (levels.some((level) => level.includes("grow2gether"))) keys.add("grow2gether");
+  if (levels.some((level) => level.includes("restore you"))) keys.add("restoreyou");
+  return Array.from(keys);
 }
 
 export default function App() {
@@ -321,6 +335,18 @@ export default function App() {
   }
 
   const userOptions = useMemo(() => users.map((u) => ({ id: u.id, label: `${u.name} (${u.cnpj})` })), [users]);
+  const visibleLogoKeys = useMemo(() => {
+    if (!me) return [];
+    if (me.is_admin) return ["deepdive", "express", "grow2gether", "restoreyou"];
+    return getLogoKeysByAccess(me.access_levels || []);
+  }, [me]);
+
+  const logoMap = {
+    deepdive: { src: deepDiveLogo, alt: "Deep Dive" },
+    express: { src: expressLogo, alt: "Express" },
+    grow2gether: { src: grow2getherLogo, alt: "Grow2Gether" },
+    restoreyou: { src: restoreYouLogo, alt: "Restore You" },
+  };
 
   if (!token) {
     return (
@@ -328,8 +354,8 @@ export default function App() {
         <div className="login-wrap">
           <section className="login-card">
             <div className="login-brand">
-              <img src={brandLogo} alt="Brand" />
               <h1>Portal Clientes Jacuzzi</h1>
+              <img src={brandLogo} alt="Brand" />
             </div>
 
             <div className="login-side">
@@ -344,7 +370,7 @@ export default function App() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="btn" type="submit">
+                <button className="btn login-enter" type="submit">
                   Entrar
                 </button>
               </form>
@@ -353,7 +379,7 @@ export default function App() {
 
               <div className="switch-row">
                 <button
-                  className="btn alt"
+                  className="btn first-access"
                   type="button"
                   onClick={() => {
                     setShowFirstAccess(!showFirstAccess);
@@ -363,7 +389,7 @@ export default function App() {
                   Primeiro acesso
                 </button>
                 <button
-                  className="btn ghost"
+                  className="btn reset-access"
                   type="button"
                   onClick={() => {
                     setShowReset(!showReset);
@@ -458,20 +484,31 @@ export default function App() {
     <div className="page">
       <div className="app-shell">
         <header className="topbar">
-          <div>
-            <h1 className="title">Portal Clientes</h1>
-            <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
-          </div>
-          <div className="row">
-            <button className="btn alt" onClick={loadSpreadsheets}>
-              Carregar planilhas
-            </button>
-            {me?.is_admin && (
-              <button className="btn ghost" onClick={loadAdminData}>
-                Carregar dados admin
+          <div className="topbar-left">
+            <div className="topbar-main">
+              <div>
+                <h1 className="title">Portal Clientes</h1>
+                <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
+              </div>
+              <div className="access-logo-row">
+                {visibleLogoKeys.map((key) => (
+                  <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
+                ))}
+              </div>
+            </div>
+            <div className="row top-load-actions">
+              <button className="btn load-sheets" onClick={loadSpreadsheets}>
+                Carregar planilhas
               </button>
-            )}
-            <button className="btn" onClick={handleLogout}>
+              {me?.is_admin && (
+                <button className="btn load-admin" onClick={loadAdminData}>
+                  Carregar dados admin
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="topbar-right">
+            <button className="btn logout-btn" onClick={handleLogout}>
               Sair
             </button>
           </div>
