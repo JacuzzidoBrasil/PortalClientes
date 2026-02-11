@@ -6,8 +6,60 @@ from app.dependencies import get_db, get_current_user
 import pandas as pd
 import numpy as np
 import os
+import re
+import unicodedata
 
 router = APIRouter(prefix="/spreadsheets", tags=["spreadsheets"])
+
+
+def _normalize_text(text: str) -> str:
+    base = unicodedata.normalize("NFKD", str(text))
+    return "".join(ch for ch in base if not unicodedata.combining(ch)).lower()
+
+
+def _is_currency_column(column_name: str) -> bool:
+    normalized = _normalize_text(column_name)
+    return "preco" in normalized or "valor" in normalized
+
+
+def _to_float(value):
+    if value is None:
+        return None
+    if isinstance(value, (int, float, np.integer, np.floating)):
+        if pd.isna(value) or np.isinf(value):
+            return None
+        return float(value)
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    # Handles values such as "R$ 1.467,23", "1467.23", "1,467.23"
+    text = text.replace("R$", "").replace(" ", "")
+    text = re.sub(r"[^0-9,.\-]", "", text)
+    if not text:
+        return None
+
+    if "," in text and "." in text:
+        if text.rfind(",") > text.rfind("."):
+            text = text.replace(".", "").replace(",", ".")
+        else:
+            text = text.replace(",", "")
+    elif "," in text:
+        text = text.replace(",", ".")
+
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def _format_brl(value):
+    number = _to_float(value)
+    if number is None:
+        return value
+    formatted = f"{number:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R$ {formatted}"
 
 @router.get("")
 def list_spreadsheets(db: Session = Depends(get_db), user=Depends(get_current_user)):
@@ -69,6 +121,9 @@ def get_spreadsheet_data(
         df = df[mask]
 
     df = df.iloc[offset:offset + limit]
+    for column in df.columns:
+        if _is_currency_column(column):
+            df[column] = df[column].apply(_format_brl)
     # sanitize to JSON-safe values
     df = df.replace({np.inf: None, -np.inf: None, np.nan: None})
     return {
