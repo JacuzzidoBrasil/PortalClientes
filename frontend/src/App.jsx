@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
+import brandLogo from "../brand.png";
 import jacuzziLogo from "../Jacuzzi.png";
 import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
@@ -356,6 +357,7 @@ export default function App() {
             <div className="login-brand">
               <img src={jacuzziLogo} alt="Jacuzzi" className="login-jacuzzi" />
               <h1>Portal Clientes Jacuzzi</h1>
+              <img src={brandLogo} alt="Brand" className="login-brand-logo" />
             </div>
 
             <div className="login-side">
@@ -485,6 +487,9 @@ export default function App() {
       <div className="app-shell">
         <header className="topbar">
           <div className="topbar-left">
+            <div className="jacuzzi-banner-wrap">
+              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+            </div>
             <div className="topbar-main">
               <div>
                 <h1 className="title">Portal Clientes</h1>
@@ -497,9 +502,6 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="jacuzzi-banner-wrap">
-              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
             </div>
             <div className="row top-load-actions">
               <button className="btn load-sheets" onClick={loadSpreadsheets}>

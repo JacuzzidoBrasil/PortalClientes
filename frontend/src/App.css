@@ -81,6 +81,11 @@ select {
   margin-bottom: 4px;
 }
 
+.login-brand-logo {
+  width: min(320px, 84%);
+  max-width: 320px;
+}
+
 .login-brand h1 {
   margin: 0;
   font-size: 2rem;
@@ -298,11 +303,11 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .jacuzzi-banner {
-  height: 54px;
+  height: 86px;
   width: auto;
 }
 
