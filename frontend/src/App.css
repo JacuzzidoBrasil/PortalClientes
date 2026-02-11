@@ -1,16 +1,16 @@
 :root {
   --bg: #0b263a;
-  --panel: #102f46;
-  --panel-alt: #14384f;
-  --line: #1f4d6b;
+  --panel: #ffffff;
+  --panel-alt: #f5f9ff;
+  --line: #d6e5f5;
   --primary: #2894ff;
   --primary-strong: #1f7ad4;
-  --primary-soft: #17486f;
-  --text: #e7f3ff;
-  --text-soft: #9bbad6;
+  --primary-soft: #eaf3ff;
+  --text: #17324f;
+  --text-soft: #5b7390;
   --danger: #ff6b6b;
   --ok: #57d9a3;
-  --shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  --shadow: 0 14px 36px rgba(4, 20, 36, 0.22);
   --radius: 16px;
 }
 
@@ -66,9 +66,9 @@ select {
 .login-brand img {
   max-width: 260px;
   width: 70%;
-  background: #f4f8ff;
-  padding: 14px;
-  border-radius: 16px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
 }
 
 .login-brand h1 {
@@ -102,16 +102,16 @@ select {
 
 .field {
   width: 100%;
-  border: 1px solid #2f6385;
+  border: 1px solid #bdd4ec;
   border-radius: 12px;
   padding: 11px 12px;
-  background: #0d2b41;
+  background: #fff;
   color: var(--text);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .field::placeholder {
-  color: #86a8c6;
+  color: #7a93b0;
 }
 
 .field:focus {
@@ -142,14 +142,14 @@ select {
 
 .btn.alt {
   background: var(--primary-soft);
-  color: #bfe1ff;
-  border-color: #2d6f9c;
+  color: #1f7ad4;
+  border-color: #9fc4ea;
 }
 
 .btn.ghost {
-  background: #0e3048;
-  color: #bfe1ff;
-  border-color: #2d6f9c;
+  background: #fff;
+  color: #1f7ad4;
+  border-color: #9fc4ea;
 }
 
 .btn.danger {
@@ -166,14 +166,14 @@ select {
 
 .message.ok {
   color: var(--ok);
-  background: #113a33;
-  border-color: #1f6656;
+  background: #e8fbf2;
+  border-color: #b7efd3;
 }
 
 .message.error {
   color: var(--danger);
-  background: #3b1a1e;
-  border-color: #6f2f37;
+  background: #fff0f0;
+  border-color: #ffc5c5;
 }
 
 .switch-row {
@@ -256,8 +256,8 @@ select {
 }
 
 .item {
-  border: 1px solid #235675;
-  background: #0e3047;
+  border: 1px solid #d6e5f5;
+  background: #f8fbff;
   border-radius: 12px;
   padding: 10px;
   display: flex;
@@ -285,7 +285,7 @@ select {
 
 .table-wrap {
   overflow: auto;
-  border: 1px solid #235675;
+  border: 1px solid #d6e5f5;
   border-radius: 12px;
   margin-top: 10px;
 }
@@ -297,15 +297,15 @@ table {
 
 th,
 td {
-  border-bottom: 1px solid #1d4a67;
+  border-bottom: 1px solid #e1ecf8;
   padding: 8px 10px;
   text-align: left;
   font-size: 0.92rem;
 }
 
 th {
-  background: #153d5b;
-  color: #d9edff;
+  background: #f0f6ff;
+  color: #17324f;
 }
 
 @keyframes fade-up {
