@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app.db import Base
 
@@ -25,6 +25,11 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     status = Column(Enum("active", "inactive"), default="active")
     is_admin = Column(Boolean, default=False)
+    first_access_completed = Column(Boolean, default=False)
+    first_access_code_hash = Column(String(64), nullable=True)
+    first_access_code_expires = Column(DateTime, nullable=True)
+    reset_code_hash = Column(String(64), nullable=True)
+    reset_code_expires = Column(DateTime, nullable=True)
 
     access_levels = relationship(
         "AccessLevel",

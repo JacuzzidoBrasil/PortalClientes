@@ -13,6 +13,10 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [me, setMe] = useState(null);
   const [message, setMessage] = useState("");
+  const [showFirstAccess, setShowFirstAccess] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [firstAccessForm, setFirstAccessForm] = useState({ cnpj: "", email: "", code: "", new_password: "" });
+  const [resetForm, setResetForm] = useState({ cnpj: "", email: "", code: "", new_password: "" });
 
   const [spreadsheets, setSpreadsheets] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -78,6 +82,15 @@ export default function App() {
       setToken(res.data.access_token);
       localStorage.setItem("token", res.data.access_token);
     } catch (err) {
+      const detail = err?.response?.data?.detail;
+      const status = err?.response?.status;
+      if (detail === "First access required" || status === 403) {
+        setMessage("Primeiro acesso necess?rio. Use o fluxo de primeiro acesso.");
+        setShowFirstAccess(true);
+        setShowReset(false);
+        setFirstAccessForm({ ...firstAccessForm, cnpj, email: "" });
+        return;
+      }
       setMessage("Login inv?lido.");
     }
   }
@@ -239,6 +252,129 @@ export default function App() {
           <button type="submit">Entrar</button>
           {message && <div style={{ color: "crimson" }}>{message}</div>}
         </form>
+
+        <div style={{ marginTop: 12, display: "flex", gap: 12 }}>
+          <button onClick={() => { setShowFirstAccess(!showFirstAccess); setShowReset(false); }}>
+            Primeiro acesso
+          </button>
+          <button onClick={() => { setShowReset(!showReset); setShowFirstAccess(false); }}>
+            Recuperar senha
+          </button>
+        </div>
+
+        {showFirstAccess && (
+          <div style={{ marginTop: 16, maxWidth: 360, display: "grid", gap: 8 }}>
+            <strong>Primeiro acesso</strong>
+            <input
+              placeholder="CNPJ"
+              value={firstAccessForm.cnpj}
+              onChange={(e) => setFirstAccessForm({ ...firstAccessForm, cnpj: e.target.value })}
+            />
+            <input
+              placeholder="Email"
+              value={firstAccessForm.email}
+              onChange={(e) => setFirstAccessForm({ ...firstAccessForm, email: e.target.value })}
+            />
+            <button
+              onClick={async () => {
+                setMessage("");
+                try {
+                  await axios.post(`${API_URL}/auth/first-access/request`, {
+                    cnpj: firstAccessForm.cnpj,
+                    email: firstAccessForm.email,
+                  });
+                  setMessage("C?digo de primeiro acesso enviado por email.");
+                } catch (err) {
+                  setMessage("Erro ao solicitar primeiro acesso.");
+                }
+              }}
+            >
+              Enviar c?digo
+            </button>
+            <input
+              placeholder="C?digo recebido"
+              value={firstAccessForm.code}
+              onChange={(e) => setFirstAccessForm({ ...firstAccessForm, code: e.target.value })}
+            />
+            <input
+              placeholder="Nova senha"
+              type="password"
+              value={firstAccessForm.new_password}
+              onChange={(e) => setFirstAccessForm({ ...firstAccessForm, new_password: e.target.value })}
+            />
+            <button
+              onClick={async () => {
+                setMessage("");
+                try {
+                  await axios.post(`${API_URL}/auth/first-access/confirm`, firstAccessForm);
+                  setMessage("Senha definida. Voc? j? pode fazer login.");
+                  setShowFirstAccess(false);
+                } catch (err) {
+                  setMessage("Erro ao confirmar primeiro acesso.");
+                }
+              }}
+            >
+              Confirmar primeiro acesso
+            </button>
+          </div>
+        )}
+
+        {showReset && (
+          <div style={{ marginTop: 16, maxWidth: 360, display: "grid", gap: 8 }}>
+            <strong>Recuperar senha</strong>
+            <input
+              placeholder="CNPJ"
+              value={resetForm.cnpj}
+              onChange={(e) => setResetForm({ ...resetForm, cnpj: e.target.value })}
+            />
+            <input
+              placeholder="Email"
+              value={resetForm.email}
+              onChange={(e) => setResetForm({ ...resetForm, email: e.target.value })}
+            />
+            <button
+              onClick={async () => {
+                setMessage("");
+                try {
+                  await axios.post(`${API_URL}/auth/password-reset/request`, {
+                    cnpj: resetForm.cnpj,
+                    email: resetForm.email,
+                  });
+                  setMessage("C?digo de recupera??o enviado por email.");
+                } catch (err) {
+                  setMessage("Erro ao solicitar recupera??o.");
+                }
+              }}
+            >
+              Enviar c?digo
+            </button>
+            <input
+              placeholder="C?digo recebido"
+              value={resetForm.code}
+              onChange={(e) => setResetForm({ ...resetForm, code: e.target.value })}
+            />
+            <input
+              placeholder="Nova senha"
+              type="password"
+              value={resetForm.new_password}
+              onChange={(e) => setResetForm({ ...resetForm, new_password: e.target.value })}
+            />
+            <button
+              onClick={async () => {
+                setMessage("");
+                try {
+                  await axios.post(`${API_URL}/auth/password-reset/confirm`, resetForm);
+                  setMessage("Senha atualizada. Voc? j? pode fazer login.");
+                  setShowReset(false);
+                } catch (err) {
+                  setMessage("Erro ao confirmar recupera??o.");
+                }
+              }}
+            >
+              Confirmar recupera??o
+            </button>
+          </div>
+        )}
       </div>
     );
   }

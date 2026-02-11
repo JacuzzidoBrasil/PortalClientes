@@ -17,7 +17,7 @@ class UserCreate(BaseModel):
     cnpj: str
     name: str
     email: Optional[str] = None
-    password: str
+    password: Optional[str] = None
     access_level_ids: List[int]
     is_admin: bool = False
 
@@ -48,3 +48,23 @@ class SpreadsheetItemAdmin(BaseModel):
 class SpreadsheetData(BaseModel):
     columns: List[str]
     rows: List[dict]
+
+class FirstAccessRequest(BaseModel):
+    cnpj: str
+    email: str
+
+class FirstAccessConfirm(BaseModel):
+    cnpj: str
+    email: str
+    code: str
+    new_password: str
+
+class PasswordResetRequest(BaseModel):
+    cnpj: str
+    email: str
+
+class PasswordResetConfirm(BaseModel):
+    cnpj: str
+    email: str
+    code: str
+    new_password: str

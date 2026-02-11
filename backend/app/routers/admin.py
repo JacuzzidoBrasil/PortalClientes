@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app import models, schemas
 from app.dependencies import get_db, get_current_admin
 from app.auth import hash_password
+import secrets
 from app.core.config import settings
 import os
 import uuid
@@ -34,12 +35,14 @@ def create_user(payload: schemas.UserCreate, db: Session = Depends(get_db), admi
     if db.query(models.User).filter(models.User.cnpj == payload.cnpj).first():
         raise HTTPException(status_code=400, detail="CNPJ already exists")
 
+    raw_password = payload.password or secrets.token_urlsafe(16)
     user = models.User(
         cnpj=payload.cnpj,
         name=payload.name,
         email=payload.email,
-        password_hash=hash_password(payload.password),
+        password_hash=hash_password(raw_password),
         is_admin=payload.is_admin,
+        first_access_completed=False,
     )
     access_levels = db.query(models.AccessLevel).filter(models.AccessLevel.id.in_(payload.access_level_ids)).all()
     user.access_levels = access_levels

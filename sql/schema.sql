@@ -14,6 +14,11 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   status ENUM('active','inactive') DEFAULT 'active',
   is_admin TINYINT(1) DEFAULT 0,
+  first_access_completed TINYINT(1) DEFAULT 0,
+  first_access_code_hash CHAR(64),
+  first_access_code_expires DATETIME,
+  reset_code_hash CHAR(64),
+  reset_code_expires DATETIME,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -53,4 +58,19 @@ INSERT INTO access_levels (name) VALUES
 ('Restore You Widestream'),
 ('Restore You PowerPro'),
 ('Restore You TargetPro'),
-('Restore You Standard');
+('Restore You Standard'),
+('Express'),
+('Grow2gether'),
+('Deep dive Infinite Regional'),
+('Deep dive Legend Regional'),
+('Deep dive Open Regional'),
+('Deep dive Prime Regional'),
+('Deep dive Select Regional'),
+('Deep dive Standard Regional'),
+('Grow2gether Regional'),
+('Restore You Aqualibrium Regional'),
+('Restore You PowerPro Regional'),
+('Restore You Standard Regional'),
+('Restore You TargetPro Regional'),
+('Restore You Widestream Regional'),
+('Ecommerce');
