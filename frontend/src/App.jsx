@@ -3,10 +3,7 @@ import axios from "axios";
 import "./App.css";
 import jacuzziLogo from "../Jacuzzi.png";
 import jacuzziWhiteLogo from "../Jacuzzi branco.png";
-import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
-import grow2getherLogo from "../Grow2Gether.png";
-import restoreYouLogo from "../RestoreYou.jpg";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const UF_CODES = [
@@ -41,16 +38,6 @@ const UF_CODES = [
 
 function authHeaders(token) {
   return { headers: { Authorization: `Bearer ${token}` } };
-}
-
-function getLogoKeysByAccess(accessLevels = []) {
-  const levels = accessLevels.map((level) => String(level || "").toLowerCase());
-  const keys = new Set();
-  if (levels.some((level) => level.includes("deep dive"))) keys.add("deepdive");
-  if (levels.some((level) => level.includes("express"))) keys.add("express");
-  if (levels.some((level) => level.includes("grow2gether"))) keys.add("grow2gether");
-  if (levels.some((level) => level.includes("restore you"))) keys.add("restoreyou");
-  return Array.from(keys);
 }
 
 export default function App() {
@@ -370,19 +357,6 @@ export default function App() {
   }
 
   const userOptions = useMemo(() => users.map((u) => ({ id: u.id, label: `${u.name} (${u.cnpj})` })), [users]);
-  const visibleLogoKeys = useMemo(() => {
-    if (!me) return [];
-    if (me.is_admin) return ["deepdive", "express", "grow2gether", "restoreyou"];
-    return getLogoKeysByAccess(me.access_levels || []);
-  }, [me]);
-
-  const logoMap = {
-    deepdive: { src: deepDiveLogo, alt: "Deep Dive" },
-    express: { src: expressLogo, alt: "Express" },
-    grow2gether: { src: grow2getherLogo, alt: "Grow2Gether" },
-    restoreyou: { src: restoreYouLogo, alt: "Restore You" },
-  };
-
   if (!token) {
     return (
       <div className="page">
@@ -515,36 +489,9 @@ export default function App() {
     <div className="page">
       <div className="app-shell">
         <header className="topbar">
-          <div className="topbar-left">
-            <div className="topbar-main">
-              <div>
-                <h1 className="title">Portal Clientes</h1>
-                <div className="welcome-row">
-                  <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
-                  <div className="access-logo-row">
-                    {visibleLogoKeys.map((key) => (
-                      <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
-                    ))}
-                    {visibleLogoKeys.length > 0 && (
-                      <span className="logo-separator" aria-hidden="true">
-                        |
-                      </span>
-                    )}
-                    <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row top-load-actions">
-              <button className="btn load-sheets" onClick={loadSpreadsheets}>
-                Carregar planilhas
-              </button>
-              {me?.is_admin && (
-                <button className="btn load-admin" onClick={loadAdminData}>
-                  Carregar dados admin
-                </button>
-              )}
-            </div>
+          <div className="topbar-main">
+            <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+            <h1 className="title">Portal Clientes Jacuzzi</h1>
           </div>
           <div className="topbar-right">
             <button className="btn logout-btn" onClick={handleLogout}>
@@ -558,22 +505,35 @@ export default function App() {
         <div className={`grid-main ${me?.is_admin ? "" : "single-column"}`}>
           <section className="card card-spreadsheets">
             <h2>Planilhas</h2>
-            <div className="row">
-              <input
-                className="field"
-                placeholder="Buscar na tabela"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <input
-                className="field"
-                placeholder="Coluna opcional"
-                value={searchCol}
-                onChange={(e) => setSearchCol(e.target.value)}
-              />
-              <button className="btn alt" onClick={() => selectedId && loadData(selectedId, true)}>
-                Buscar
-              </button>
+            <div className="planilha-toolbar">
+              <div className="planilha-searches">
+                <input
+                  className="field half-field"
+                  placeholder="Buscar na tabela"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <input
+                  className="field half-field"
+                  placeholder="Coluna opcional"
+                  value={searchCol}
+                  onChange={(e) => setSearchCol(e.target.value)}
+                />
+              </div>
+              <div className="programa-info">
+                <p className="subtitle programa-text">
+                  {me ? `Bem-vindo, ${me.name}, seu programa comercial e` : "Seu programa comercial e"}
+                </p>
+                <img src={expressLogo} alt="Express" className="access-logo" />
+              </div>
+              <div className="row planilha-actions">
+                <button className="btn load-sheets" onClick={loadSpreadsheets}>
+                  Carregar planilhas
+                </button>
+                <button className="btn alt" onClick={() => selectedId && loadData(selectedId, true)}>
+                  Buscar
+                </button>
+              </div>
             </div>
 
             <ul className="list">
@@ -628,7 +588,12 @@ export default function App() {
 
           {me?.is_admin && (
             <section className="card">
-              <h2>Administracao</h2>
+              <div className="row">
+                <h2>Administracao</h2>
+                <button className="btn load-admin" onClick={loadAdminData}>
+                  Carregar dados admin
+                </button>
+              </div>
               <p className="muted">Gestao de usuarios, acessos e planilhas.</p>
 
               <div className="card" style={{ marginTop: 12 }}>

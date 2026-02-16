@@ -236,28 +236,26 @@ select {
 }
 
 .topbar {
-  border: 1px solid rgba(212, 230, 248, 0.5);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.2);
+  margin: -24px -24px 0;
+  width: calc(100% + 48px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0;
+  background: rgba(15, 27, 45, 0.38);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  padding: 16px 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px 24px;
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr auto;
+  align-items: center;
   gap: 12px;
-}
-
-.topbar-left {
-  display: grid;
-  gap: 10px;
 }
 
 .topbar-main {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   justify-items: start;
   text-align: left;
 }
@@ -273,10 +271,7 @@ select {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-}
-
-.top-load-actions {
-  margin-top: 2px;
+  align-self: start;
 }
 
 .access-logo-row {
@@ -296,7 +291,7 @@ select {
 }
 
 .jacuzzi-banner {
-  height: 64px;
+  height: 56px;
   width: auto;
 }
 
@@ -309,7 +304,7 @@ select {
 
 .title {
   margin: 0;
-  font-size: 1.95rem;
+  font-size: 2.05rem;
   color: #ffffff;
 }
 
@@ -410,6 +405,40 @@ select {
   background: rgba(255, 255, 255, 0.92);
 }
 
+.planilha-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.planilha-searches {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.half-field {
+  width: min(220px, 48%);
+}
+
+.programa-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.programa-text {
+  margin: 0;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.planilha-actions {
+  justify-content: flex-end;
+}
+
 .table-wrap {
   overflow: auto;
   border: 1px solid #d6e5f5;
@@ -458,6 +487,7 @@ th {
 
   .topbar {
     grid-template-columns: 1fr;
+    width: calc(100% + 48px);
   }
 
   .topbar-main {
@@ -472,5 +502,17 @@ th {
 
   .topbar-right {
     justify-content: flex-start;
+  }
+
+  .planilha-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .half-field {
+    width: 100%;
+  }
+
+  .programa-text {
+    white-space: normal;
   }
 }
