@@ -22,9 +22,13 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Poppins", "Montserrat", sans-serif;
-  background:
+  background-image:
     linear-gradient(to bottom, rgba(5, 16, 32, 0.58), rgba(5, 16, 32, 0.72)),
-    url("../fundo.png") center center / cover no-repeat fixed;
+    url("../fundo.png");
+  background-position: center center, center center;
+  background-size: cover, contain;
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: fixed, fixed;
   color: var(--text);
 }
 
@@ -58,8 +62,8 @@ select {
 }
 
 .login-jacuzzi {
-  width: min(300px, 90%);
-  max-width: 300px;
+  width: min(430px, 94%);
+  max-width: 430px;
   justify-self: center;
 }
 
