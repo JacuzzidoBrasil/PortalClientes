@@ -24,7 +24,7 @@ body {
   font-family: "Segoe UI", "Poppins", "Montserrat", sans-serif;
   background:
     linear-gradient(to bottom, rgba(5, 16, 32, 0.58), rgba(5, 16, 32, 0.72)),
-    url("../RestoreYou.jpg") center center / cover no-repeat fixed;
+    url("../fundo.png") center center / cover no-repeat fixed;
   color: var(--text);
 }
 
@@ -367,10 +367,13 @@ select {
 }
 
 .card.card-spreadsheets h2,
-.card.card-spreadsheets strong,
 .card.card-spreadsheets label,
 .card.card-spreadsheets p {
   color: #ffffff;
+}
+
+.card.card-spreadsheets .sheet-title {
+  color: #0f2238;
 }
 
 .card.card-spreadsheets .btn.ghost {

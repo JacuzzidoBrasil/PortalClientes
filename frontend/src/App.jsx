@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import jacuzziLogo from "../Jacuzzi.png";
+import jacuzziWhiteLogo from "../Jacuzzi branco.png";
 import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
 import grow2getherLogo from "../Grow2Gether.png";
@@ -388,7 +389,7 @@ export default function App() {
         <div className="login-wrap">
           <section className="login-card">
             <div className="login-side">
-              <img src={jacuzziLogo} alt="Jacuzzi" className="login-jacuzzi" />
+              <img src={jacuzziWhiteLogo} alt="Jacuzzi" className="login-jacuzzi" />
               <h1>Portal Clientes Jacuzzi</h1>
               <h2 className="panel-title">Entrar</h2>
               <p className="panel-subtitle">Use CNPJ e senha para acessar.</p>
@@ -574,7 +575,7 @@ export default function App() {
             <ul className="list">
               {spreadsheets.map((it) => (
                 <li className="item" key={it.id}>
-                  <strong>{it.title}</strong>
+                  <strong className="sheet-title">{it.title}</strong>
                   <div className="row">
                     <button className="btn ghost" onClick={() => loadData(it.id, true)}>
                       Abrir
