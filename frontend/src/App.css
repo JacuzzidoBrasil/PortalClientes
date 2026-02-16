@@ -253,7 +253,7 @@ select {
 
 .topbar-main {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
   justify-items: start;
@@ -291,7 +291,7 @@ select {
 }
 
 .jacuzzi-banner {
-  height: 56px;
+  height: 60px;
   width: auto;
 }
 
@@ -304,8 +304,14 @@ select {
 
 .title {
   margin: 0;
-  font-size: 2.05rem;
+  font-size: 2.2rem;
   color: #ffffff;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-align: center;
+  justify-self: center;
+  width: 100%;
 }
 
 .subtitle {
@@ -407,26 +413,26 @@ select {
 
 .planilha-toolbar {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-rows: auto auto;
   gap: 10px;
-  align-items: center;
 }
 
 .planilha-searches {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .half-field {
-  width: min(220px, 48%);
+  width: 100%;
 }
 
 .programa-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .programa-text {
@@ -436,7 +442,12 @@ select {
 }
 
 .planilha-actions {
-  justify-content: flex-end;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.access-logo-large {
+  height: 78px;
 }
 
 .table-wrap {

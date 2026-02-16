@@ -492,6 +492,7 @@ export default function App() {
           <div className="topbar-main">
             <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
             <h1 className="title">Portal Clientes Jacuzzi</h1>
+            <div className="topbar-spacer" />
           </div>
           <div className="topbar-right">
             <button className="btn logout-btn" onClick={handleLogout}>
@@ -519,12 +520,12 @@ export default function App() {
                   value={searchCol}
                   onChange={(e) => setSearchCol(e.target.value)}
                 />
-              </div>
-              <div className="programa-info">
-                <p className="subtitle programa-text">
-                  {me ? `Bem-vindo, ${me.name}, seu programa comercial e` : "Seu programa comercial e"}
-                </p>
-                <img src={expressLogo} alt="Express" className="access-logo" />
+                <div className="programa-info">
+                  <p className="subtitle programa-text">
+                    {me ? `Bem-vindo, ${me.name}, seu programa comercial é:` : "Seu programa comercial é:"}
+                  </p>
+                  <img src={expressLogo} alt="Express" className="access-logo access-logo-large" />
+                </div>
               </div>
               <div className="row planilha-actions">
                 <button className="btn load-sheets" onClick={loadSpreadsheets}>
