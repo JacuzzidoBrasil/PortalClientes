@@ -22,14 +22,9 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Poppins", "Montserrat", sans-serif;
-  background-image:
-    linear-gradient(to bottom, rgba(5, 16, 32, 0.58), rgba(5, 16, 32, 0.72)),
-    url("../fundo.png"),
-    url("../fundo.png");
-  background-position: center center, center center, center center;
-  background-size: cover, 96% auto, cover;
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  background-attachment: fixed, fixed, fixed;
+  background:
+    linear-gradient(to bottom, rgba(5, 16, 32, 0.5), rgba(5, 16, 32, 0.68)),
+    url("../fundo.png") center center / 100% 100% no-repeat fixed;
   color: var(--text);
 }
 
@@ -295,10 +290,9 @@ select {
 .access-logo {
   height: 64px;
   width: auto;
-  border-radius: 8px;
-  border: 1px solid #d7e6f6;
-  background: #fff;
-  padding: 2px 6px;
+  border: 0;
+  background: transparent;
+  padding: 0;
 }
 
 .jacuzzi-banner {
