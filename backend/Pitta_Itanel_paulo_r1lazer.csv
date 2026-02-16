@@ -1,0 +1,436 @@
+cnpj,name,email,uf,password,access_levels,first_access_completed
+6391000151,YOSHIZAKI IRRIGACAO LTDA,contato@yoshizaki.com.br,SP,senha1,Deep dive Standard,0
+208040000123,COMERCIAL GROSFESTILO P P PIS LTDA,felipe@grosfestilo.com.br,SP,senha2,Deep dive Standard,0
+242110000160,ELETRO TECNICA IPIRANGA COM E SERV L,eletroipirangaservicos@hotmail.com,SP,senha3,Deep dive Standard,0
+565883000187,ELETRO J L CAMPINAS LTDA,contato@eletrojlcampinas.com.br,SP,senha4,Deep dive Standard,0
+661080000126,BENE & BENI COM DE PISCINAS LTDA,valinhospiscinas@valinhospiscinas.com.br,SP,senha5,Deep dive Standard,0
+728502000133,WILBRA COM DE CASAS PRE-FABRICADAS L,DUDA@MUNDODASPISCINAS.COM.BR,SP,senha6,Deep dive Standard,0
+797714000172,VLADEMIR CAMARGO & CIA LTDA,marcio.agrocamargo@hotmail.com,SP,senha7,Deep dive Standard,0
+861339000182,AAANS PISCINAS LTDA,nspiscinas@nspiscinas.com.br,SP,senha8,Express,0
+934062000170,KOLORINES COM IMPORT E EXPORT LTDA,arnaldo@kolorines.com.br,SP,senha9,Express,0
+951524000168,OSVAIR LANZA PISCINAS EPP,atl.pisc@hotmail.com,SP,senha10,Express,0
+1009160000164,EQUIPISCINAS COMERCIAL LTDA,equipiscinas@uol.com.br,SP,senha11,Deep dive Standard,0
+1044609000125,ELETRO MOTORES TERITILLI LTDA,teritilli_motores@hotmail.com,SP,senha12,Deep dive Standard,0
+1141626000180,MAFERCA COMERCIO VAREJISTA DE PRODUT,contatosmaferca@terra.com.br,SP,senha13,Deep dive Standard,0
+1357690000101,EQUIBOMBAS S P COMERCIAL LTDA,flavio@equibombas.com.br,SP,senha14,Deep dive Prime,0
+1558479000149,AQUABASE SOROCABA COM LTDA,aquabase.sorocaba@gmail.com,SP,senha15,Deep dive Standard,0
+1582892000149,MERITO COMERCIO DE EQUIPAMENTOS LIMI,faturamento@meritocomercial.com.br,SP,senha16,Deep dive Legend,0
+1606356000136,ELETROTECNICA IRMAOS CAMPOS LTDA,eletrotecnicairmaoscampos@hotmail.com,SP,senha17,Deep dive Standard,0
+1772974000156,W E GREGGIO COM DE BOMBAS HIDR LTDA,eduardogreggio@terra.com.br,SP,senha18,Express,0
+1779465000155,HIDROTECNICA RAMOS LTDA,rosana@hrbombas.com.br,SP,senha19,Express,0
+1958018000163,FLAMAPAR COMERCIO DE FERRAGENS E PAR,flamapar@flamapar.com,SP,senha20,Deep dive Standard,0
+1995567000108,ROGERIO SANTOS COM PISCINAS E ACESS,cocabpools@gmail.com,SP,senha21,Deep dive Standard,0
+2111386000134,ROSEMARY ALVES DE LIMA,rcpiscinas11@hotmail.com,SP,senha22,Deep dive Standard,0
+2291486000190,GEORG FISCHER FGS IND E COM LTDA,ricardo.goncalves@georgfischer.com,SP,senha23,Deep dive Standard,0
+2325156000178,J.B.DE OLIVEIRA EQUIPAMENTOS,compras@prohotel.com.br,SP,senha24,Deep dive Standard,0
+2794929000165,QUALIBOMBAS MOT BOMBAS E FERR LTDA,financeiro@qualibombas.com.br,SP,senha25,Deep dive Standard,0
+2842919000158,RBM DESTEFANO PORTO FERREIRA,acqua-flipper@hotmail.com,SP,senha26,Deep dive Standard,0
+2990011000191,GERCO COM DE PROD PARA PISC LTDA,gerco1999@hotmail.com,SP,senha27,Deep dive Standard,0
+3020516000196,GOLD PISCINAS SJC LTDA,carla@goldpiscinas.com.br,SP,senha28,Express,0
+3110650000188,CASTELO COMERCIAL DE BOMBAS LTDA,carolina@castelobombas.com.br,SP,senha29,Express,0
+3430365000144,BRAGANCA PISCINAS E ACESSORIOS LTDA,gil@bragancapiscinas.com.br,SP,senha30,Deep dive Standard,0
+3439146000126,ANTONIO BENEDITO DE ALMEIDA,hidraulicapingodagua@hotmail.com,SP,senha31,Deep dive Standard,0
+3448470000100,DESITAL ENGENHARIA DE INSTALACOES LT,contato@desital.com.br,SP,senha32,Express,0
+3500479000547,HIDREL DE CARAGUA HIDR E ELET LTDA,financeiro.hidrelcd@gmail.com,SP,senha33,Grow2gether,0
+3560932000187,MALVEZZI COM DE MAT P CONSTRUCAO LTD,mmhouse@terra.com.br,SP,senha34,Deep dive Standard,0
+3707663000139,PISCINAS BOM JESUS EQUIP HIDRA LTDA,compras@piscinasjundiai.com.br,SP,senha35,Deep dive Standard,0
+3758357000121,EMPIRE CONSERVADORA COM E SERV LTDA,compras@empirebombas.com.br,SP,senha36,Deep dive Standard,0
+3796027000120,COMERCIAL CIOCE LTDA ME,dogswimmer@terra.com.br,SP,senha37,Express,0
+3947533000173,L A PISCINAS E ACESSORIOS LTDA,financeiro@lapiscinas.com.br,SP,senha38,Deep dive Standard,0
+4055213000171,DKRY NUMAKURA SERVICOS LTDA,dkrymotores@gmail.com,SP,senha39,Deep dive Standard,0
+4057879000169,MOMBACA RACOES MAQUINAS PRODUTOS DE,arnaldojus@gmail.com,SP,senha40,Deep dive Standard,0
+4288909000148,PIRATUBO MAT PARA CONST LTDA,chpiracicaba@uol.com.br,SP,senha41,Deep dive Standard,0
+4439796000134,COMERCIAL LANEL LTDA,faturamento@nnascimento.com.br,SP,senha42,Deep dive Standard,0
+4451651000159,CESAR DA SILVA GOMES COMERCIO DE PIS,adm@engepool.com.br,SP,senha43,Express,0
+4493657000199,ALTA TEMP COMERCIAL LTDA,altatemp@altatemp.com.br,SP,senha44,Deep dive Standard,0
+4519709000159,BOICUCANGA ELETRO MOTORES LTDA,eletro.motores@uol.com.br,SP,senha45,Deep dive Standard,0
+4644309000175,VALERETTO & VALERETTO COMERCIAL LTDA,valeretto@valeretto.com.br,SP,senha46,Express,0
+4661643000137,PISCINAS RIO DAS PEDRAS LTDA,riodaspedraspiscinas@uol.com.br,SP,senha47,Deep dive Standard,0
+4700401000105,COMERCIAL AGROEMPORIO LTDA,agroemporio.itu@gmail.com,SP,senha48,Deep dive Standard,0
+4797468000100,MMPROJETOS CONSULTORIA E SOLUCOES LT,mmprojetos.01@gmail.com,SP,senha49,Deep dive Standard,0
+4912789000108,ACFC4 AQUECEDORES LTDA,cesar@acfc4.com.br,SP,senha50,Deep dive Standard,0
+5023127000140,JOSE CARLOS GUINAMI,jcvendas@guinami.com.br,SP,senha51,Express,0
+5098051000111,CRISTAL PISCINAS PERUIBE LTDA,cristalpiscinas@uol.com.br,SP,senha52,Deep dive Standard,0
+5127079000130,OP FRANCISCONE LTDA,opfranciscone@gmail.com,SP,senha53,Deep dive Standard,0
+5134590000169,G&B COM E SERV DE PRODUTOS P PISCINA,comercial@piscinassummer.com.br,SP,senha54,Deep dive Standard,0
+5304734000188,CENTRAL DAS BOMBAS COM E SERV LTDA M,BOMBAS@CENTRALBOMBAS.COM.BR,SP,senha55,Deep dive Standard,0
+5653849000188,WILSON OSSAMU MAKINO LTDA,compras@makino.com.br,SP,senha56,Deep dive Standard,0
+6233772000150,HP CALADO,contato@hpcalado.com.br,SP,senha57,Deep dive Standard,0
+6635124000120,ACQUA NOBRE COM DE PISCINAS LTDA,acquanobre.com.br@gmail.com,SP,senha58,Express,0
+7102409000168,TEODORO COMERCIO DE PISCINAS LTDA,comercial@teodoropiscinas.com.br,SP,senha59,Deep dive Standard,0
+7117602000172,BOMBAZZA COMERCIO DE BOMBAS LTDA,financeiro@bombaspaulo.com.br,SP,senha60,Deep dive Standard,0
+7248785000165,PORTAL DAS BOMBAS HIDRAULICAS LTDA,financeiro@portaldasbombas.com.br,SP,senha61,Express,0
+7377670000170,CRISTAL AZUL PISCINAS LTDA,contato@cristalazulpiscinas.com.br,SP,senha62,Deep dive Standard,0
+7451182000166,REI DAS PECAS SOS PISCINAS LTDA,sospiscinapecas@gmail.com,SP,senha63,Deep dive Standard,0
+7477121000178,SAMUEL VILELA SOBRAL,adm.gruponovais@gmail.com,SP,senha64,Deep dive Standard,0
+7582974000170,SILVANA MOITAL HENRIQUE PISCINA,PISCINAAZUL@TERRA.COM.BR,SP,senha65,Deep dive Standard,0
+7687884000143,ACQUA CLEAN PISCINAS & ENG LTDA,ricardoalexandre.eng@hotmail.com,SP,senha66,Deep dive Standard,0
+7828600000191,DJA COMERCIO DE PISCINAS LTDA,comercial@assistecpiscinas.com.br,SP,senha67,Deep dive Standard,0
+8027818000100,ITAICI PISCINAS COM DE BOMBAS E PISC,ITAICIPISCINAS@UOL.COM.BR,SP,senha68,Express,0
+8053602000119,EMPORIO DA PISCINA COM DE ART P PISC,amarildo@emporiodapiscina.com.br,SP,senha69,Deep dive Standard,0
+8155708000123,ELETROTECNICA LARA LTDA,thais@laramotores.com.br,SP,senha70,Deep dive Standard,0
+8288024000280,WORTEC IND E COM DE BOMBAS E SERV LT,fabricio@wortecbombas.com.br,SP,senha71,Deep dive Standard,0
+8509643000177,SVA ENERGIA LTDA,administrativo@cbesolar.com.br,SP,senha72,Deep dive Standard,0
+8532794000146,JOSELYNE APARECIDA PRATA,jopiscinas@hotmail.com,SP,senha73,Deep dive Standard,0
+8722529000120,MG PINGO D AGUA BOMBAS E MOTORES ELE,mgpingodagua@hotmail.com,SP,senha74,Deep dive Standard,0
+8736854000142,ADALBERTO C DE GODOY MATERIAIS ELETR,casadoenrolador@uol.com.br,SP,senha75,Deep dive Standard,0
+8921444000171,MONICA NUNES BATISTA ZABEU,ilhapar2@gmail.com,SP,senha76,Deep dive Standard,0
+8948444000165,BENECATTO COM DE MAT DE CONSTR LTDA,adm1@benecatto.com.br,SP,senha77,Express,0
+8958591000116,JMC PISCINAS & BOMBAS LTDA,benepiscinas@uol.com.br,SP,senha78,Express,0
+9155158000105,JCR DA SILVA CONSERTO DE MAQUINAS,gmaquina.vendas@hotmail.com,SP,senha79,Deep dive Standard,0
+9171574000105,RESGATE - INDUSTRIA E COM DE PISC LT,resgatepiscinas@gmail.com,SP,senha80,Deep dive Standard,0
+9193580000155,BUSCARIOLI COM E OFICINA DE MOT ELET,maclaus.donoso@buscarioli.com.br,SP,senha81,Deep dive Standard,0
+9239731000169,HT HI TECH PISC EQ E SERV LTDA,alexandre@htpiscinas.com.br,SP,senha82,Deep dive Standard,0
+9269414000195,AQUA FORTIS IND E COM DE PROD P PISC,aguafortes@gmail.com,SP,senha83,Deep dive Standard,0
+9349991000197,CONECT PUMPS IMPORT E COM DE BOMBAS,CONECTPUMPS@GMAIL.COM,SP,senha84,Deep dive Standard,0
+9561253000109,LUCIANO ROSA LEITE & CIA LTDA,financeiro@llpiscinas.com.br,SP,senha85,Deep dive Standard,0
+9565759000196,F CHICARELI - BOMBAS LTDA,contato.grupomc@gmail.com,SP,senha86,Deep dive Standard,0
+10357347000140,ENBIVE COM DE PRODUTOS P PISCINAS LT,comercial@piscinacom.com.br,SP,senha87,Deep dive Standard,0
+10362964000133,TRIANGULO COM E SERV BOM E MOT LTDA,comercial@triangulobombas.com.br,SP,senha88,Deep dive Standard,0
+10364286000148,RENAN ANDRADE JORDAO,flaviopiscinas761@yahoo.com,SP,senha89,Deep dive Standard,0
+10507801000100,C.S. ISHIDA GONCALVES PISCINAS,compras@totalpiscinas.com.br,SP,senha90,Deep dive Standard,0
+10529577000149,MURILO CORTIJO ITU,financeiro@teqma.com.br,SP,senha91,Deep dive Standard,0
+10553306000129,DESTEFANO PARTICIPACOES LTDA,acqua-flipper@hotmail.com,SP,senha92,Deep dive Standard,0
+"10597890000114,""CBB - COM, CONSER E M DE B P/ AGUA L"",administrativo.financeiro@cbbbombas.com.br,SP,senha93,Express,0"
+10771404000213,CLIMAP COM PROD EQUIP PISCINA LTDA,administrativo.cd@climap.com.br,SP,senha94,Express,0
+10792572000104,FLO & CABRAL - ART P PISCINAS LTDA,maxipiscinas@maxipiscinas.com.br,SP,senha95,Deep dive Standard,0
+10818176000109,IBM COMERCIO DE BOMBAS E MOTORES LTD,nfe@ibmbombas.com.br,SP,senha96,Deep dive Standard,0
+10899385000124,ISAMAR DIS DE PRODS E AC P/ PIS LTDA,erica.isamarpiscinas@gmail.com,SP,senha97,Deep dive Standard,0
+10923560000171,WILSON MARINS DE SOUZA JUNIOR,SOROSOL@TERRA.COM.BR,SP,senha98,Deep dive Standard,0
+10931168000174,CASA DAS BOMBAS DE ATIBAIA LTDA,valdemar@tsuji.com.br,SP,senha99,Express,0
+10981623000146,G D E BOMBAS E EQUIPAMENTOS LTDA,compras@gdebombas.com.br,SP,senha100,Deep dive Standard,0
+10988049000158,NS PISCINAS COMERCIAL LTDA,nspiscinas@nspiscinas.com.br,SP,senha101,Express,0
+11019682000109,L M DE J NASCIMENTO MANUT DE BOMBAS,portobombas@gmail.com,SP,senha102,Deep dive Standard,0
+11138346000177,RR AUTOMACAO E MOTORES LTDA,faturamento@rrmotores.com.br,SP,senha103,Deep dive Open,0
+11152495000190,LA REIS MANUT E COM DE M ELET LTDA,REISELETRICIDADEINDUSTRIAL@BOL.COM.BR,SP,senha104,Deep dive Standard,0
+11202304000158,PORTAL COM DE BOMBAS E MAQ ABC LTDA,financeiro@portaldasbombasabc.com.br,SP,senha105,Deep dive Standard,0
+11213648000162,ARGON COMERCIAL ELETRICA LTDA,EDSON@ARGONELETRICA.COM.BR,SP,senha106,Deep dive Standard,0
+11414480000153,ONILSIO FERREIRA NETO,netobombas.nb@gmail.com,SP,senha107,Grow2gether,0
+11509686000167,PERSONAL PISCINAS LTDA ME,personalpiscinas@hotmail.com,SP,senha108,Deep dive Standard,0
+11552087000126,SOFSOL COM E SERV DE AQUEC LTDA,atendimento@sofsol.com.br,SP,senha109,Deep dive Standard,0
+11557546000164,PISCINAS WEB LTDA,CONTATO@PISCINASWEB.COM.BR,SP,senha110,Deep dive Standard,0
+11607529000194,ANGELA C P JACOMETTI ELET HIDRA E PI,jacomettibombas@hotmail.com,SP,senha111,Deep dive Standard,0
+11729430000165,NIVALDO FRANCISCO ITU,financeiro.itupiscinas@gmail.com,SP,senha112,Express,0
+11804883000109,FERREIRENSE COM TEC MOT E BOMBAS LTD,FERREIRENSE.COMERCIAL@HOTMAIL.COM,SP,senha113,Deep dive Standard,0
+11870848000198,ELEMENZA COMERCIAL LTDA,nfe@multiagua.com.br,SP,senha114,Deep dive Standard,0
+11993042000197,E R PEREIRA BOMBAS,anabeatriz@ambombas.com.br,SP,senha115,Deep dive Standard,0
+12022590000132,ECCO FONTES COM IMPORT E EXP LTDA,contato@eccofontes.com.br,SP,senha116,Express,0
+12035089000100,SILMAR PROD E ACESS P PISC LTDA,contato@silmarpiscinas.com.br,SP,senha117,Deep dive Standard,0
+12044628000178,ANISIA BRITO DOS SANTOS,asbombas@asbombas.com.br,SP,senha118,Deep dive Standard,0
+12538600000197,COM E PREST DE SERV CASTILHO LTDA,lenesobombas@gmail.com,SP,senha119,Deep dive Standard,0
+12829190000133,SPA DAS MAQ BELMAQ COM E ASSI TEC LT,SPABELMAQ@GMAIL.COM,SP,senha120,Deep dive Standard,0
+12871439000179,MULTIMOTORES ELET COM E SERV LTDA,multimotores.eletricos@hotmail.com,SP,senha121,Deep dive Standard,0
+12941156000156,INSIDE ENGENHARIA E IMPORTACAO INPL,ibere@insidepiscinas.com.br,SP,senha122,Deep dive Standard,0
+12965396000190,ALUCEL SUPRIMENTOS INDUSTRIAIS LTDA,marcela@alucel.net,SP,senha123,Deep dive Standard,0
+13097841000100,KLEYTON DAVID MARCELINO,contato@kmmotoreseletricos.com.br,SP,senha124,Deep dive Standard,0
+13123234000178,MR SERV E COM DE BOMBAS LTDA,atendimento@secobbombas.com.br,SP,senha125,Deep dive Standard,0
+13123300000100,REINALDO ROBERTO DA SILVA ELETRICA,rrs-engenharia@hotmail.com,SP,senha126,Deep dive Standard,0
+13188033000159,SP MOTORES ELETRICOS LTDA,carla.silva@spmotoreseletricos.com.br,SP,senha127,Deep dive Standard,0
+13279659000170,GUSTAVO BARBOSA S SIST AQUEC SOLAR L,vendas1@solar3.com.br,SP,senha128,Deep dive Standard,0
+13376804000131,ARENA PISCINAS E COMERCIO LTDA,contato@arenapiscinas.com.br,SP,senha129,Deep dive Standard,0
+13448494000113,S M DE CARVALHO,sueli@hidrogaspiscinas.com.br,SP,senha130,Deep dive Standard,0
+13501386000167,THIAGO MANUEIRA TERUEL,contato@clickpiscinas.com.br,SP,senha131,Deep dive Standard,0
+13552599000118,BROGNONI & BASSO CONST DE PISC LTDA,josemaria.vendas@reclubpiscinas.com.br,SP,senha132,Deep dive Standard,0
+13905118000100,CONSTRULIMP LTDA,construlimpv@hotmail.com,SP,senha133,Deep dive Standard,0
+13990455000143,ESPELHO D'AGUA COM E MANUT DE PISC,ESPELHODAAGUIAPISCINAS@HOTMAIL.COM,SP,senha134,Express,0
+14118664000164,BIO ART PISCINAS LTDA,bioartpiscinas@hotmail.com,SP,senha135,Deep dive Standard,0
+14149749000100,ATACADAO DAS PISCINAS COM E SERV LTD,summerpiscinas@live.com,SP,senha136,Deep dive Standard,0
+14153198000158,FAMILIA LAZER COM EQUIP P PISCINAS L,cristiane@familialazer.com.br,SP,senha137,Deep dive Standard,0
+14360229000141,RS COM E MANUT PISCINA E AQUEC SOLAR,ricardo.saccon@hotmail.com,SP,senha138,Deep dive Standard,0
+14382870000187,ANTONIO ERNESTO DE CARVALHO,toninhopiscina@gmail.com,SP,senha139,Deep dive Standard,0
+14452008000101,ECOHOT COM E INST DE AQUEC LTDA,comercial@ecohot.com.br,SP,senha140,Deep dive Standard,0
+14599094000171,CAMPINAS PISCINAS LTDA,financeiro@campinaspiscinas.com.br,SP,senha141,Deep dive Standard,0
+14776205000178,ARICANDUVA COM MAN BOMBAS E MOT ELET,contato@aricanduvabombas.com.br,SP,senha142,Deep dive Standard,0
+14778311000190,BOMBASHOPPING COMERCIO E MANUTENCAO,compras@nnascimento.com.br,SP,senha143,Deep dive Open,0
+15086250000163,MIZU BOMBAS COMERCIO E SERVICOS LTDA,faturamento@mizubombas.com.br,SP,senha144,Deep dive Select,0
+15179700000162,CENTRAO COMERCIO DE EQUIP LTDA ME,nfe@cequipamentos.com.br,SP,senha145,Deep dive Standard,0
+15207513000145,APROFISSIONAL FERRAMENTAS LTDA,compras@aprofer.com.br,SP,senha146,Deep dive Standard,0
+15258801000129,COMERCIAL HIDRAULICA LIMEIRENSE LTDA,chlimeirense@gmail.com,SP,senha147,Deep dive Standard,0
+15392864000173,CENTRAO DAS BOMBAS COM DE MOT E EQUI,nfe@centraodasbombas.com.br,SP,senha148,Express,0
+15483752000128,ATACADAO DA RACAO LTDA,atacadaodaracaoitupeva@hotmail.com,SP,senha149,Deep dive Standard,0
+15659754000125,CGM DISTRIB DE ACESS E PECAS LTDA,ricardo@camaviacessorios.com,SP,senha150,Deep dive Standard,0
+15670884000169,ACQUATECCK HIDROELETROMECANICA LTDA,buzo@acquatecck.com.br,SP,senha151,Grow2gether,0
+15756498000194,EMPIRE BOMBAS EQUIPAMENTOS HIDRAULIC,comercial@empirebombas.com.br,SP,senha152,Express,0
+15810821000160,CAMARGO COM DE BOMBAS E MOT LTDA,nfe@camargobombas.com.br,SP,senha153,Deep dive Standard,0
+15835105000138,AM CONSERVADORA DE BOMBAS LTDA,anabeatriz@ambombas.com.br,SP,senha154,Express,0
+16602234000149,NICETUBS LTDA,compras2@nicetubs.com,SP,senha155,Deep dive Standard,0
+16805647000120,UNI EQUIP IND E SERVICOS LTDA,uniequipamentos@uniequipamentos.com.br,SP,senha156,Deep dive Standard,0
+16870624000108,B&M PISCINAS LTDA,benjamimpiscinas@gmail.com,SP,senha157,Deep dive Standard,0
+16908172000106,PLANALTO CRISTALINE LTDA,tatiane.batista@planalto.eng.br,SP,senha158,Deep dive Standard,0
+17261395000189,17.261.395 ALEXANDRE DE OLIVEIRA,motoreseletricos2021@gmail.com,SP,senha159,Deep dive Standard,0
+17622782000101,ISTOBAL DO BRASIL IND E COM LTDA,nfe@istobal.com.br,SP,senha160,Grow2gether,0
+17691768000151,AQUA FLEX AQ E PRESSUR LTDA,contado@aquaflexaquecedores.com.br,SP,senha161,Deep dive Standard,0
+17709253000131,ITUSOLLAR ENERGIA LTDA,conttatoclima@gmail.com,SP,senha162,Deep dive Standard,0
+17779438000112,CL PREST SERV LOC EQUIP COM SOC UNIP,ibimaquinas@outlook.com.br,SP,senha163,Deep dive Standard,0
+18022109000195,ANDRE GASPAR 36548062876,gaspar.piscinas@hotmail.com,SP,senha164,Deep dive Standard,0
+18029072000127,ACQUA BOMBAS SOROCABA LTDA,acquabombasservice2013@gmail.com,SP,senha165,Deep dive Standard,0
+18276994000139,GILMAR PAULETTO ELES ITU,COMERCIAL@ELLESPISCINAS.COM.BR,SP,senha166,Deep dive Standard,0
+18357700000101,BARAO POOL PISCINAS LTDA,baraopool@gmail.com,SP,senha167,Deep dive Standard,0
+18399524000162,GERALDO DE OLIVEIRA SILVA MANUTENCOE,agarebobinamento@gmail.com,SP,senha168,Deep dive Standard,0
+18459760000127,ADRIANO FERREIRA DE SOUZA,comprashidramais@gmail.com,SP,senha169,Deep dive Standard,0
+18791771000100,A.J. DE MELO EQUIPAMENTOS PARA PISCI,adailtonartcom@gmail.com,SP,senha170,Deep dive Standard,0
+"18820545000100,""DIMENSIONAR SOL EM B, MOT E AUT LTDA"",ricardo@dimensionarbombas.com.br,SP,senha171,Deep dive Standard,0"
+19210501000120,ITU PAISAGISMO LTDA,contato@itupaisagismo.com.br,SP,senha172,Deep dive Standard,0
+19594385000190,GMC COMPONENTES ELETRICOS E AUTOMACA,adm@gmcautomacao.com.br,SP,senha173,Deep dive Standard,0
+19851753000139,ELIAS KISELAR 05631354845,kiselar@hotmail.com,SP,senha174,Deep dive Standard,0
+19942116000178,ACQUATEC SBC COMERCIAL LTDA,acquatec@acquatecbombas.com.br,SP,senha175,Deep dive Standard,0
+20227968000162,WF REPRES E COM DE PISC E PEDRAS LTD,wagnerdpereira@hotmail.com,SP,senha176,Deep dive Standard,0
+20547229000158,PH7 PISCINAS LTDA,contato@ph7piscinas.com,SP,senha177,Deep dive Standard,0
+20632609000190,DENIS RODRIGUES DE SOUZA COM DE EQUI,denis.dmdeletricaehidraulica@gmail.com,SP,senha178,Deep dive Standard,0
+21025428000169,HELIO JOSE DA SILVA 30175174890,atendimento@mefiltros.com.br,SP,senha179,Deep dive Standard,0
+21506751000154,HIDROGAS SERV EM EQUIP P PISC EIREL,sueli@hidrogaspiscinas.com.br,SP,senha180,Deep dive Standard,0
+21557614000149,STAR AQUECEDORES LTDA,contato@staraquecedores.com.br,SP,senha181,Deep dive Standard,0
+21725898000135,VAACH EQUIP HIDRA LTDA,comercial@vaach.com.br,SP,senha182,Deep dive Standard,0
+21848529000130,SOS BOMBAS HIDR SERV E COM LTDA,sosbombaseservicos@gmail.com,SP,senha183,Deep dive Standard,0
+21875170000190,LEIA DA SILVA DE OLIVEIRA,construcenter.materiais@outlook.com,SP,senha184,Deep dive Standard,0
+22175250000103,JDM FLEX COM. E MANUT. DE APARELHOS,jdmflex.st@gmail.com,SP,senha185,Deep dive Standard,0
+22356098000157,EMPRESERV SERVICOS ESPECIALIZADOS &,assistente.empreserv.com@gmail.com,SP,senha186,Deep dive Standard,0
+22450856000100,Y. H. M. VERGANI SERV EM PISC LTDA,CONTATO@PIUPISCINAS.COM.BR,SP,senha187,Deep dive Standard,0
+22554578000122,MAROL ONLINE COM DE PROD PIS LTDA,vendas@marol.com.br,SP,senha188,Deep dive Standard,0
+22799538000140,PREVINE PRO SERVICE LTDA,desentupidoraprevine@gmail.com,SP,senha189,Deep dive Standard,0
+22842021000197,22.842.021 ADRIANA TIYOKO BARBOSA,DRIKATIYOKO@GMAIL.COM,SP,senha190,Deep dive Standard,0
+23156569000146,DOURO COMERCIO DE PISCINA LTDA ME,wanderley@casaazulpiscinas.com.br,SP,senha191,Deep dive Standard,0
+23192140000104,LEMBO PISCINAS II LTDA,lembopiscinas@uol.com.br,SP,senha192,Grow2gether,0
+23298253000199,ANTONIO MARCOS MARTINS 12261652810,ipslazer@outlook.com,SP,senha193,Deep dive Standard,0
+23423315000147,FR DOS ANJOS PREST DE SERV E COMERCI,aquanticapiscinas1@gmail.com,SP,senha194,Deep dive Standard,0
+23640567000128,ELETROMECANICA HGW EIRELI,eletrohgw@gmail.com,SP,senha195,Deep dive Standard,0
+23792522000179,MARCOS ANTONIO RODRIGUES 32943627810,maktubcomercial@outlook.com,SP,senha196,Deep dive Standard,0
+24009311000180,GUSTAVO HENRIQUE BALAN RODRIGUES,gustavo@grbombas.com.br,SP,senha197,Deep dive Standard,0
+24020276000108,CS3 TERMOTECNOLOGIA SP LTDA,alexandre.vieira@s3.com.br,SP,senha198,Deep dive Standard,0
+24030805000146,SANITHERM COM E SER DE EQ P AGUA LTD,contato@sanitherm.com.br,SP,senha199,Express,0
+24147188000163,PISCINAS ROSSETTI LTDA,contato@piscinasro7.com.br,SP,senha200,Deep dive Standard,0
+24447174000165,INDESTAC IND COM IMP P SPAS E PISC L,contato@indestac.com.br,SP,senha201,Deep dive Standard,0
+24738188000138,MAX GATE COMERCIAL LTDA,vendas@dgacomercial.com.br,SP,senha202,Deep dive Standard,0
+25047126000142,DR.HIDRO LTDA,contato@drhidro.com.br,SP,senha203,Deep dive Standard,0
+25173981000108,ECOHYDROS CONS E PROJ SUST LTDA,millygiacon@gmail.com,SP,senha204,Deep dive Standard,0
+25224349000138,RAFAEL CARLOS DA SILVA,raphael.titanium22@gmail.com,SP,senha205,Express,0
+25234133000153,SUNCORP ENERGIA SOLAR LTDA,felipe.costa@suncorp.com.br,SP,senha206,Express,0
+26352210000132,MONTEIRO & AVERSA COM E LAZER LTDA,buzo@acquatecck.com.br,SP,senha207,Deep dive Standard,0
+"26427361000102,""GENERAL BOMBAS, ENGENHARIA DA MANUTE"",comercial@generalbombas.com,SP,senha208,Deep dive Standard,0"
+26819277000134,MDG AQUECEDORES LTDA,mdgaquecedores@gmail.com,SP,senha209,Deep dive Standard,0
+26999350000105,26.999.350 JOSE CICERO CORREIA ISIDO,jc.aquecedores100@gmail.com,SP,senha210,Deep dive Standard,0
+27122687000194,27.122.687 CLEBER RODRIGUES DA MOTA,lazerpoolprojetos@gmail.com,SP,senha211,Deep dive Standard,0
+27343071000143,BOMBEMI COMERCIAL LTDA,comercial@bombemi.com.br,SP,senha212,Deep dive Standard,0
+27501546000182,MONT PISCINAS LTDA,compras@montpiscinas.com.br,SP,senha213,Deep dive Standard,0
+27518164000161,MIRIAN LOMBARDI VILLELA T OLIVEIRA,vendas@marol.com.br,SP,senha214,Deep dive Standard,0
+27668551000184,JBR AQUECEDORES CAMPINAS LTDA,jbraquecedorescampinas@hotmail.com,SP,senha215,Deep dive Standard,0
+28043348000185,REDE BOMBAS COMERCIO E SERVICOS LTDA,clarissa.fonzar@jacuzzi.com.br,SP,senha216,Deep dive Standard,0
+28250499000104,MANBO COM - COM DE MATERIAIS E SERV,danielle@manbobombas.com.br,SP,senha217,Deep dive Standard,0
+28449496000102,ALEXANDRE GIAMPAOLI,bicoinstalacoes@gmail.com,SP,senha218,Express,0
+28462723000121,AGUAS NOVAS CONSERVADORA DE BOMBAS L,aguasnovas@gmail.com,SP,senha219,Express,0
+28574357000100,PROTERRA BOMBAS E SERVICOS LTDA,proterrabombas@proterrabombas.com.br,SP,senha220,Deep dive Standard,0
+28622903000123,EQUIPOOLS COM DE FERRAMENTAS E EQUIP,financeiro@equipools.com.br,SP,senha221,Deep dive Infinite,0
+28928344000184,FABIO DA SILVA FERNANDES PISCINAS,fabio.solpiscinas@gmail.com,SP,senha222,Deep dive Standard,0
+29000493000141,SELLOUT SOLUCOES DE E-COMMERCE LTDA,marcosamary@sellout.com.br,SP,senha223,Deep dive Standard,0
+29004680000101,C D B COMERCIO DE BOMBAS EIRELI,nfe@centraodasbombas.com.br,SP,senha224,Deep dive Standard,0
+29254244000182,A. CERRETTO JUNIOR,contato@hydropoolpiscinas.com.br,SP,senha225,Deep dive Standard,0
+29591198000107,SG COMERCIO DE MAT HIDR E ELET LTDA,administrativo.cd@climap.com.br,SP,senha226,Deep dive Standard,0
+29828228000156,THIAGO DE ABREU PAULINI,aqueserv@gmail.com,SP,senha227,Deep dive Standard,0
+"29851278000154,""IMPERIO CLS COM BOMBAS DAGUA, MOT E"",adm1@coliseuferramentas.com.br,SP,senha228,Deep dive Standard,0"
+29933459000120,JVK SERV ELET E HIDR LTDA,goeswgoes@gmail.com,SP,senha229,Deep dive Standard,0
+29986485000116,FAVARO MOTORES E BOMBAS,favarop@outlook.com,SP,senha230,Deep dive Standard,0
+30042274000104,LIDER INDUSTRIA E COMERCIO LTDA,adm@liderindustriaecomercio.com.br,SP,senha231,Deep dive Standard,0
+30069865000175,ANARA CONSTRUCOES LTDA,ANARAPISCINAS@GMAIL.COM,SP,senha232,Deep dive Standard,0
+30339560000136,AQUATICA EQUIPAMENTOS SAO CARLOS LTD,aquaticaequipamentos@gmail.com,SP,senha233,Deep dive Standard,0
+30447432000106,GILBERTO JULIO DA SILVA,GIL.JULIOSILVA@GMAIL.COM,SP,senha234,Deep dive Standard,0
+30484528000144,BELLAAGUA S.A.S LTDA,ricardotroya@yahoo.com.br,SP,senha235,Deep dive Standard,0
+30496086000156,TEKHOUSE ENERGIA SOLAR LTDA,ADM@TEKHOUSE.COM.BR,SP,senha236,Deep dive Standard,0
+30622663000109,OPTIMA RENOVA LTDA,administrativo@optimarenova.com.br,SP,senha237,Express,0
+30993258000105,JPR PISCINAS - COM E SERV LTDA,RICK-PAULA@HOTMAIL.COM,SP,senha238,Deep dive Standard,0
+31543693000192,UNITY COM E MANUT DE BOMBAS E AQUEC,unitybombas@gmail.com,SP,senha239,Deep dive Standard,0
+31780191000185,31.780.191 CHARLES DE PAIVA,CHARLES.HCFACILITIES@GMAIL.COM,SP,senha240,Deep dive Standard,0
+31982471000176,RICO CLIMA - SIST DE AQ E PRESSURIZA,ricardo.zagodasilva@gmail.com,SP,senha241,Deep dive Standard,0
+32154310000157,REQUINTE PISCINAS LTDA,comercial@requintepiscinas.com.br,SP,senha242,Deep dive Standard,0
+32536599000179,LHD PREZOTTO LOUCAS,alleanzaloja@gmail.com,SP,senha243,Deep dive Standard,0
+32585365000111,MULTILIMP MANUT DE PISCINAS LTDA,multlimppiscinas@hotmail.com,SP,senha244,Deep dive Standard,0
+32901535000120,LL BANHEIRAS DO BRASIL LTDA,aquintadasbanheiras@gmail.com,SP,senha245,Deep dive Standard,0
+32971611000173,RELUX CONSTRUTORA LTDA,reluxconstrutora@gmail.com,SP,senha246,Deep dive Standard,0
+33064038000187,NARA M. F. JARDIM COMERCIO E MANUTEN,PISCINASUBATUBA@HOTMAIL.COM,SP,senha247,Deep dive Standard,0
+33077924000145,INTELLIGENZ BR C E E DE EQ EL E HID,contato@intelligenzbrasil.com.br,SP,senha248,Express,0
+33332698000100,ECOTECH SERV E COM DE EQUIP DE ENERG,edneia.ecotech@gmail.com,SP,senha249,Deep dive Standard,0
+33401436000141,FLAVIO ANDRADE JORDAO PISCINAS,flaviopiscinas761@yahoo.com,SP,senha250,Deep dive Standard,0
+33816702000105,SAMUCA PISCINAS LTDA,samucapiscinas@gmail.com,SP,senha251,Deep dive Standard,0
+33829311000117,TECMOV IND E COM DE EQUIP LTDA,cesar@acfc4.com.br,SP,senha252,Deep dive Standard,0
+34282514000107,3P MOTORES ELETRICOS LTDA,claudemir@picelli.com.br,SP,senha253,Express,0
+34744385000113,VIVA PISCINA SP COM PISC E BOMBAS LT,vivapiscina@vivapiscina.com.br,SP,senha254,Deep dive Standard,0
+34758680000129,SP PISCINAS COMERCIO DE PISCINAS LTD,arquitetura@sppiscinas.com.br,SP,senha255,Deep dive Standard,0
+34895109000156,ALCALLINA PISCINAS & LAZER LTDA,financas@alcallina.com.br,SP,senha256,Express,0
+35273686000179,HIDRO SYSTEM BOMBAS - ELET E HIDR LT,atendimento@hidrosystemhidraulica.com.br,SP,senha257,Deep dive Standard,0
+35524467000115,GLOBALMAR AQUEC E SOL P/ PISCINAS LT,GLOBALMAR2318@GMAIL.COM,SP,senha258,Deep dive Standard,0
+35634671000199,AQUA'D PISCINAS LTDA,adeilsonpiscinasemanutencao@gmail.com,SP,senha259,Deep dive Standard,0
+35762218000168,M MOMESSO COM E MANUT DE BOMBAS LTDA,COMPRAS@GRUPOMOMESSO.COM,SP,senha260,Deep dive Standard,0
+35973736000120,HELCEB PISCINAS E ACESSORIOS LTDA,helceb@hotmail.com,SP,senha261,Deep dive Standard,0
+36109842000123,ACQUA PINK PISCINAS LTDA,acquapinkpiscinas@gmail.com,SP,senha262,Deep dive Standard,0
+36297201000140,TDSO BOMBAS LTDA,artdbombas@hotmail.com,SP,senha263,Deep dive Standard,0
+36443250000143,36.443.250 DANIEL SILVA CRUZ,scequip.loja@gmail.com,SP,senha264,Deep dive Standard,0
+36496889000197,MACOL COMERCIO DE PISCINAS & SPA LTD,CLAUDIO@MACOLPISCINAS.COM.BR,SP,senha265,Deep dive Standard,0
+36659276000123,THERMOBRA'S AQUECIMENTOS DE AGUAS LT,administrativo@piscibras.com.br,SP,senha266,Deep dive Standard,0
+37799453000130,ROBERTO MEIRELES COIMBRA 79147771100,dilzamacielcarla@gmail.com,SP,senha267,Deep dive Standard,0
+37812160000145,R-TECH AQUECEDORES & ASS TEC LTDA,financeiro@rtechaquecedores.com.br,SP,senha268,Express,0
+37851009000116,REGIS AUGUSTO XAVIER LEMES,regisxavier.ms@gmail.com,SP,senha269,Deep dive Standard,0
+38202367000160,FACILITY PISCINAS COMERCIAL LTDA,comercial@facilitypiscinas.com.br,SP,senha270,Deep dive Standard,0
+39152510000110,PISCINAS FAMILY PRODUTOS E SERVICOS,piscinasfamily@hotmail.com,SP,senha271,Deep dive Standard,0
+39491687000140,ENRIAQUECE SISTEMAS DE AQUECIMENTO L,vendas@pelegrinirepresentacoes.com.br,SP,senha272,Deep dive Standard,0
+39761355000139,PISCINAX C PROD E MAN P PISC LTDA,comercial@piscinax.com.br,SP,senha273,Express,0
+39778740000199,H2SOL COM DE PRODUTOS DE PISCINAS LT,sol@h2sol.com.br,SP,senha274,Express,0
+39796317000111,FRATELLI COM ATAC E VAR MAT ELET LTD,administrativo@fratellieletrica.com.br,SP,senha275,Deep dive Standard,0
+40295424000145,A C DA SILVA TOZO LTDA,rstpressaoideal@gmail.com,SP,senha276,Deep dive Standard,0
+40316004000106,ACQUAVERSE ENGENHARIA E COMERCIO LTD,hellen@acquaverse.com,SP,senha277,Deep dive Standard,0
+40706417000199,BELA VISTA PISCINAS E FILTROS LTDA,belavistapiscinas@gmail.com,SP,senha278,Deep dive Standard,0
+40726708000149,CFC BOMBAS E EQUIP P PISCINA LTDA,FINANCEIRO@CFCBOMBAS.COM.BR,SP,senha279,Express,0
+40803860000188,NANO BIOPLASTIC COMERCIO DE ARTEFATO,oliver@nanoplastic.com.br,SP,senha280,Deep dive Standard,0
+40839506000103,NEW EQUIB SERVICE COM E SERV LTDA,equibombas@equibombas.com.br,SP,senha281,Deep dive Standard,0
+41111597000129,G3 PISCINAS E EQUIPAMENTOS EIRELI,g3piscinas@gmail.com,SP,senha282,Deep dive Standard,0
+41230521000112,ROLAND BOMBAS E PISCINAS LTDA,acquahousepiscinas@gmail.com,SP,senha283,Express,0
+42034273000105,ALINE DE BRITO GUILGER 39590886809,eletromorai@yahoo.com,SP,senha284,Deep dive Standard,0
+42361309000157,OASIS TECNOLOGIA E MEIO AMBIENTE LTD,OASISPRESERVACAO@GMAIL.COM,SP,senha285,Deep dive Standard,0
+42443480000105,BOMIP COMERCIO E MANUTENCAO DE BOMBA,daniela@bombasipiranga.com.br,SP,senha286,Deep dive Standard,0
+42580725000146,42.580.725 EVELIN MARCELA ARAUJO TUV,HIDREALPISCINAS@GMAIL.COM,SP,senha287,Deep dive Standard,0
+42582912000169,WILLAMES GABRIEL ALVES PINHEIRO LTDA,lairtonmeck@outlook.com,SP,senha288,Deep dive Standard,0
+42591038000126,42.591.038 JULIA RIBEIRO LOURENCO,financeiro@lourencopiscinas.com.br,SP,senha289,Deep dive Standard,0
+42800931000114,WD PISCINAS LTDA,FILIAL1@DONATTIDISTRIBUIDORA.COM.BR,SP,senha290,Deep dive Standard,0
+42879880000168,LITORAL PISCINAS LTDA,LITORALPISCINASADM@GMAIL.COM,SP,senha291,Deep dive Standard,0
+43007471000134,DUDU MANUT VEND E INST DE MAQ E EQUI,ederson.oliveiraa@gmail.com,SP,senha292,Deep dive Standard,0
+43148030000152,COMARX EQUIPAMENTOS E SERVICOS LTDA,adm2@comarx.com.br,SP,senha293,Deep dive Standard,0
+43423462000124,BRASAO AQUECEDORES LTDA,brasao.aquecedores@gmail.com,SP,senha294,Deep dive Standard,0
+43585925000154,MKF COMERCIO E SERV DE AQUEC LTDA,financeiro@instamaq.com.br,SP,senha295,Express,0
+43609422000171,ELI ASSIST E MANUT EM EQUIP P PISCIN,elimartinsmanutencao@gmail.com,SP,senha296,Deep dive Standard,0
+43636707000100,L E SISTEMA SOLAR E PISCINAS LTDA,l.e.solarpiscinas@hotmail.com,SP,senha297,Deep dive Standard,0
+43804854000133,AQUAVIEW EQUIPAMENTOS LTDA,aquaview.piscinas@gmail.com,SP,senha298,Deep dive Standard,0
+43895368000178,MARIE CHRISTINE ZANARDO 03548326897,rich.eng@uol.com.br,SP,senha299,Deep dive Standard,0
+44002899000157,FB COMERCIO DE BOMBAS LTDA,fbrepresentacoes31@gmail.com,SP,senha300,Deep dive Standard,0
+44014264000170,ALFREDO GIORGIO SCATENA LTDA,carlascatena@terra.com.br,SP,senha301,Deep dive Standard,0
+44669113000150,BOMBRAZ V B PECAS E EQ HIDR LTDA,contato@b.bombras.com.br,SP,senha302,Deep dive Standard,0
+44803989000147,TERRAGUA COMERCIO DE BOMBAS EIRELI,nfe@terraguabombas.com.br,SP,senha303,Deep dive Standard,0
+44936693000102,JAQUELINE GAMA DA S GUIMARAES 300655,administrativo@gamabombas.com.br,SP,senha304,Deep dive Standard,0
+44950199000194,MOB-POOL MANUTENCAO DE PISCINAS LTDA,COMERCIAL@MOBPISCINAS.COM.BR,SP,senha305,Deep dive Standard,0
+45025097000125,S O S PRIME MOT S EM EL E HID LTDA,sos.primemotores@gmail.com,SP,senha306,Deep dive Standard,0
+45591938000161,45.591.938 MARISE FERNANDA COSTA MAR,marcuccipiscina@yahoo.com.br,SP,senha307,Deep dive Standard,0
+46061144000159,LOURENCO PISCINAS ITU LTDA,LOURENCOPISCINA@GMAIL.COM,SP,senha308,Express,0
+46262085000187,ELETROGAS COMERCIAL LTDA,EFIORI1@HOTMAIL.COM,SP,senha309,Deep dive Open,0
+46305509000143,MT POOL PISCINAS LTDA,REUSLY@HOTMAIL.COM,SP,senha310,Deep dive Standard,0
+46317827000124,CLICK PIS SERV E COM DE PROD LTDA,contato@clickpiscinas.com.br,SP,senha311,Deep dive Infinite,0
+46407565000199,SB COMERCIO DE BOMBAS E ASSISTENCIA,nfe@sbbombas.com.br,SP,senha312,Express,0
+46412528000179,LESTE COM DE BOMBAS E MOTORES LTDA,lestebombasp@gmail.com,SP,senha313,Deep dive Standard,0
+46440629000153,LML COMERCIO E SERVICOS LTDA,adm@valebombas.com.br,SP,senha314,Deep dive Standard,0
+46642912000168,UP AUTOMACAO INDUSTRIAL LTDA,CONTATO@PRESSURIZADORESUP.COM.BR,SP,senha315,Grow2gether,0
+46643433000166,HIDROGAS BOMBAS E EQUIPAMENTOS P PIS,sueli@hidrogaspiscinas.com.br,SP,senha316,Express,0
+46719071000140, UNIBOMBAS VENDAS REPAROS BOMBAS ELE,UNIBOMBAS2023@GMAIL.COM,SP,senha317,Deep dive Standard,0
+46743189000103,OPTIMA COMERCIO E SERVICOS LTDA,administrativo@optimarenova.com.br,SP,senha318,Deep dive Standard,0
+46797803000110,46.797.803 MARCELLO MAZZA,mazza.marcello.mm@gmail.com,SP,senha319,Deep dive Standard,0
+46838436000155,FACILITA SOLUC E SERV ESPECIALIZADOS,contato@facilitaservice.com.br,SP,senha320,Grow2gether,0
+46991695000111,REI DA PISCINA E-COMMERCE LTDA,marcoamary@sellout.com.br,SP,senha321,Deep dive Standard,0
+47097985000189,COMERCIAL STOCK BOMBAS LTDA,adm@csbengenharia.com.br,SP,senha322,Deep dive Standard,0
+47305676000157,LUCAS COSTA PEREIRA LTDA,contato@penattipiscinas.com,SP,senha323,Deep dive Standard,0
+47545205000116,CASA DOS AQUECEDORES & PISCINAS LTDA,debiora@hidrauli.com.br,SP,senha324,Deep dive Standard,0
+48149320000134,SEO VEIGA COMERCIAL LTDA,comercial@seoveiga.com.br,SP,senha325,Deep dive Standard,0
+48280693000140,REQUINTE COMERCIAL LTDA,compras@requintebombas.com,SP,senha326,Express,0
+48796254000194,AHMAR BOMBAS E FERRAGENS LTDA,ahmar@ahmar.com.br,SP,senha327,Express,0
+48892716000177,AQUATIKA PISCINAS LTDA,contato@aquatikapiscinas.com.br,SP,senha328,Deep dive Standard,0
+49268265000164,MAROL AUTOMACAO EM PISCINAS LTDA,vendas@marol.com.br,SP,senha329,Deep dive Standard,0
+49276814000142,MAROL POOLS E COMERCIO LTDA,vendas@marol.com.br,SP,senha330,Deep dive Standard,0
+49306655000181,ELETROLIPE MOTORES ELETRICOS LTDA,roberto.pavanelli@eletrolipemotores.com.br,SP,senha331,Deep dive Standard,0
+49527606000179,STAR BOMBAS - SOLUCOES EM MOTOBOMBAS,comercial@starbombas.com.br,SP,senha332,Deep dive Standard,0
+49889526000163,ACQUA SHOP BOMBAS E AQUECEDORES LTDA,contato@aqueceshop.com.br,SP,senha333,Deep dive Standard,0
+49931687000178,M SEVERIANO LTDA,regisxavier.ms@gmail.com,SP,senha334,Deep dive Standard,0
+50074780000192,ELETROSILVA ENROLAMENTO DE MOT LTDA,eletrosilva@eletrosilva.com.br,SP,senha335,Deep dive Standard,0
+50085755000104,TEMPO COMERCIO DE PROD P PISCINA LTD,bruna.ggpiscinas@gmail.com,SP,senha336,Deep dive Standard,0
+50261097000164,SELLOUT A ORDEM E-COMMERCE LTDA,marcosamary@sellout.com.br,SP,senha337,Deep dive Standard,0
+50266243000144,RAINHA DA PISCINA E-COMMERCE LTDA,marcosamary@sellout.com.br,SP,senha338,Express,0
+50703230000195,CASI MOTORES E BOMBAS LTDA,financeiro@casimotoresebombas.com.br,SP,senha339,Deep dive Standard,0
+50780147000110,HIDRAULICA SANTOS C MAT HD EIRELI,hidraulicasantostatui@gmail.com,SP,senha340,Deep dive Standard,0
+51111446000124,HIDRO ASSENTOS COM PROD HIDROSSANIT,hidroassentos@gmail.com,SP,senha341,Deep dive Standard,0
+51149421000110,AZURE SOLAR AQUEC E ENERGIA S LTDA,azuresolar.solucoesrenovaveis@gmail.com,SP,senha342,Deep dive Standard,0
+51187458000132,NEVADA E-COMMERCE PROD EQUIP PISC LA,ml_nevadapiscinas@hotmail.com,SP,senha343,Express,0
+51466845000108,INDUSTRIA MAQUINAS LIMA LTDA,nestor@maquinaslima.com.br,SP,senha344,Deep dive Standard,0
+51687713000106,ELETRO BUSCARIOLI LTDA,buscarioli@buscarioli.com.br,SP,senha345,Deep dive Standard,0
+51815514000136,AB TECH FERRAM E ASSIST LTDA,ADMABTECH@ADMABTECH.COM,SP,senha346,Deep dive Standard,0
+"51908879000105,""JARBRAS LOGISTICA, COMERCIO E TRADIN"",james@spasversati.com.br,SP,senha347,Deep dive Standard,0"
+52015640000179,H2SOL SERVICOS COM DE PROD PISCINAS,sol@h2sol.com.br,SP,senha348,Deep dive Standard,0
+52454212000142,MARCUCCI REVEST P PISCINAS LTDA,marcuccipiscina@yahoo.com.br,SP,senha349,Deep dive Standard,0
+52779162000173,ACQUA BELLA COM DE EQUIP PARA PISCIN,contato.acquabella@gmail.com,SP,senha350,Deep dive Standard,0
+52901347000109,TORTUGAS COM DE PISC E EQUIP LTDA,adm@engepool.com.br,SP,senha351,Deep dive Standard,0
+53155164000154,POOL SHOP COM EQUIP PISCINA LTDA,contasapagar@poolshop.com.br,SP,senha352,Deep dive Standard,0
+53177484000296,EZA COMERCIO IMPORTADORA E EXPORTADO,EZAMOTOBOMBAS@GMAIL.COM,SP,senha353,Deep dive Standard,0
+53423608000195,53.423.608 SAMUEL GASPAR,SAM_GASPAR@HOTMAIL.COM,SP,senha354,Deep dive Standard,0
+"53642165000123,""CASA NEVES COMERCIO DE MATERIAIS, EL"",casanevessolucoes@gmail.com,SP,senha355,Deep dive Standard,0"
+54081732000182,AGRO PECUARIA DELLAMUTTA LTDA,AGROPECUARIADELLAMUTTA@GMAIL.COM,SP,senha356,Deep dive Standard,0
+54131682000109,AMF COMERCIO E CONSTRUCAO LTDA,camila.fulltech@gmail.com,SP,senha357,Deep dive Standard,0
+54193657000141,TONY PISCINA LTDA,tonypiscina03@gmail.com,SP,senha358,Grow2gether,0
+54271059000143,HIDRAULICA TROPICAL PRODUTOS P PISCI,cocabpools@gmail.com,SP,senha359,Deep dive Standard,0
+54434284000153,AMANDA BORGES DA SILVA,amandaborgessilva6@gmail.com,SP,senha360,Deep dive Standard,0
+54520147000131,ROM INSTALACOES LTDA,RICARDO@ROMINSTALACOES.COM.BR,SP,senha361,Deep dive Standard,0
+54541727000105,MARETTI GARDEN CENTER LTDA,casaeverde@casaeverde.com.br,SP,senha362,Deep dive Standard,0
+54558705000158,CASA DAS BOMBAS LTDA,aletzan@uol.com.br,SP,senha363,Grow2gether,0
+54770052000176,ROOMAR BOMBAS E EQUIP P PISC LTDA,adm.roomar@terra.com.br,SP,senha364,Deep dive Standard,0
+54887591000190,ELETROMOTORES ARISTIDES GOMES LTDA,eletroaristidesgomes@gmail.com,SP,senha365,Deep dive Standard,0
+"54892000000172,""SUPRIMENTOS MRO ELETRICA, HIDRAULICA"",vendas@supri-mro.com.br,SP,senha366,Deep dive Standard,0"
+55019239000103,55.019.239 FERNANDO ROCHA DOS SANTOS,COMERCIAL@FARBOMBAS.COM,SP,senha367,Deep dive Standard,0
+55460187000106,55.460.187 ANTONIO BENEDITO DE ALMEI,hidraulica.acqua@gmail.com,SP,senha368,Deep dive Standard,0
+55595805000117,CHAMA INDUSTRIA COMERCIO E INSTALACO,chama@aquecedoreschama.com.br,SP,senha369,Deep dive Standard,0
+"55804885000173,""ALPHA MASTER COMERCIO DE BANHEIRAS,"",ALPHAMASTERBANHEIRAS@GMAIL.COM,SP,senha370,Deep dive Standard,0"
+56136470000131,ESL ELETROTECNICA SINERGIA LTDA,leonardo@eslsinergia.com.br,SP,senha371,Deep dive Standard,0
+56336514000177,JAM ELETRO LTDA,joao@jameletro.com.br,SP,senha372,Deep dive Standard,0
+56525561000169,ADRIANA MORELLO B PRAIA E PISCINA,compras@praiaepiscina.com.br,SP,senha373,Grow2gether,0
+56696289000180,FERNANDES EQUIP P PISCINAS LTDA,info@fernandespiscinas.com.br,SP,senha374,Deep dive Standard,0
+56705379000190,PENATTI COM PROD P PISCINAS LTDA,contato@penattipiscinas.com,SP,senha375,Deep dive Open,0
+57080756000105,HOBBY PISCINAS LTDA,hobbypiscinas87@bol.com.br,SP,senha376,Express,0
+57223032000173,HIDROGAS URBANOVA LTDA,sueli@hidrogaspiscinas.com.br,SP,senha377,Deep dive Standard,0
+57308654000102,G BAS BOMBAS ASSIST E SERV LTDA,atendimento@basbombas.com.br,SP,senha378,Deep dive Standard,0
+57413848000160,INSTAMAQ COMERCIO E CONSTRUCAO LTDA,fernando.fulltech@gmail.com,SP,senha379,Deep dive Standard,0
+57416818000107,BRITOS - COMERCIO DE BOMBAS LTDA,tamires@bombasfb.com.br,SP,senha380,Deep dive Standard,0
+57653825000122,SOBERANO EQUIP HIDR E TECNOLOGIA LTD,compras@soberanobombas.com.br,SP,senha381,Express,0
+57845123000140,ECOPOOL AQUECEDORES & EQUIP P PISCIN,ecopoolaquecedores@gmail.com,SP,senha382,Deep dive Standard,0
+57920779000180,VIDA E SOL COM DE ART DE DECORACAO E,nfe@vidaesol.com.br,SP,senha383,Deep dive Standard,0
+57940421000110,TECMAG MANUTENCAO INDUSTRIAL LTDA,COMPRAS@TECMAG.COM.BR,SP,senha384,Deep dive Standard,0
+57955733000105,MANBO GABAN MANUTENCAO E COMERCIO DE,william@manbobombas.com.br,SP,senha385,Deep dive Standard,0
+57983371000158,INSTART BOMBAS E EQUIP P PISC LTDA,contato@lojainstart.com.br,SP,senha386,Deep dive Select,0
+58170094000127,IDEAL COMERCIO DE BOMBAS LTDA,thiago@idealbombas.com,SP,senha387,Deep dive Standard,0
+58183037000182,58.183.037 JOSE ROBERTO DE SOUZA LEM,sljoseroberto@gmail.com,SP,senha388,Deep dive Standard,0
+58263389000148,CAMPOS RODRIGUES COMERCIAL LTDA,jundpoolpiscinas@gmail.com,SP,senha389,Deep dive Standard,0
+58267084000104,58.267.084 CLAYTON ROGER CAMPOS BAGA,claytonbagatin@gmail.com,SP,senha390,Deep dive Standard,0
+58352792000143,MT PISCINAS E CONSTRUCOES LTDA,karol.soares@jacuzzi.com.br,SP,senha391,Deep dive Prime,0
+59041754000132,59.041.754 ADRIANA ZANOM CURA,mailto:comercial@azpoolpicinas.com,SP,senha392,Deep dive Standard,0
+59082252000150,MF COSTA HOME E GARDEN COM LTDA,fabriciobrilhantte@gmail.com,SP,senha393,Deep dive Standard,0
+59175390000183,PROTECH BOMBAS LTDA,protechbombas@gmail.com,SP,senha394,Deep dive Standard,0
+59383877000151,ANDRE LUIZ PICELLI RIO CLARO,claudemir@picelli.com.br,SP,senha395,Deep dive Standard,0
+59460703000145,ABN BOMBAS LTDA,abnbombas@abnbombas.com.br,SP,senha396,Deep dive Standard,0
+59605879000148,SOROBOMBAS MAT ELET E BOMBAS IND LTD,COMERCIAL@SOROBOMBAS.COM.BR,SP,senha397,Deep dive Standard,0
+59723593000167,AQUA CONTROL ARTIGOS PARA PISCINAS E,vendasaquacontrol@gmail.com,SP,senha398,Deep dive Standard,0
+60028354000176,ERG ELETROMOTORES EIRELI,NFE@ERG.COM.BR,SP,senha399,Deep dive Standard,0
+60292497000190,REQUIP COMERCIO E SERVICOS LTDA,financeiro@bombasrequip.com.br,SP,senha400,Deep dive Standard,0
+60320140000179,KF BOMBAS COMERCIO E SERVICOS LTDA,vendaskfbombas@gmail.com,SP,senha401,Deep dive Standard,0
+60404217000199,SUPER AGUA SERV EQUIP DE PISC LAZER,contato@superaguapiscinas.com.br,SP,senha402,Deep dive Standard,0
+60920543000159,CONSERV PAULISTA DE BOMBAS LTDA,compras@conservadorapaulista.com.br,SP,senha403,Express,0
+60981279000163,BOMSEL BOMBAS E SELOS MECANICOS LTDA,BOMSELBOMBAS@OUTLOOK.COM,SP,senha404,Deep dive Standard,0
+60999661000102,SOLUCOES CASTRO LTDA,BRUNO@SOLUCOESCASTRO.COM.BR,SP,senha405,Deep dive Standard,0
+61477709000177,ACQUASHOW COM DE EQUIP P AGUA LTDA,gilberto.acquashow@gmail.com,SP,senha406,Deep dive Open,0
+61557468000176,BOMBAS PAULO DE SOROCABA LTDA,compras@bombaspaulo.com.br,SP,senha407,Deep dive Open,0
+61733338000147,PISCINAS INCRIVEIS COMERCIO LTDA,REUSLY@HOTMAIL.COM,SP,senha408,Deep dive Standard,0
+61748778000178,ACQUA FLIPPER COM DE PISC E ACES LTD,acqua-flipper@hotmail.com,SP,senha409,Express,0
+62029001000116,GFM BOMBAS E MOTORES LTDA,gfm.motores@gmail.com,SP,senha410,Deep dive Standard,0
+62182822000198,AQUALUME COMERCIAL E SERVICOS LTDA,financeiro@aqualumepiscinas.com.br,SP,senha411,Deep dive Standard,0
+62526553000130,MAROL PISCINAS PROD QUIMICOS LTDA,vendas@marol.com.br,SP,senha412,Express,0
+62923958000101,CONSTRUCENTER ESTRELA MAT P CONST LT,construcenterestrela@gmail.com,SP,senha413,Deep dive Standard,0
+"63200584000169,""NEVADA POOLS - MANUTENCAO, COMERCIO"",nevadapiscinas@uol.com.br,SP,senha414,Deep dive Standard,0"
+63969323000108,IDEAL PISCINAS LTDA,contasapagar@idealpiscinas.com.br,SP,senha415,Deep dive Standard,0
+64663677000192,CAMARGO COM DE PROD AGROP LTDA,camargo.comercio@hotmail.com,SP,senha416,Express,0
+64777543000100,JOMAR ENROLAMENTO DE MOT ELET LTDA,cjoseagri@gmail.com,SP,senha417,Deep dive Standard,0
+65975880000167,COMERCIAL HIDRAULICA PIRACICABA LTDA,chpiracicaba@uol.com.br,SP,senha418,Express,0
+66095365000155,HIDRO MARTIN EQUIPAMS E ACESSORIOS P,hidromartin@uol.com.br,SP,senha419,Deep dive Standard,0
+66563040000230,VANGUARDA COMERCIAL HIDRO ELETRICA L,campinas@vanguardacomercial.com.br,SP,senha420,Deep dive Standard,0
+67282822000183,AQUECEBEM AQUEC E SERV LTDA,marcio@aquecebem.com.br,SP,senha421,Express,0
+67621532000117,BOMPIC BOMBAS PISC E BANHEIRAS LTDA,adriana@bompic.com.br,SP,senha422,Deep dive Standard,0
+68038488000180,TECNOBANHO HIDRAULICA LTDA,odila@tecnobanho.com.br,SP,senha423,Deep dive Standard,0
+69144111000178,ABASTECEDORA DE BOMBAS BER KEN LTDA,vendas@berken.com.br,SP,senha424,Deep dive Select,0
+69177145000169,JCQ COM DE PROD PARA PISCINAS LTDA,admin@jcqpiscinas.com.br,SP,senha425,Express,0
+69278562000106,HIDROSHOPING COM DE PISC E ACES LTDA,financeiro@hidrauli.com.br,SP,senha426,Deep dive Standard,0
+69300358000136,INFORMAR BRASIL AUTOMACAO LTDA,marcia@primeiromundo.com.br,SP,senha427,Deep dive Standard,0
+69322493000182,GERSON DIONISIO DA SILVA & CIA LTDA,eletromaquinaitatiba@terra.com.br,SP,senha428,Deep dive Standard,0
+71651590000160,RIBEIRO & FUZEL LTDA,nfe@chacarasecia.com.br,SP,senha429,Express,0
+71694533000169,DJMP COME DE MAT DE LIMPEZA LTDA,aquazulcristal@gmail.com,SP,senha430,Deep dive Standard,0
+71773469000101,ADAILTON CRISPIM DOS SANTOS,casadasbombas@hotmail.com,SP,senha431,Deep dive Standard,0
+71913388000160,ACQUA SECURITY LTDA,carlos@acqua-sp.com.br,SP,senha432,Deep dive Standard,0
+72765332000178,VERNER TROCKENBROCK-PORTO FELIZ,COMERCIAL@ELETROTECNICAMOTORES.COM.BR,SP,senha433,Deep dive Standard,0
+73001620000119,ELETROTECNICA MIROMAX LTDA,vendas@miromax.com.br,SP,senha434,Deep dive Standard,0
+11111111111111,teste,matheus.cabrerisso@jacuzzi.com.br,SP,senha435,Express,0
