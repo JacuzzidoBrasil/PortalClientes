@@ -528,6 +528,11 @@ export default function App() {
                 {visibleLogoKeys.map((key) => (
                   <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
                 ))}
+                {visibleLogoKeys.length > 0 && (
+                  <span className="logo-separator" aria-hidden="true">
+                    |
+                  </span>
+                )}
                 <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
               </div>
             </div>
