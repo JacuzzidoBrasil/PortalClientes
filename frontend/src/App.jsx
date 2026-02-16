@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import brandLogo from "../brand.png";
 import jacuzziLogo from "../Jacuzzi.png";
 import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
@@ -388,13 +387,9 @@ export default function App() {
       <div className="page">
         <div className="login-wrap">
           <section className="login-card">
-            <div className="login-brand">
+            <div className="login-side">
               <img src={jacuzziLogo} alt="Jacuzzi" className="login-jacuzzi" />
               <h1>Portal Clientes Jacuzzi</h1>
-              <img src={brandLogo} alt="Brand" className="login-brand-logo" />
-            </div>
-
-            <div className="login-side">
               <h2 className="panel-title">Entrar</h2>
               <p className="panel-subtitle">Use CNPJ e senha para acessar.</p>
               <form onSubmit={handleLogin} className="form-grid">
@@ -526,15 +521,14 @@ export default function App() {
                 <h1 className="title">Portal Clientes</h1>
                 <div className="welcome-row">
                   <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
-                  <div className="access-logo-row">
-                    {visibleLogoKeys.map((key) => (
-                      <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
-                    ))}
-                  </div>
                 </div>
               </div>
-              <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
-              <div className="topbar-main-spacer" aria-hidden="true" />
+              <div className="access-logo-row">
+                {visibleLogoKeys.map((key) => (
+                  <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
+                ))}
+                <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+              </div>
             </div>
             <div className="row top-load-actions">
               <button className="btn load-sheets" onClick={loadSpreadsheets}>
@@ -557,7 +551,7 @@ export default function App() {
         {message && <div className={`message ${messageTone}`}>{message}</div>}
 
         <div className={`grid-main ${me?.is_admin ? "" : "single-column"}`}>
-          <section className="card">
+          <section className="card card-spreadsheets">
             <h2>Planilhas</h2>
             <div className="row">
               <input
