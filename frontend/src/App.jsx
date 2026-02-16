@@ -391,7 +391,6 @@ export default function App() {
             <div className="login-side">
               <img src={jacuzziWhiteLogo} alt="Jacuzzi" className="login-jacuzzi" />
               <h1>Portal Clientes Jacuzzi</h1>
-              <h2 className="panel-title">Entrar</h2>
               <p className="panel-subtitle">Use CNPJ e senha para acessar.</p>
               <form onSubmit={handleLogin} className="form-grid">
                 <input className="field" placeholder="CNPJ" value={cnpj} onChange={(e) => setCnpj(e.target.value)} />

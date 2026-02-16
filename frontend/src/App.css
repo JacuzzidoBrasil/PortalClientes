@@ -22,9 +22,14 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Poppins", "Montserrat", sans-serif;
-  background:
+  background-image:
     linear-gradient(to bottom, rgba(5, 16, 32, 0.58), rgba(5, 16, 32, 0.72)),
-    url("../fundo.png") center center / cover no-repeat fixed;
+    url("../fundo.png"),
+    url("../fundo.png");
+  background-position: center center, center center, center center;
+  background-size: cover, 96% auto, cover;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
   color: var(--text);
 }
 
@@ -58,8 +63,8 @@ select {
 }
 
 .login-jacuzzi {
-  width: min(310px, 90%);
-  max-width: 310px;
+  width: min(286px, 86%);
+  max-width: 286px;
   justify-self: center;
 }
 
@@ -76,6 +81,7 @@ select {
   display: grid;
   gap: 12px;
   align-content: start;
+  justify-items: center;
 }
 
 .panel-title {
@@ -156,11 +162,17 @@ select {
 .btn.first-access {
   background: var(--primary);
   color: #ffffff;
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.06rem;
 }
 
 .btn.reset-access {
   background: var(--primary);
   color: #ffffff;
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.06rem;
 }
 
 .btn.load-sheets {
@@ -199,9 +211,15 @@ select {
 }
 
 .switch-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.login-side .form-grid {
+  width: 100%;
 }
 
 .auth-flow {
@@ -223,10 +241,12 @@ select {
 }
 
 .topbar {
-  border: 1px solid rgba(206, 225, 245, 0.55);
+  border: 1px solid rgba(212, 230, 248, 0.5);
   border-radius: var(--radius);
-  background: rgba(245, 251, 255, 0.9);
+  background: rgba(255, 255, 255, 0.2);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   padding: 16px 18px;
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -273,7 +293,7 @@ select {
 }
 
 .access-logo {
-  height: 54px;
+  height: 64px;
   width: auto;
   border-radius: 8px;
   border: 1px solid #d7e6f6;
@@ -282,7 +302,7 @@ select {
 }
 
 .jacuzzi-banner {
-  height: 54px;
+  height: 64px;
   width: auto;
 }
 
@@ -295,12 +315,14 @@ select {
 
 .title {
   margin: 0;
-  font-size: 1.45rem;
+  font-size: 1.95rem;
+  color: #ffffff;
 }
 
 .subtitle {
   margin: 2px 0 0;
-  color: var(--text-soft);
+  color: #e6f1ff;
+  font-size: 1.12rem;
 }
 
 .grid-main {
@@ -432,6 +454,10 @@ th {
 }
 
 @media (max-width: 980px) {
+  .switch-row {
+    grid-template-columns: 1fr;
+  }
+
   .grid-main {
     grid-template-columns: 1fr;
   }
