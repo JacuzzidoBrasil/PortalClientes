@@ -243,8 +243,8 @@ select {
   grid-template-columns: 1fr;
   align-items: center;
   gap: 12px;
-  justify-items: center;
-  text-align: center;
+  justify-items: start;
+  text-align: left;
 }
 
 .welcome-row {
@@ -269,7 +269,7 @@ select {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .access-logo {

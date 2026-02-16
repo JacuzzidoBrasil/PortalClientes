@@ -522,18 +522,18 @@ export default function App() {
                 <h1 className="title">Portal Clientes</h1>
                 <div className="welcome-row">
                   <p className="subtitle">{me ? `Bem-vindo, ${me.name}` : "Painel de acesso"}</p>
+                  <div className="access-logo-row">
+                    {visibleLogoKeys.map((key) => (
+                      <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
+                    ))}
+                    {visibleLogoKeys.length > 0 && (
+                      <span className="logo-separator" aria-hidden="true">
+                        |
+                      </span>
+                    )}
+                    <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+                  </div>
                 </div>
-              </div>
-              <div className="access-logo-row">
-                {visibleLogoKeys.map((key) => (
-                  <img key={key} src={logoMap[key].src} alt={logoMap[key].alt} className="access-logo" />
-                ))}
-                {visibleLogoKeys.length > 0 && (
-                  <span className="logo-separator" aria-hidden="true">
-                    |
-                  </span>
-                )}
-                <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
               </div>
             </div>
             <div className="row top-load-actions">
