@@ -37,8 +37,7 @@ select {
 .page {
   min-height: 100vh;
   padding: 24px;
-  display: flex;
-  flex-direction: column;
+  padding-bottom: 270px;
 }
 
 .login-wrap {
@@ -506,10 +505,10 @@ th {
 }
 
 .footer {
-  margin-top: auto;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  width: 100vw;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(15, 27, 45, 0.38);
   color: #ffffff;
@@ -517,6 +516,7 @@ th {
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  z-index: 20;
 }
 
 .footer-content {
@@ -619,6 +619,7 @@ th {
 @media (max-width: 768px) {
   .page {
     padding: 12px;
+    padding-bottom: 330px;
   }
 
   .login-wrap {
