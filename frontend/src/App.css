@@ -590,6 +590,7 @@ th {
 .footer-company-info {
   border-top: 1px solid rgba(255, 255, 255, 0.24);
   padding-top: 12px;
+  text-align: center;
 }
 
 .footer-company-info p {
