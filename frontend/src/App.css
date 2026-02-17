@@ -466,6 +466,15 @@ select {
   height: 92px;
 }
 
+.confidential-note {
+  margin: 0;
+  color: #ff7979;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  text-align: center;
+  max-width: 300px;
+}
+
 .table-wrap {
   overflow: auto;
   border: 1px solid #d6e5f5;
@@ -490,6 +499,77 @@ td {
 th {
   background: #f0f6ff;
   color: #17324f;
+}
+
+.footer {
+  margin-top: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(15, 27, 45, 0.38);
+  color: #ffffff;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.footer-content {
+  padding: 18px 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.footer-links,
+.footer-social {
+  display: grid;
+  gap: 8px;
+}
+
+.footer-links h3,
+.footer-social h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.footer-links a {
+  color: #d7e8ff;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.footer-links a:hover,
+.social-icon:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.social-icon {
+  color: #d7e8ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.footer-company-info p {
+  margin: 2px 0;
+  color: #e9f3ff;
+  font-size: 0.86rem;
+}
+
+.footer-copy {
+  margin-top: 10px;
+  font-size: 0.8rem;
 }
 
 @keyframes fade-up {
@@ -585,5 +665,9 @@ th {
 
   .programa-text {
     white-space: normal;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
   }
 }

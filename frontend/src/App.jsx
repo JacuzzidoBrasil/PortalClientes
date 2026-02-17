@@ -557,6 +557,7 @@ export default function App() {
                   {programLogos.map((logo) => (
                     <img key={logo.alt} src={logo.src} alt={logo.alt} className="access-logo access-logo-large" />
                   ))}
+                  <p className="confidential-note">O conteudo deste site e confidencial e nao deve ser compartilhado.</p>
                 </div>
               </div>
               <div className="row planilha-actions">
@@ -808,6 +809,77 @@ export default function App() {
             </section>
           )}
         </div>
+
+        <footer className="footer">
+          <div className="footer-content">
+            <div className="footer-top">
+              <div className="footer-links">
+                <h3>Links Uteis</h3>
+                <a href="https://www.jacuzzi.com.br/contato-2/" target="_blank" rel="noreferrer">
+                  CONTATO
+                </a>
+                <a href="https://www.jacuzzi.com.br/assistencia-tecnica/" target="_blank" rel="noreferrer">
+                  ASSISTENCIA TECNICA
+                </a>
+                <a href="https://www.jacuzzi.com.br/privacidade/" target="_blank" rel="noreferrer">
+                  POLITICA DE PRIVACIDADE
+                </a>
+              </div>
+
+              <div className="footer-social">
+                <h3>Redes Sociais</h3>
+                <div className="social-icons">
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=5511993769644&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="social-icon"
+                    title="WhatsApp"
+                  >
+                    WhatsApp
+                  </a>
+                  <a
+                    href="https://www.facebook.com/jacuzzibrasil"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="social-icon"
+                    title="Facebook"
+                  >
+                    Facebook
+                  </a>
+                  <a
+                    href="https://www.instagram.com/jacuzzibrasiloficial/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="social-icon"
+                    title="Instagram"
+                  >
+                    Instagram
+                  </a>
+                  <a
+                    href="https://www.youtube.com/channel/UCkk0U82tcl4hQ0DtVjy0dNw"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="social-icon"
+                    title="YouTube"
+                  >
+                    YouTube
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="footer-company-info">
+              <p>
+                <strong>JACUZZI DO BRASIL IND E COM LTDA</strong> - CNPJ 59.105.007/0001-10
+              </p>
+              <p>Rod. Waldomiro C. Camargo, km 53,5 - SP-79. CEP 13308-900 - Itu - SP</p>
+              <p>Tel.: (11) 2118-7500 | Suporte tecnico: Grande Sao Paulo (11) 2118-7500</p>
+              <p>Demais localidades - DDG 0800-702-1432 | E-mail: faleconosco@jacuzzi.com.br</p>
+              <p className="footer-copy">© 2025 Jacuzzi do Brasil. Todos os direitos reservados.</p>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
