@@ -441,12 +441,12 @@ select {
 .programa-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 12px;
   justify-content: flex-start;
   align-self: start;
   justify-self: end;
-  text-align: right;
+  text-align: center;
 }
 
 .programa-text {
