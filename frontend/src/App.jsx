@@ -226,11 +226,17 @@ export default function App() {
         ...authHeaders(token),
         responseType: "blob",
       });
+      const disposition = res.headers["content-disposition"] || "";
+      const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+      const simpleMatch = disposition.match(/filename=\"?([^\";]+)\"?/i);
+      const fromHeader = utf8Match?.[1] ? decodeURIComponent(utf8Match[1]) : simpleMatch?.[1];
+      const sheet = spreadsheets.find((item) => item.id === id);
+      const fallback = sheet ? `${sheet.title}.${format === "csv" ? "csv" : "xlsx"}` : `planilha.${format === "csv" ? "csv" : "xlsx"}`;
       const blob = new Blob([res.data]);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = format === "csv" ? "planilha.csv" : "planilha.xlsx";
+      a.download = fromHeader || fallback;
       document.body.appendChild(a);
       a.click();
       a.remove();
