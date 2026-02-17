@@ -557,7 +557,6 @@ export default function App() {
                   {programLogos.map((logo) => (
                     <img key={logo.alt} src={logo.src} alt={logo.alt} className="access-logo access-logo-large" />
                   ))}
-                  <p className="confidential-note">O conteudo deste site e confidencial e nao deve ser compartilhado.</p>
                 </div>
               </div>
               <div className="row planilha-actions">
@@ -567,6 +566,9 @@ export default function App() {
                 <button className="btn" onClick={() => selectedId && loadData(selectedId, true)}>
                   Buscar
                 </button>
+                <p className="confidential-note">
+                  O conteudo deste site e confidencial e nao deve ser compartilhado.
+                </p>
               </div>
             </div>
 
@@ -814,15 +816,15 @@ export default function App() {
           <div className="footer-content">
             <div className="footer-top">
               <div className="footer-links">
-                <h3>Links Uteis</h3>
+                <h3>Links Úteis</h3>
                 <a href="https://www.jacuzzi.com.br/contato-2/" target="_blank" rel="noreferrer">
-                  CONTATO
+                  <i className="fas fa-envelope" aria-hidden="true"></i> CONTATO
                 </a>
                 <a href="https://www.jacuzzi.com.br/assistencia-tecnica/" target="_blank" rel="noreferrer">
-                  ASSISTENCIA TECNICA
+                  <i className="fas fa-tools" aria-hidden="true"></i> ASSISTÊNCIA TÉCNICA
                 </a>
                 <a href="https://www.jacuzzi.com.br/privacidade/" target="_blank" rel="noreferrer">
-                  POLITICA DE PRIVACIDADE
+                  <i className="fas fa-shield-alt" aria-hidden="true"></i> POLÍTICA DE PRIVACIDADE
                 </a>
               </div>
 
@@ -836,7 +838,7 @@ export default function App() {
                     className="social-icon"
                     title="WhatsApp"
                   >
-                    WhatsApp
+                    <i className="fab fa-whatsapp" aria-hidden="true"></i>
                   </a>
                   <a
                     href="https://www.facebook.com/jacuzzibrasil"
@@ -845,7 +847,7 @@ export default function App() {
                     className="social-icon"
                     title="Facebook"
                   >
-                    Facebook
+                    <i className="fab fa-facebook-f" aria-hidden="true"></i>
                   </a>
                   <a
                     href="https://www.instagram.com/jacuzzibrasiloficial/"
@@ -854,7 +856,7 @@ export default function App() {
                     className="social-icon"
                     title="Instagram"
                   >
-                    Instagram
+                    <i className="fab fa-instagram" aria-hidden="true"></i>
                   </a>
                   <a
                     href="https://www.youtube.com/channel/UCkk0U82tcl4hQ0DtVjy0dNw"
@@ -863,7 +865,7 @@ export default function App() {
                     className="social-icon"
                     title="YouTube"
                   >
-                    YouTube
+                    <i className="fab fa-youtube" aria-hidden="true"></i>
                   </a>
                 </div>
               </div>

@@ -37,6 +37,7 @@ select {
 .page {
   min-height: 100vh;
   padding: 24px;
+  padding-bottom: 240px;
 }
 
 .login-wrap {
@@ -460,6 +461,8 @@ select {
 .planilha-actions {
   justify-content: flex-start;
   gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .access-logo-large {
@@ -467,12 +470,12 @@ select {
 }
 
 .confidential-note {
-  margin: 0;
+  margin: 0 0 0 auto;
   color: #ff7979;
   font-size: 0.72rem;
-  line-height: 1.2;
-  text-align: center;
-  max-width: 300px;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .table-wrap {
@@ -502,20 +505,26 @@ th {
 }
 
 .footer {
-  margin-top: 14px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(15, 27, 45, 0.38);
   color: #ffffff;
-  border-radius: 16px;
+  border-radius: 0;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  z-index: 20;
 }
 
 .footer-content {
-  padding: 18px 20px;
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 12px 24px 14px;
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .footer-top {
@@ -538,6 +547,9 @@ th {
 }
 
 .footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #d7e8ff;
   text-decoration: none;
   font-size: 0.92rem;
@@ -556,15 +568,22 @@ th {
 }
 
 .social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.32);
   color: #d7e8ff;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .footer-company-info p {
   margin: 2px 0;
   color: #e9f3ff;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
 }
 
 .footer-copy {
@@ -586,6 +605,7 @@ th {
 @media (max-width: 768px) {
   .page {
     padding: 12px;
+    padding-bottom: 330px;
   }
 
   .login-wrap {
@@ -663,11 +683,27 @@ th {
     flex: 1;
   }
 
+  .confidential-note {
+    margin-left: 0;
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
   .programa-text {
     white-space: normal;
   }
 
   .footer-top {
     grid-template-columns: 1fr;
+  }
+
+  .footer-content {
+    padding: 10px 12px 12px;
+  }
+
+  .footer-links a {
+    font-size: 0.86rem;
   }
 }
