@@ -5,7 +5,7 @@ import jacuzziWhiteLogo from "../Jacuzzi branco.png";
 import deepDiveLogo from "../DeepDive.png";
 import expressLogo from "../Express.png";
 import grow2getherLogo from "../Grow2Gether.png";
-import restoreYouLogo from "../RestoreYou.jpg";
+import restoreYouLogo from "../RestoreYou.png";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const UF_CODES = [
@@ -42,7 +42,7 @@ function authHeaders(token) {
   return { headers: { Authorization: `Bearer ${token}` } };
 }
 
-function getProgramLogo(accessLevels = []) {
+function getProgramLogos(accessLevels = []) {
   const normalized = accessLevels.map((level) =>
     String(level || "")
       .toLowerCase()
@@ -50,19 +50,20 @@ function getProgramLogo(accessLevels = []) {
       .trim()
   );
 
-  if (normalized.some((level) => level.includes("grow2gether"))) {
-    return { src: grow2getherLogo, alt: "Grow2Gether" };
-  }
+  const logos = [];
   if (normalized.some((level) => level.includes("express"))) {
-    return { src: expressLogo, alt: "Express" };
+    logos.push({ src: expressLogo, alt: "Express" });
   }
-  if (normalized.some((level) => level.includes("restore you"))) {
-    return { src: restoreYouLogo, alt: "Restore You" };
+  if (normalized.some((level) => level.includes("grow2gether"))) {
+    logos.push({ src: grow2getherLogo, alt: "Grow2Gether" });
   }
   if (normalized.some((level) => level.includes("deep dive"))) {
-    return { src: deepDiveLogo, alt: "Deep Dive" };
+    logos.push({ src: deepDiveLogo, alt: "Deep Dive" });
   }
-  return null;
+  if (normalized.some((level) => level.includes("restore you"))) {
+    logos.push({ src: restoreYouLogo, alt: "Restore You" });
+  }
+  return logos;
 }
 
 export default function App() {
@@ -116,7 +117,7 @@ export default function App() {
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadAccessIds, setUploadAccessIds] = useState([]);
-  const programLogo = useMemo(() => getProgramLogo(me?.access_levels || []), [me]);
+  const programLogos = useMemo(() => getProgramLogos(me?.access_levels || []), [me]);
 
   useEffect(() => {
     if (token) {
@@ -553,9 +554,9 @@ export default function App() {
                     <br />
                     seu programa comercial é:
                   </p>
-                  {programLogo && (
-                    <img src={programLogo.src} alt={programLogo.alt} className="access-logo access-logo-large" />
-                  )}
+                  {programLogos.map((logo) => (
+                    <img key={logo.alt} src={logo.src} alt={logo.alt} className="access-logo access-logo-large" />
+                  ))}
                 </div>
               </div>
               <div className="row planilha-actions">
