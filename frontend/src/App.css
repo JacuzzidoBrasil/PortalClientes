@@ -37,7 +37,8 @@ select {
 .page {
   min-height: 100vh;
   padding: 24px;
-  padding-bottom: 270px;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-wrap {
@@ -232,7 +233,9 @@ select {
 .app-shell {
   max-width: 1520px;
   margin: 0 auto;
-  display: grid;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
@@ -505,10 +508,10 @@ th {
 }
 
 .footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  margin-top: auto;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(15, 27, 45, 0.38);
   color: #ffffff;
@@ -516,7 +519,6 @@ th {
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 20;
 }
 
 .footer-content {
@@ -619,7 +621,6 @@ th {
 @media (max-width: 768px) {
   .page {
     padding: 12px;
-    padding-bottom: 330px;
   }
 
   .login-wrap {
