@@ -291,6 +291,7 @@ select {
 .jacuzzi-banner {
   height: 60px;
   width: auto;
+  margin-left: -14px;
 }
 
 .logo-separator {
@@ -417,10 +418,15 @@ select {
 
 .planilha-searches {
   display: grid;
+  grid-template-columns: minmax(260px, 430px) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.search-inputs {
+  display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
-  align-items: center;
-  max-width: 430px;
 }
 
 .half-field {
@@ -433,6 +439,7 @@ select {
   gap: 12px;
   flex-wrap: wrap;
   justify-content: flex-start;
+  align-self: start;
 }
 
 .programa-text {
@@ -515,6 +522,10 @@ th {
   }
 
   .planilha-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .planilha-searches {
     grid-template-columns: 1fr;
   }
 

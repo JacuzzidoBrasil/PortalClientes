@@ -507,18 +507,20 @@ export default function App() {
             <h2>Planilhas</h2>
             <div className="planilha-toolbar">
               <div className="planilha-searches">
-                <input
-                  className="field half-field"
-                  placeholder="Buscar na tabela"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <input
-                  className="field half-field"
-                  placeholder="Coluna opcional"
-                  value={searchCol}
-                  onChange={(e) => setSearchCol(e.target.value)}
-                />
+                <div className="search-inputs">
+                  <input
+                    className="field half-field"
+                    placeholder="Buscar na tabela"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <input
+                    className="field half-field"
+                    placeholder="Coluna opcional"
+                    value={searchCol}
+                    onChange={(e) => setSearchCol(e.target.value)}
+                  />
+                </div>
                 <div className="programa-info">
                   <p className="subtitle programa-text">
                     {me ? `Bem-vindo, ${me.name}, seu programa comercial é:` : "Seu programa comercial é:"}
