@@ -567,7 +567,7 @@ export default function App() {
                   Buscar
                 </button>
                 <p className="confidential-note">
-                  O conteudo deste site e confidencial e nao deve ser compartilhado.
+                  O conteudo deste site é confidencial e não deve ser compartilhado.
                 </p>
               </div>
             </div>
