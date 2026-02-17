@@ -232,6 +232,7 @@ select {
 
 .app-shell {
   max-width: 1520px;
+  width: 100%;
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -329,6 +330,7 @@ select {
 
 .grid-main {
   display: grid;
+  width: 100%;
   gap: 16px;
   grid-template-columns: 1.05fr 1fr;
 }
