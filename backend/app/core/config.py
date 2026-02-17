@@ -3,8 +3,8 @@ import os
 
 class Settings(BaseModel):
     db_host: str = os.getenv("DB_HOST", "localhost")
-    db_port: int = int(os.getenv("DB_PORT", "3306"))
-    db_name: str = os.getenv("DB_NAME", "portal_clientes")
+    db_port: int = int(os.getenv("DB_PORT", ""))
+    db_name: str = os.getenv("DB_NAME", "")
     db_user: str = os.getenv("DB_USER", "root")
     db_pass: str = os.getenv("DB_PASS", "")
     jwt_secret: str = os.getenv("JWT_SECRET", "change-this")
@@ -13,8 +13,8 @@ class Settings(BaseModel):
     upload_dir: str = os.getenv("UPLOAD_DIR", "/app/uploads")
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.office365.com")
     smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user: str = os.getenv("SMTP_USER", "matheus.cabrerisso@jacuzzi.com.br")
-    smtp_pass: str = os.getenv("SMTP_PASS", "Mat@13362")
-    smtp_from: str = os.getenv("SMTP_FROM", "matheus.cabrerisso@jacuzzi.com.br")
+    smtp_user: str = os.getenv("SMTP_USER", "")
+    smtp_pass: str = os.getenv("SMTP_PASS", "")
+    smtp_from: str = os.getenv("SMTP_FROM", "")
 
 settings = Settings()
