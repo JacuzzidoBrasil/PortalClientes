@@ -236,8 +236,10 @@ select {
 }
 
 .topbar {
-  margin: -24px -24px 0;
-  width: calc(100% + 48px);
+  margin-top: -24px;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 0;
   background: rgba(15, 27, 45, 0.38);
@@ -245,19 +247,16 @@ select {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   padding: 12px 24px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 12px;
+  position: relative;
 }
 
 .topbar-main {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto;
   align-items: center;
   gap: 16px;
-  justify-items: start;
-  text-align: left;
+  justify-content: center;
+  text-align: center;
 }
 
 .welcome-row {
@@ -268,10 +267,9 @@ select {
 }
 
 .topbar-right {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  align-self: start;
+  position: absolute;
+  right: 24px;
+  top: 12px;
 }
 
 .access-logo-row {
@@ -419,9 +417,10 @@ select {
 
 .planilha-searches {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: 8px;
   align-items: center;
+  max-width: 430px;
 }
 
 .half-field {
@@ -433,6 +432,7 @@ select {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .programa-text {
@@ -497,22 +497,21 @@ th {
   }
 
   .topbar {
-    grid-template-columns: 1fr;
-    width: calc(100% + 48px);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    width: 100vw;
   }
 
   .topbar-main {
     grid-template-columns: 1fr;
-    justify-items: start;
-  }
-
-  .welcome-row {
-    flex-direction: column;
-    align-items: flex-start;
+    justify-items: center;
   }
 
   .topbar-right {
-    justify-content: flex-start;
+    position: static;
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
   }
 
   .planilha-toolbar {

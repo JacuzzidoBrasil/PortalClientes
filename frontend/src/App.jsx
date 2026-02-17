@@ -492,7 +492,6 @@ export default function App() {
           <div className="topbar-main">
             <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
             <h1 className="title">Portal Clientes Jacuzzi</h1>
-            <div className="topbar-spacer" />
           </div>
           <div className="topbar-right">
             <button className="btn logout-btn" onClick={handleLogout}>
