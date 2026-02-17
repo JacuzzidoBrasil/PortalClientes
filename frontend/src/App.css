@@ -503,7 +503,19 @@ th {
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 768px) {
+  .page {
+    padding: 12px;
+  }
+
+  .login-wrap {
+    min-height: calc(100vh - 24px);
+  }
+
+  .login-card {
+    width: 100%;
+  }
+
   .switch-row {
     grid-template-columns: 1fr;
   }
@@ -513,10 +525,12 @@ th {
   }
 
   .topbar {
+    margin-top: -12px;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     width: 100vw;
     display: block;
+    padding: 10px 12px;
   }
 
   .topbar-main {
@@ -524,6 +538,7 @@ th {
     display: grid;
     grid-template-columns: 1fr;
     justify-items: center;
+    gap: 6px;
   }
 
   .topbar-right {
@@ -549,6 +564,23 @@ th {
 
   .half-field {
     width: 100%;
+  }
+
+  .title {
+    font-size: 1.45rem;
+  }
+
+  .jacuzzi-banner {
+    position: static;
+    height: 42px;
+  }
+
+  .planilha-actions {
+    width: 100%;
+  }
+
+  .planilha-actions .btn {
+    flex: 1;
   }
 
   .programa-text {
