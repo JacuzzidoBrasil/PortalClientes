@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import jacuzziLogo from "../Jacuzzi.png";
 import jacuzziWhiteLogo from "../Jacuzzi branco.png";
 import expressLogo from "../Express.png";
 
@@ -490,7 +489,7 @@ export default function App() {
       <div className="app-shell">
         <header className="topbar">
           <div className="topbar-main">
-            <img src={jacuzziLogo} alt="Jacuzzi" className="jacuzzi-banner" />
+            <img src={jacuzziWhiteLogo} alt="Jacuzzi" className="jacuzzi-banner" />
             <h1 className="title">Portal Clientes Jacuzzi</h1>
           </div>
           <div className="topbar-right">
@@ -523,7 +522,9 @@ export default function App() {
                 </div>
                 <div className="programa-info">
                   <p className="subtitle programa-text">
-                    {me ? `Bem-vindo, ${me.name}, seu programa comercial é:` : "Seu programa comercial é:"}
+                    {me ? `Bem-vindo, ${me.name},` : "Bem-vindo,"}
+                    <br />
+                    seu programa comercial é:
                   </p>
                   <img src={expressLogo} alt="Express" className="access-logo access-logo-large" />
                 </div>
@@ -532,7 +533,7 @@ export default function App() {
                 <button className="btn load-sheets" onClick={loadSpreadsheets}>
                   Carregar planilhas
                 </button>
-                <button className="btn alt" onClick={() => selectedId && loadData(selectedId, true)}>
+                <button className="btn" onClick={() => selectedId && loadData(selectedId, true)}>
                   Buscar
                 </button>
               </div>
