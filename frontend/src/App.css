@@ -248,13 +248,16 @@ select {
   -webkit-backdrop-filter: blur(10px);
   padding: 12px 24px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .topbar-main {
-  display: grid;
-  grid-template-columns: auto auto;
+  position: relative;
+  width: 100%;
+  display: flex;
   align-items: center;
-  gap: 16px;
   justify-content: center;
   text-align: center;
 }
@@ -291,7 +294,8 @@ select {
 .jacuzzi-banner {
   height: 60px;
   width: auto;
-  margin-left: -14px;
+  position: absolute;
+  left: 4px;
 }
 
 .logo-separator {
@@ -421,6 +425,7 @@ select {
   grid-template-columns: minmax(260px, 430px) auto;
   gap: 12px;
   align-items: start;
+  width: 100%;
 }
 
 .search-inputs {
@@ -440,6 +445,8 @@ select {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-self: start;
+  justify-self: end;
+  text-align: right;
 }
 
 .programa-text {
@@ -507,9 +514,12 @@ th {
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     width: 100vw;
+    display: block;
   }
 
   .topbar-main {
+    position: static;
+    display: grid;
     grid-template-columns: 1fr;
     justify-items: center;
   }
@@ -527,6 +537,11 @@ th {
 
   .planilha-searches {
     grid-template-columns: 1fr;
+  }
+
+  .programa-info {
+    justify-self: start;
+    text-align: left;
   }
 
   .half-field {
