@@ -453,6 +453,8 @@ select {
   margin: 0;
   color: #ffffff;
   white-space: nowrap;
+  font-size: 1.2rem;
+  line-height: 1.35;
 }
 
 .planilha-actions {
@@ -461,7 +463,7 @@ select {
 }
 
 .access-logo-large {
-  height: 78px;
+  height: 92px;
 }
 
 .table-wrap {
