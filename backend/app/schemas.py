@@ -70,3 +70,20 @@ class PasswordResetConfirm(BaseModel):
     email: str
     code: str
     new_password: str
+
+
+class ExtratoJobCreate(BaseModel):
+    input_month: Optional[str] = "FEVEREIRO 2026"
+    customer_name: Optional[str] = "MERITO COMERCIO DE EQUIPAMENTOS LIM"
+
+
+class ExtratoJobItem(BaseModel):
+    id: int
+    status: str
+    input_month: str
+    customer_name: str
+    pdf_available: bool
+    error_message: Optional[str] = None
+    created_at: Optional[str] = None
+    started_at: Optional[str] = None
+    finished_at: Optional[str] = None

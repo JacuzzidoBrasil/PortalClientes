@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime, Text
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.db import Base
 
@@ -66,3 +67,19 @@ class Spreadsheet(Base):
         secondary=spreadsheet_access,
         back_populates="spreadsheets",
     )
+
+
+class ExtratoJob(Base):
+    __tablename__ = "extrato_jobs"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    requested_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+    status = Column(Enum("pending", "running", "done", "error"), nullable=False, default="pending")
+    input_month = Column(String(20), nullable=False, default="FEVEREIRO 2026")
+    customer_name = Column(String(180), nullable=False)
+    pdf_path = Column(String(255), nullable=True)
+    error_message = Column(Text, nullable=True)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+    started_at = Column(DateTime, nullable=True)
+    finished_at = Column(DateTime, nullable=True)
+
+    user = relationship("User")
