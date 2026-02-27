@@ -117,10 +117,7 @@ export default function App() {
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadAccessIds, setUploadAccessIds] = useState([]);
-  const [extratoJob, setExtratoJob] = useState(null);
-  const [extratoBusy, setExtratoBusy] = useState(false);
   const programLogos = useMemo(() => getProgramLogos(me?.access_levels || []), [me]);
-  const isExtratoUser = Boolean(me && (me.id === 1 || me.cnpj === "00000000000000"));
 
   useEffect(() => {
     if (token) {
@@ -138,21 +135,6 @@ export default function App() {
       setEditAccessIds(u.access_levels.map((a) => a.id));
     }
   }, [editUserId, users]);
-
-  useEffect(() => {
-    if (token && isExtratoUser) {
-      loadLatestExtratoJob();
-    }
-  }, [token, isExtratoUser]);
-
-  useEffect(() => {
-    if (!isExtratoUser) return;
-    if (!extratoJob || !["pending", "running"].includes(extratoJob.status)) return;
-    const timer = setInterval(() => {
-      loadLatestExtratoJob();
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [isExtratoUser, extratoJob]);
 
   function setError(msg) {
     setMessageTone("error");
@@ -276,42 +258,6 @@ export default function App() {
       setAdminSheets(sheetsRes.data);
     } catch {
       setError("Erro ao carregar dados de administracao.");
-    }
-  }
-
-  async function loadLatestExtratoJob() {
-    try {
-      const res = await axios.get(`${API_URL}/extrato/jobs/latest`, authHeaders(token));
-      setExtratoJob(res.data || null);
-    } catch {
-      // silent refresh for background polling
-    }
-  }
-
-  async function startExtratoJob() {
-    setExtratoBusy(true);
-    try {
-      const res = await axios.post(`${API_URL}/extrato/jobs`, {}, authHeaders(token));
-      setExtratoJob(res.data);
-      setSuccess("Solicitacao de extrato enviada. Aguarde o processamento.");
-    } catch {
-      setError("Erro ao solicitar extrato.");
-    } finally {
-      setExtratoBusy(false);
-    }
-  }
-
-  async function openExtratoPdf() {
-    if (!extratoJob?.id) return;
-    try {
-      const res = await axios.get(`${API_URL}/extrato/jobs/${extratoJob.id}/pdf`, {
-        ...authHeaders(token),
-        responseType: "blob",
-      });
-      const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
-      window.open(url, "_blank", "noopener,noreferrer");
-    } catch {
-      setError("Erro ao abrir PDF do extrato.");
     }
   }
 
@@ -626,19 +572,6 @@ export default function App() {
                 <button className="btn" onClick={() => selectedId && loadData(selectedId, true)}>
                   Buscar
                 </button>
-                {isExtratoUser && (
-                  <div className="row extrato-actions">
-                    <button className="btn alt" type="button" onClick={startExtratoJob} disabled={extratoBusy}>
-                      {extratoBusy ? "Enviando..." : "Gerar Extrato"}
-                    </button>
-                    {extratoJob && <span className={`extrato-status ${extratoJob.status}`}>Extrato: {extratoJob.status}</span>}
-                    {extratoJob?.status === "done" && (
-                      <button className="btn ghost" type="button" onClick={openExtratoPdf}>
-                        Abrir PDF Extrato
-                      </button>
-                    )}
-                  </div>
-                )}
                 <p className="confidential-note">
                   O conteudo deste site é confidencial e não deve ser compartilhado.
                 </p>

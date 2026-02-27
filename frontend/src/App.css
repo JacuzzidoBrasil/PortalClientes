@@ -470,29 +470,6 @@ select {
   flex-wrap: wrap;
 }
 
-.extrato-actions {
-  gap: 8px;
-}
-
-.extrato-status {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.extrato-status.pending,
-.extrato-status.running {
-  color: #ffd66b;
-}
-
-.extrato-status.done {
-  color: #7cf2b3;
-}
-
-.extrato-status.error {
-  color: #ff8e8e;
-}
-
 .access-logo-large {
   height: 92px;
 }

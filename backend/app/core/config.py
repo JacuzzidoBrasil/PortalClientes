@@ -16,7 +16,5 @@ class Settings(BaseModel):
     smtp_user: str = os.getenv("SMTP_USER", "")
     smtp_pass: str = os.getenv("SMTP_PASS", "")
     smtp_from: str = os.getenv("SMTP_FROM", "")
-    agent_token: str = os.getenv("AGENT_TOKEN", "")
-    extrato_output_dir: str = os.getenv("EXTRATO_OUTPUT_DIR", "/app/uploads/extratos")
 
 settings = Settings()
