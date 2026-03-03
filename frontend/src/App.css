@@ -230,6 +230,52 @@ select {
   animation: fade-up 0.26s ease-out;
 }
 
+.terms-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.terms-link {
+  background: transparent;
+  border: 0;
+  color: #9fd0ff;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.terms-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.terms-modal {
+  width: min(760px, 100%);
+  max-height: 80vh;
+  overflow: auto;
+  background: #ffffff;
+  color: #17324f;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 12px;
+}
+
+.terms-modal h3,
+.terms-modal p {
+  margin: 0;
+}
+
 .app-shell {
   max-width: 1520px;
   width: 100%;

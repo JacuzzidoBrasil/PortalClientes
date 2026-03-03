@@ -82,6 +82,8 @@ export default function App() {
     code: "",
     new_password: "",
   });
+  const [firstAccessTermsAccepted, setFirstAccessTermsAccepted] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [resetForm, setResetForm] = useState({
     cnpj: "",
     email: "",
@@ -355,11 +357,16 @@ export default function App() {
   }
 
   async function confirmFirstAccess() {
+    if (!firstAccessTermsAccepted) {
+      setError("Voce precisa aceitar os Termos de Uso para continuar.");
+      return;
+    }
     setMessage("");
     try {
       await axios.post(`${API_URL}/auth/first-access/confirm`, firstAccessForm);
       setSuccess("Senha definida. Voce ja pode fazer login.");
       setShowFirstAccess(false);
+      setFirstAccessTermsAccepted(false);
     } catch {
       setError("Erro ao confirmar primeiro acesso.");
     }
@@ -422,6 +429,9 @@ export default function App() {
                   onClick={() => {
                     setShowFirstAccess(!showFirstAccess);
                     setShowReset(false);
+                    if (showFirstAccess) {
+                      setFirstAccessTermsAccepted(false);
+                    }
                   }}
                 >
                   Primeiro acesso
@@ -469,9 +479,58 @@ export default function App() {
                     value={firstAccessForm.new_password}
                     onChange={(e) => setFirstAccessForm({ ...firstAccessForm, new_password: e.target.value })}
                   />
-                  <button className="btn" type="button" onClick={confirmFirstAccess}>
+                  <label className="terms-check">
+                    <input
+                      type="checkbox"
+                      checked={firstAccessTermsAccepted}
+                      onChange={(e) => setFirstAccessTermsAccepted(e.target.checked)}
+                    />
+                    <span>
+                      Li e concordo com os Termos de Uso.{" "}
+                      <button className="terms-link" type="button" onClick={() => setShowTermsModal(true)}>
+                        (Ver termos)
+                      </button>
+                    </span>
+                  </label>
+                  <button className="btn" type="button" onClick={confirmFirstAccess} disabled={!firstAccessTermsAccepted}>
                     Confirmar primeiro acesso
                   </button>
+                </div>
+              )}
+
+              {showTermsModal && (
+                <div className="terms-modal-backdrop" onClick={() => setShowTermsModal(false)}>
+                  <div className="terms-modal" onClick={(e) => e.stopPropagation()}>
+                    <h3>Termo de Compromisso e Confidencialidade</h3>
+                    <p>
+                      Ao acessar esta plataforma, concorda e declara estar ciente das seguintes obrigações relativas à
+                      segurança da informação e proteção de dados:
+                    </p>
+                    <p>
+                      <strong>1.</strong>
+                      <br />
+                      Não Compartilhamento: Comprometo-me a não compartilhar, ceder ou vender meu nome de usuário e
+                      senha a terceiros sob qualquer pretexto.
+                      <br />
+                      Responsabilidade: Entendo que o acesso à conta é de minha exclusiva responsabilidade e que
+                      qualquer atividade realizada com minhas credenciais será atribuída a mim.
+                    </p>
+                    <p>
+                      <strong>2.</strong>
+                      <br />
+                      Uso Exclusivo: Todo o conteúdo disponível neste site (textos, vídeos, imagens, metodologias e
+                      materiais) é para uso pessoal e não comercial.
+                      <br />
+                      Finalidade: Os dados coletados para o seu acesso são utilizados estritamente para a prestação do
+                      serviço e segurança da plataforma, conforme o Art. 7º da Lei 13.709/2018.
+                      <br />
+                      Segurança: O site adota medidas técnicas para proteger o acesso, mas a segurança também depende
+                      da guarda cuidadosa da sua senha pelo usuário.
+                    </p>
+                    <button className="btn" type="button" onClick={() => setShowTermsModal(false)}>
+                      Fechar
+                    </button>
+                  </div>
                 </div>
               )}
 
