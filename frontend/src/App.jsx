@@ -503,7 +503,7 @@ export default function App() {
                   <div className="terms-modal" onClick={(e) => e.stopPropagation()}>
                     <h3>Termo de Compromisso e Confidencialidade</h3>
                     <p>
-                      Ao acessar esta plataforma, concorda e declara estar ciente das seguintes obrigações relativas à
+                      Ao acessar esta plataforma, concordo e declaro estar ciente das seguintes obrigações relativas à
                       segurança da informação e proteção de dados:
                     </p>
                     <p>
@@ -521,7 +521,7 @@ export default function App() {
                       Uso Exclusivo: Todo o conteúdo disponível neste site (textos, vídeos, imagens, metodologias e
                       materiais) é para uso pessoal e não comercial.
                       <br />
-                      Finalidade: Os dados coletados para o seu acesso são utilizados estritamente para a prestação do
+                      Finalidade: Os dados coletados para o acesso são utilizados estritamente para a prestação do
                       serviço e segurança da plataforma, conforme o Art. 7º da Lei 13.709/2018.
                       <br />
                       Segurança: O site adota medidas técnicas para proteger o acesso, mas a segurança também depende
