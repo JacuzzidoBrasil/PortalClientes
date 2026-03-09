@@ -70,3 +70,18 @@ class PasswordResetConfirm(BaseModel):
     email: str
     code: str
     new_password: str
+
+
+class InvoiceItem(BaseModel):
+    id: int
+    user_id: Optional[int] = None
+    cnpj: str
+    invoice_number: str
+    invoice_date: Optional[str] = None
+    total_value: Optional[float] = None
+    created_at: Optional[str] = None
+
+
+class InvoiceSyncResult(BaseModel):
+    id: int
+    status: str

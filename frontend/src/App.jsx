@@ -102,6 +102,7 @@ export default function App() {
   const [accessLevels, setAccessLevels] = useState([]);
   const [users, setUsers] = useState([]);
   const [adminSheets, setAdminSheets] = useState([]);
+  const [adminInvoices, setAdminInvoices] = useState([]);
 
   const [newUser, setNewUser] = useState({
     cnpj: "",
@@ -137,6 +138,12 @@ export default function App() {
       setEditAccessIds(u.access_levels.map((a) => a.id));
     }
   }, [editUserId, users]);
+
+  useEffect(() => {
+    if (token && me?.is_admin) {
+      loadAdminInvoices();
+    }
+  }, [token, me?.is_admin]);
 
   function setError(msg) {
     setMessageTone("error");
@@ -340,6 +347,35 @@ export default function App() {
       setSuccess("Planilha excluida.");
     } catch {
       setError("Erro ao excluir planilha.");
+    }
+  }
+
+  async function loadAdminInvoices() {
+    try {
+      const res = await axios.get(`${API_URL}/invoices/admin`, authHeaders(token));
+      setAdminInvoices(res.data);
+    } catch {
+      setError("Erro ao carregar notas.");
+    }
+  }
+
+  async function downloadInvoice(id, invoiceNumber) {
+    try {
+      const res = await axios.get(`${API_URL}/invoices/${id}/download`, {
+        ...authHeaders(token),
+        responseType: "blob",
+      });
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${invoiceNumber || "nota"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      setError("Erro ao baixar nota.");
     }
   }
 
@@ -685,6 +721,35 @@ export default function App() {
                 </div>
               </>
             )}
+
+            <div className="notes-section">
+              <h3>Minhas notas</h3>
+              {me?.is_admin ? (
+                <>
+                  <div className="row" style={{ marginBottom: 8 }}>
+                    <button className="btn alt" type="button" onClick={loadAdminInvoices}>
+                      Atualizar notas
+                    </button>
+                  </div>
+                  <ul className="list">
+                    {adminInvoices.map((inv) => (
+                      <li className="item" key={inv.id}>
+                        <span>
+                          {inv.invoice_number} - {inv.cnpj}
+                          {inv.invoice_date ? ` - ${inv.invoice_date}` : ""}
+                        </span>
+                        <button className="btn ghost" type="button" onClick={() => downloadInvoice(inv.id, inv.invoice_number)}>
+                          Abrir PDF
+                        </button>
+                      </li>
+                    ))}
+                    {!adminInvoices.length && <li className="item">Nenhuma nota encontrada.</li>}
+                  </ul>
+                </>
+              ) : (
+                <p className="notes-dev">em desenvolvimento</p>
+              )}
+            </div>
           </section>
 
           {me?.is_admin && (

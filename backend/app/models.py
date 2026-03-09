@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime, Date, Numeric
 from sqlalchemy.orm import relationship
 from app.db import Base
 
@@ -66,3 +66,18 @@ class Spreadsheet(Base):
         secondary=spreadsheet_access,
         back_populates="spreadsheets",
     )
+
+
+class Invoice(Base):
+    __tablename__ = "invoices"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    cnpj = Column(String(18), nullable=False)
+    invoice_number = Column(String(50), nullable=False)
+    invoice_date = Column(Date, nullable=True)
+    total_value = Column(Numeric(14, 2), nullable=True)
+    file_path = Column(String(255), nullable=False)
+    file_hash = Column(String(64), nullable=False, unique=True)
+    created_at = Column(DateTime, nullable=True)
+
+    user = relationship("User")

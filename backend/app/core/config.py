@@ -11,6 +11,8 @@ class Settings(BaseModel):
     jwt_algorithm: str = "HS256"
     access_token_exp_minutes: int = 60 * 24
     upload_dir: str = os.getenv("UPLOAD_DIR", "/app/uploads")
+    invoice_dir: str = os.getenv("INVOICE_DIR", "/app/uploads/invoices")
+    sync_token: str = os.getenv("SYNC_TOKEN", "")
     smtp_host: str = os.getenv("SMTP_HOST", "smtp.office365.com")
     smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
     smtp_user: str = os.getenv("SMTP_USER", "")
