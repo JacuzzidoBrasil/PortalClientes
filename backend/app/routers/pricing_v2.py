@@ -1,9 +1,11 @@
 from datetime import datetime
+import io
 import os
 import re
 
 import pandas as pd
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -11,6 +13,22 @@ from app.dependencies import get_current_user, get_db
 
 router = APIRouter(prefix="/pricing-v2", tags=["pricing-v2"])
 TEST_CNPJ = "058352792000143"
+CALCULATED_TITLE = "TABELA DE PRECO CALCULADA"
+CALCULATED_COLUMNS = [
+    "UF",
+    "COD_ITEM",
+    "DEN_ITEM",
+    "PRE_UNIT",
+    "DESCONTOS_CASCATA",
+    "BASE_LIQUIDA",
+    "ALIQ_IPI",
+    "ALIQ_ST",
+    "VALOR_IPI",
+    "VALOR_ST",
+    "VALOR_FINAL",
+    "PROGRAMA",
+    "CATEGORIA",
+]
 
 
 def _normalize_cnpj(value: str) -> str:
@@ -96,118 +114,186 @@ def _read_master(path_master: str) -> pd.DataFrame:
     return df
 
 
+def _build_pricing_payload(user, strict_test_user: bool = False) -> dict:
+    if _normalize_cnpj(user.cnpj) != TEST_CNPJ:
+        if strict_test_user:
+            raise HTTPException(status_code=403, detail="em desenvolvimento")
+        return {"status": "em desenvolvimento"}
+    if not user.uf:
+        raise HTTPException(status_code=400, detail="User UF not set")
+
+    master = _read_master(settings.pricing_master_path)
+    prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
+    client_prog = _read_client_programs(settings.pricing_client_program_path)
+
+    required_client_cols = {"COD_CLIENTE", "PROGRAMA", "CATEGORIA"}
+    missing = required_client_cols - set(client_prog.columns)
+    if missing:
+        raise HTTPException(status_code=500, detail=f"Missing columns in client program file: {', '.join(sorted(missing))}")
+
+    cnpj = _normalize_cnpj(user.cnpj)
+    uf = str(user.uf).strip().upper()
+
+    cp = client_prog[client_prog["COD_CLIENTE"].apply(_normalize_cnpj) == cnpj]
+    if cp.empty:
+        raise HTTPException(status_code=404, detail="Program/categoria not found for client")
+
+    programa = str(cp.iloc[0]["PROGRAMA"]).strip().upper()
+    categoria = str(cp.iloc[0]["CATEGORIA"]).strip().upper()
+
+    base = master[master["UF"].astype(str).str.strip().str.upper() == uf].copy()
+    if base.empty:
+        raise HTTPException(status_code=404, detail=f"No master prices found for UF {uf}")
+
+    if all(c in prog_desc.columns for c in ["PROGRAMA", "CATEGORIA", "COD_ITEM"]):
+        pmap = prog_desc[(prog_desc["PROGRAMA"].str.upper() == programa) & (prog_desc["CATEGORIA"].str.upper() == categoria)]
+        pmap = pmap.set_index("COD_ITEM") if not pmap.empty else pd.DataFrame()
+    else:
+        pmap = pd.DataFrame()
+
+    if all(c in cli_desc.columns for c in ["COD_CLIENTE", "COD_ITEM"]):
+        cmap = cli_desc[cli_desc["COD_CLIENTE"].apply(_normalize_cnpj) == cnpj]
+        cmap = cmap.set_index("COD_ITEM") if not cmap.empty else pd.DataFrame()
+    else:
+        cmap = pd.DataFrame()
+
+    if "COD_UF" in uf_desc.columns and "COD_ITEM" in uf_desc.columns:
+        umap = uf_desc[uf_desc["COD_UF"].str.upper() == uf]
+        umap = umap.set_index("COD_ITEM") if not umap.empty else pd.DataFrame()
+    else:
+        umap = pd.DataFrame()
+
+    rows = []
+    for _, row in base.iterrows():
+        cod_item = str(row.get("COD_ITEM", "")).strip()
+        if not cod_item:
+            continue
+
+        seq = []
+        if not pmap.empty and cod_item in pmap.index:
+            r = pmap.loc[cod_item]
+            if isinstance(r, pd.DataFrame):
+                r = r.iloc[0]
+            seq += _parse_discount_seq(r.get("DESC_BASE"))
+            seq += _parse_discount_seq(r.get("DESC_REDU"))
+            seq += _parse_discount_seq(r.get("DESC_PROG"))
+            if _campaign_valid(r.get("VALD_CAMP")):
+                seq += _parse_discount_seq(r.get("DESC_CAMP"))
+
+        if not cmap.empty and cod_item in cmap.index:
+            r = cmap.loc[cod_item]
+            if isinstance(r, pd.DataFrame):
+                r = r.iloc[0]
+            seq += _parse_discount_seq(r.get("DESC_CLI"))
+
+        if not umap.empty and cod_item in umap.index:
+            r = umap.loc[cod_item]
+            if isinstance(r, pd.DataFrame):
+                r = r.iloc[0]
+            seq += _parse_discount_seq(r.get("DESC_UF"))
+
+        price = _to_float(row.get("PRE_UNIT"))
+        for pct in seq:
+            price = price * (1 - (pct / 100.0))
+
+        aliq_ipi = _to_float(row.get("ALIQ_IPI"))
+        aliq_st = _to_float(row.get("ALIQ_ST"))
+        valor_ipi = price * (aliq_ipi / 100.0)
+        valor_st = price * (aliq_st / 100.0)
+
+        rows.append(
+            {
+                "UF": uf,
+                "COD_ITEM": cod_item,
+                "DEN_ITEM": row.get("DEN_ITEM"),
+                "PRE_UNIT": round(_to_float(row.get("PRE_UNIT")), 2),
+                "DESCONTOS_CASCATA": "+".join(str(int(x) if float(x).is_integer() else x) for x in seq),
+                "BASE_LIQUIDA": round(price, 2),
+                "ALIQ_IPI": aliq_ipi,
+                "ALIQ_ST": aliq_st,
+                "VALOR_IPI": round(valor_ipi, 2),
+                "VALOR_ST": round(valor_st, 2),
+                "VALOR_FINAL": round(price + valor_ipi + valor_st, 2),
+                "PROGRAMA": programa,
+                "CATEGORIA": categoria,
+            }
+        )
+
+    return {
+        "status": "ok",
+        "title": CALCULATED_TITLE,
+        "client_cnpj": cnpj,
+        "programa": programa,
+        "categoria": categoria,
+        "rows": rows,
+    }
+
+
 @router.get("/my-table")
 def my_table_v2(db: Session = Depends(get_db), user=Depends(get_current_user)):
     try:
-        if _normalize_cnpj(user.cnpj) != TEST_CNPJ:
-            return {"status": "em desenvolvimento"}
-        if not user.uf:
-            raise HTTPException(status_code=400, detail="User UF not set")
+        return _build_pricing_payload(user)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"pricing-v2 error: {str(exc)}")
 
-        master = _read_master(settings.pricing_master_path)
-        prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
-        client_prog = _read_client_programs(settings.pricing_client_program_path)
 
-        required_client_cols = {"COD_CLIENTE", "PROGRAMA", "CATEGORIA"}
-        missing = required_client_cols - set(client_prog.columns)
-        if missing:
-            raise HTTPException(status_code=500, detail=f"Missing columns in client program file: {', '.join(sorted(missing))}")
+@router.get("/my-table/data")
+def my_table_v2_data(
+    offset: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=500),
+    search: str | None = None,
+    col: str | None = None,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    try:
+        payload = _build_pricing_payload(user, strict_test_user=True)
+        df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
+        if search:
+            if col and col in df.columns:
+                mask = df[col].astype(str).str.contains(search, case=False, na=False)
+            else:
+                mask = df.astype(str).apply(lambda r: r.str.contains(search, case=False, na=False)).any(axis=1)
+            df = df[mask]
 
-        cnpj = _normalize_cnpj(user.cnpj)
-        uf = str(user.uf).strip().upper()
+        df = df.iloc[offset:offset + limit]
+        return {"columns": CALCULATED_COLUMNS, "rows": df.to_dict(orient="records")}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"pricing-v2 error: {str(exc)}")
 
-        cp = client_prog[client_prog["COD_CLIENTE"].apply(_normalize_cnpj) == cnpj]
-        if cp.empty:
-            raise HTTPException(status_code=404, detail="Program/categoria not found for client")
 
-        programa = str(cp.iloc[0]["PROGRAMA"]).strip().upper()
-        categoria = str(cp.iloc[0]["CATEGORIA"]).strip().upper()
+@router.get("/my-table/download")
+def my_table_v2_download(
+    format: str = Query("excel", pattern="^(excel|csv)$"),
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    try:
+        payload = _build_pricing_payload(user, strict_test_user=True)
+        df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
+        safe_title = re.sub(r"[^\w\- ]", "", payload.get("title") or CALCULATED_TITLE).strip().replace(" ", "_")
 
-        base = master[master["UF"].astype(str).str.strip().str.upper() == uf].copy()
-        if base.empty:
-            raise HTTPException(status_code=404, detail=f"No master prices found for UF {uf}")
+        if format == "csv":
+            buffer = io.StringIO()
+            df.to_csv(buffer, index=False)
+            data = io.BytesIO(buffer.getvalue().encode("utf-8"))
+            headers = {"Content-Disposition": f'attachment; filename="{safe_title}.csv"'}
+            return StreamingResponse(data, media_type="text/csv", headers=headers)
 
-        if all(c in prog_desc.columns for c in ["PROGRAMA", "CATEGORIA", "COD_ITEM"]):
-            pmap = prog_desc[(prog_desc["PROGRAMA"].str.upper() == programa) & (prog_desc["CATEGORIA"].str.upper() == categoria)]
-            pmap = pmap.set_index("COD_ITEM") if not pmap.empty else pd.DataFrame()
-        else:
-            pmap = pd.DataFrame()
-
-        if all(c in cli_desc.columns for c in ["COD_CLIENTE", "COD_ITEM"]):
-            cmap = cli_desc[cli_desc["COD_CLIENTE"].apply(_normalize_cnpj) == cnpj]
-            cmap = cmap.set_index("COD_ITEM") if not cmap.empty else pd.DataFrame()
-        else:
-            cmap = pd.DataFrame()
-
-        if "COD_UF" in uf_desc.columns and "COD_ITEM" in uf_desc.columns:
-            umap = uf_desc[uf_desc["COD_UF"].str.upper() == uf]
-            umap = umap.set_index("COD_ITEM") if not umap.empty else pd.DataFrame()
-        else:
-            umap = pd.DataFrame()
-
-        rows = []
-        for _, row in base.iterrows():
-            cod_item = str(row.get("COD_ITEM", "")).strip()
-            if not cod_item:
-                continue
-
-            seq = []
-            if not pmap.empty and cod_item in pmap.index:
-                r = pmap.loc[cod_item]
-                if isinstance(r, pd.DataFrame):
-                    r = r.iloc[0]
-                seq += _parse_discount_seq(r.get("DESC_BASE"))
-                seq += _parse_discount_seq(r.get("DESC_REDU"))
-                seq += _parse_discount_seq(r.get("DESC_PROG"))
-                if _campaign_valid(r.get("VALD_CAMP")):
-                    seq += _parse_discount_seq(r.get("DESC_CAMP"))
-
-            if not cmap.empty and cod_item in cmap.index:
-                r = cmap.loc[cod_item]
-                if isinstance(r, pd.DataFrame):
-                    r = r.iloc[0]
-                seq += _parse_discount_seq(r.get("DESC_CLI"))
-
-            if not umap.empty and cod_item in umap.index:
-                r = umap.loc[cod_item]
-                if isinstance(r, pd.DataFrame):
-                    r = r.iloc[0]
-                seq += _parse_discount_seq(r.get("DESC_UF"))
-
-            price = _to_float(row.get("PRE_UNIT"))
-            for pct in seq:
-                price = price * (1 - (pct / 100.0))
-
-            aliq_ipi = _to_float(row.get("ALIQ_IPI"))
-            aliq_st = _to_float(row.get("ALIQ_ST"))
-            valor_ipi = price * (aliq_ipi / 100.0)
-            valor_st = price * (aliq_st / 100.0)
-
-            rows.append(
-                {
-                    "UF": uf,
-                    "COD_ITEM": cod_item,
-                    "DEN_ITEM": row.get("DEN_ITEM"),
-                    "PRE_UNIT": round(_to_float(row.get("PRE_UNIT")), 2),
-                    "DESCONTOS_CASCATA": "+".join(str(int(x) if float(x).is_integer() else x) for x in seq),
-                    "BASE_LIQUIDA": round(price, 2),
-                    "ALIQ_IPI": aliq_ipi,
-                    "ALIQ_ST": aliq_st,
-                    "VALOR_IPI": round(valor_ipi, 2),
-                    "VALOR_ST": round(valor_st, 2),
-                    "VALOR_FINAL": round(price + valor_ipi + valor_st, 2),
-                    "PROGRAMA": programa,
-                    "CATEGORIA": categoria,
-                }
-            )
-
-        return {
-            "status": "ok",
-            "client_cnpj": cnpj,
-            "programa": programa,
-            "categoria": categoria,
-            "rows": rows,
-        }
+        data = io.BytesIO()
+        with pd.ExcelWriter(data, engine="openpyxl") as writer:
+            df.to_excel(writer, index=False, sheet_name="Tabela")
+        data.seek(0)
+        headers = {"Content-Disposition": f'attachment; filename="{safe_title}.xlsx"'}
+        return StreamingResponse(
+            data,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers=headers,
+        )
     except HTTPException:
         raise
     except Exception as exc:

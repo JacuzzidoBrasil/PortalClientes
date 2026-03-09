@@ -8,6 +8,9 @@ import grow2getherLogo from "../Grow2Gether.png";
 import restoreYouLogo from "../RestoreYou.png";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const TEST_CALCULATED_CNPJ = "058352792000143";
+const CALCULATED_SHEET_ID = "pricing-v2-calculated";
+const CALCULATED_SHEET_TITLE = "TABELA DE PRECO CALCULADA";
 const UF_CODES = [
   "AC",
   "AL",
@@ -40,6 +43,10 @@ const UF_CODES = [
 
 function authHeaders(token) {
   return { headers: { Authorization: `Bearer ${token}` } };
+}
+
+function normalizeCnpj(value) {
+  return String(value || "").replace(/\D/g, "");
 }
 
 function getProgramLogos(accessLevels = []) {
@@ -196,7 +203,14 @@ export default function App() {
   async function loadSpreadsheets() {
     try {
       const res = await axios.get(`${API_URL}/spreadsheets`, authHeaders(token));
-      setSpreadsheets(res.data);
+      const baseItems = Array.isArray(res.data) ? [...res.data] : [];
+      if (!me?.is_admin && normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ) {
+        const hasCalculated = baseItems.some((item) => String(item.id) === CALCULATED_SHEET_ID);
+        if (!hasCalculated) {
+          baseItems.unshift({ id: CALCULATED_SHEET_ID, title: CALCULATED_SHEET_TITLE });
+        }
+      }
+      setSpreadsheets(baseItems);
     } catch {
       setError("Erro ao carregar planilhas.");
     }
@@ -212,7 +226,11 @@ export default function App() {
     if (search) params.search = search;
     if (searchCol) params.col = searchCol;
     try {
-      const res = await axios.get(`${API_URL}/spreadsheets/${id}/data`, {
+      const endpoint =
+        String(id) === CALCULATED_SHEET_ID
+          ? `${API_URL}/pricing-v2/my-table/data`
+          : `${API_URL}/spreadsheets/${id}/data`;
+      const res = await axios.get(endpoint, {
         ...authHeaders(token),
         params,
       });
@@ -231,7 +249,11 @@ export default function App() {
 
   async function downloadSheet(id, format) {
     try {
-      const res = await axios.get(`${API_URL}/spreadsheets/${id}/download?format=${format}`, {
+      const endpoint =
+        String(id) === CALCULATED_SHEET_ID
+          ? `${API_URL}/pricing-v2/my-table/download?format=${format}`
+          : `${API_URL}/spreadsheets/${id}/download?format=${format}`;
+      const res = await axios.get(endpoint, {
         ...authHeaders(token),
         responseType: "blob",
       });
