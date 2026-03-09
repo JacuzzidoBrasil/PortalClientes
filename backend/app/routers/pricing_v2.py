@@ -8,8 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
+from app import models
 from app.core.config import settings
-from app.dependencies import get_current_user, get_db
+from app.dependencies import get_current_admin, get_current_user, get_db
 
 router = APIRouter(prefix="/pricing-v2", tags=["pricing-v2"])
 TEST_CNPJ = "058352792000143"
@@ -114,11 +115,280 @@ def _read_master(path_master: str) -> pd.DataFrame:
     return df
 
 
-def _build_pricing_payload(user, strict_test_user: bool = False) -> dict:
-    if _normalize_cnpj(user.cnpj) != TEST_CNPJ:
-        if strict_test_user:
-            raise HTTPException(status_code=403, detail="em desenvolvimento")
-        return {"status": "em desenvolvimento"}
+def _is_test_user(user) -> bool:
+    return _normalize_cnpj(user.cnpj) == TEST_CNPJ
+
+
+def _bulk_insert(db: Session, model_cls, rows: list[dict], chunk_size: int = 2000):
+    if not rows:
+        return
+    for i in range(0, len(rows), chunk_size):
+        chunk = rows[i:i + chunk_size]
+        db.bulk_insert_mappings(model_cls, chunk)
+
+
+def _load_sources_to_db(db: Session):
+    master = _read_master(settings.pricing_master_path)
+    prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
+    client_prog = _read_client_programs(settings.pricing_client_program_path)
+
+    db.query(models.PricingMasterItem).delete()
+    db.query(models.PricingClientProgram).delete()
+    db.query(models.PricingProgramItemDiscount).delete()
+    db.query(models.PricingClientItemDiscount).delete()
+    db.query(models.PricingUfItemDiscount).delete()
+
+    master_rows = []
+    for _, row in master.iterrows():
+        cod_item = str(row.get("COD_ITEM", "")).strip()
+        uf = str(row.get("UF", "")).strip().upper()
+        if not cod_item or not uf:
+            continue
+        master_rows.append(
+            {
+                "uf": uf,
+                "num_list": str(row.get("NUM_LIST", "")).strip() or None,
+                "den_list": str(row.get("DEN_LIST", "")).strip() or None,
+                "cod_item": cod_item,
+                "den_item": str(row.get("DEN_ITEM", "")).strip() or None,
+                "um": str(row.get("UM", "")).strip() or None,
+                "cla_fisc": str(row.get("CLA_FISC", "")).strip() or None,
+                "pre_unit": _to_float(row.get("PRE_UNIT")),
+                "aliq_ipi": _to_float(row.get("ALIQ_IPI")),
+                "iva": _to_float(row.get("IVA")),
+                "aliq_st": _to_float(row.get("ALIQ_ST")),
+            }
+        )
+
+    client_rows = []
+    for _, row in client_prog.iterrows():
+        cnpj = _normalize_cnpj(row.get("COD_CLIENTE"))
+        if not cnpj:
+            continue
+        client_rows.append(
+            {
+                "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
+                "cod_cliente": cnpj,
+                "programa": str(row.get("PROGRAMA", "")).strip().upper(),
+                "categoria": str(row.get("CATEGORIA", "")).strip().upper(),
+            }
+        )
+
+    prog_rows = []
+    for _, row in prog_desc.iterrows():
+        cod_item = str(row.get("COD_ITEM", "")).strip()
+        programa = str(row.get("PROGRAMA", "")).strip().upper()
+        categoria = str(row.get("CATEGORIA", "")).strip().upper()
+        if not cod_item or not programa or not categoria:
+            continue
+        prog_rows.append(
+            {
+                "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
+                "programa": programa,
+                "categoria": categoria,
+                "cod_item": cod_item,
+                "desc_base": str(row.get("DESC_BASE", "")).strip() or None,
+                "desc_redu": str(row.get("DESC_REDU", "")).strip() or None,
+                "desc_prog": str(row.get("DESC_PROG", "")).strip() or None,
+                "desc_camp": str(row.get("DESC_CAMP", "")).strip() or None,
+                "vald_camp": pd.to_datetime(row.get("VALD_CAMP"), errors="coerce"),
+            }
+        )
+
+    cli_rows = []
+    for _, row in cli_desc.iterrows():
+        cod_item = str(row.get("COD_ITEM", "")).strip()
+        cnpj = _normalize_cnpj(row.get("COD_CLIENTE"))
+        if not cod_item or not cnpj:
+            continue
+        cli_rows.append(
+            {
+                "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
+                "cod_cliente": cnpj,
+                "cod_item": cod_item,
+                "desc_cli": str(row.get("DESC_CLI", "")).strip() or None,
+            }
+        )
+
+    uf_rows = []
+    for _, row in uf_desc.iterrows():
+        cod_item = str(row.get("COD_ITEM", "")).strip()
+        cod_uf = str(row.get("COD_UF", "")).strip().upper()
+        if not cod_item or not cod_uf:
+            continue
+        uf_rows.append(
+            {
+                "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
+                "cod_uf": cod_uf,
+                "cod_item": cod_item,
+                "desc_uf": str(row.get("DESC_UF", "")).strip() or None,
+            }
+        )
+
+    _bulk_insert(db, models.PricingMasterItem, master_rows)
+    _bulk_insert(db, models.PricingClientProgram, client_rows)
+    _bulk_insert(db, models.PricingProgramItemDiscount, prog_rows)
+    _bulk_insert(db, models.PricingClientItemDiscount, cli_rows)
+    _bulk_insert(db, models.PricingUfItemDiscount, uf_rows)
+
+    return {
+        "master_rows": len(master_rows),
+        "client_program_rows": len(client_rows),
+        "program_discount_rows": len(prog_rows),
+        "client_discount_rows": len(cli_rows),
+        "uf_discount_rows": len(uf_rows),
+    }
+
+
+def _compute_rows_from_db(db: Session, cnpj: str, uf: str) -> tuple[str, str, list[dict]]:
+    cp = db.query(models.PricingClientProgram).filter(models.PricingClientProgram.cod_cliente == cnpj).first()
+    if not cp:
+        raise HTTPException(status_code=404, detail="Program/categoria not found for client")
+
+    programa = cp.programa
+    categoria = cp.categoria
+
+    base_items = db.query(models.PricingMasterItem).filter(models.PricingMasterItem.uf == uf).all()
+    if not base_items:
+        raise HTTPException(status_code=404, detail=f"No master prices found for UF {uf}")
+
+    pmap = {
+        item.cod_item: item
+        for item in db.query(models.PricingProgramItemDiscount).filter(
+            models.PricingProgramItemDiscount.programa == programa,
+            models.PricingProgramItemDiscount.categoria == categoria,
+        ).all()
+    }
+    cmap = {
+        item.cod_item: item
+        for item in db.query(models.PricingClientItemDiscount).filter(
+            models.PricingClientItemDiscount.cod_cliente == cnpj
+        ).all()
+    }
+    umap = {
+        item.cod_item: item
+        for item in db.query(models.PricingUfItemDiscount).filter(
+            models.PricingUfItemDiscount.cod_uf == uf
+        ).all()
+    }
+
+    rows = []
+    for item in base_items:
+        cod_item = item.cod_item
+        seq = []
+
+        p = pmap.get(cod_item)
+        if p is not None:
+            seq += _parse_discount_seq(p.desc_base)
+            seq += _parse_discount_seq(p.desc_redu)
+            seq += _parse_discount_seq(p.desc_prog)
+            if _campaign_valid(p.vald_camp):
+                seq += _parse_discount_seq(p.desc_camp)
+
+        c = cmap.get(cod_item)
+        if c is not None:
+            seq += _parse_discount_seq(c.desc_cli)
+
+        u = umap.get(cod_item)
+        if u is not None:
+            seq += _parse_discount_seq(u.desc_uf)
+
+        price = float(item.pre_unit or 0.0)
+        for pct in seq:
+            price = price * (1 - (pct / 100.0))
+
+        aliq_ipi = float(item.aliq_ipi or 0.0)
+        aliq_st = float(item.aliq_st or 0.0)
+        valor_ipi = price * (aliq_ipi / 100.0)
+        valor_st = price * (aliq_st / 100.0)
+
+        rows.append(
+            {
+                "UF": uf,
+                "COD_ITEM": cod_item,
+                "DEN_ITEM": item.den_item,
+                "PRE_UNIT": round(float(item.pre_unit or 0.0), 2),
+                "DESCONTOS_CASCATA": "+".join(str(int(x) if float(x).is_integer() else x) for x in seq),
+                "BASE_LIQUIDA": round(price, 2),
+                "ALIQ_IPI": aliq_ipi,
+                "ALIQ_ST": aliq_st,
+                "VALOR_IPI": round(valor_ipi, 2),
+                "VALOR_ST": round(valor_st, 2),
+                "VALOR_FINAL": round(price + valor_ipi + valor_st, 2),
+                "PROGRAMA": programa,
+                "CATEGORIA": categoria,
+            }
+        )
+
+    return programa, categoria, rows
+
+
+def _upsert_cache(db: Session, cnpj: str, uf: str, programa: str, categoria: str, rows: list[dict], source: str):
+    db.query(models.PricingResultCache).filter(
+        models.PricingResultCache.cnpj == cnpj,
+        models.PricingResultCache.uf == uf,
+    ).delete()
+
+    now = datetime.utcnow()
+    payload = []
+    for row in rows:
+        payload.append(
+            {
+                "cnpj": cnpj,
+                "uf": uf,
+                "cod_item": row.get("COD_ITEM"),
+                "den_item": row.get("DEN_ITEM"),
+                "pre_unit": _to_float(row.get("PRE_UNIT")),
+                "descontos_cascata": row.get("DESCONTOS_CASCATA"),
+                "base_liquida": _to_float(row.get("BASE_LIQUIDA")),
+                "aliq_ipi": _to_float(row.get("ALIQ_IPI")),
+                "aliq_st": _to_float(row.get("ALIQ_ST")),
+                "valor_ipi": _to_float(row.get("VALOR_IPI")),
+                "valor_st": _to_float(row.get("VALOR_ST")),
+                "valor_final": _to_float(row.get("VALOR_FINAL")),
+                "programa": programa,
+                "categoria": categoria,
+                "source": source,
+                "updated_at": now,
+            }
+        )
+    _bulk_insert(db, models.PricingResultCache, payload)
+
+
+def _get_cached_rows(db: Session, cnpj: str, uf: str) -> tuple[str, str, list[dict]]:
+    cache_rows = db.query(models.PricingResultCache).filter(
+        models.PricingResultCache.cnpj == cnpj,
+        models.PricingResultCache.uf == uf,
+    ).order_by(models.PricingResultCache.cod_item.asc()).all()
+
+    if not cache_rows:
+        return "", "", []
+
+    programa = cache_rows[0].programa
+    categoria = cache_rows[0].categoria
+    rows = []
+    for r in cache_rows:
+        rows.append(
+            {
+                "UF": r.uf,
+                "COD_ITEM": r.cod_item,
+                "DEN_ITEM": r.den_item,
+                "PRE_UNIT": round(float(r.pre_unit or 0.0), 2),
+                "DESCONTOS_CASCATA": r.descontos_cascata or "",
+                "BASE_LIQUIDA": round(float(r.base_liquida or 0.0), 2),
+                "ALIQ_IPI": float(r.aliq_ipi or 0.0),
+                "ALIQ_ST": float(r.aliq_st or 0.0),
+                "VALOR_IPI": round(float(r.valor_ipi or 0.0), 2),
+                "VALOR_ST": round(float(r.valor_st or 0.0), 2),
+                "VALOR_FINAL": round(float(r.valor_final or 0.0), 2),
+                "PROGRAMA": r.programa,
+                "CATEGORIA": r.categoria,
+            }
+        )
+    return programa, categoria, rows
+
+
+def _build_payload_from_files(user) -> dict:
     if not user.uf:
         raise HTTPException(status_code=400, detail="User UF not set")
 
@@ -226,13 +496,78 @@ def _build_pricing_payload(user, strict_test_user: bool = False) -> dict:
         "programa": programa,
         "categoria": categoria,
         "rows": rows,
+        "source": "file",
     }
+
+
+def _build_pricing_payload(user, db: Session, strict_test_user: bool = False) -> dict:
+    if not _is_test_user(user):
+        if strict_test_user:
+            raise HTTPException(status_code=403, detail="em desenvolvimento")
+        return {"status": "em desenvolvimento"}
+
+    cnpj = _normalize_cnpj(user.cnpj)
+    uf = str(user.uf or "").strip().upper()
+    if not uf:
+        raise HTTPException(status_code=400, detail="User UF not set")
+
+    programa, categoria, rows = _get_cached_rows(db, cnpj, uf)
+    if not rows:
+        try:
+            programa, categoria, rows = _compute_rows_from_db(db, cnpj, uf)
+            _upsert_cache(db, cnpj, uf, programa, categoria, rows, source="db")
+            db.commit()
+        except Exception:
+            db.rollback()
+            file_payload = _build_payload_from_files(user)
+            _upsert_cache(
+                db,
+                cnpj,
+                uf,
+                file_payload["programa"],
+                file_payload["categoria"],
+                file_payload["rows"],
+                source="file",
+            )
+            db.commit()
+            programa = file_payload["programa"]
+            categoria = file_payload["categoria"]
+            rows = file_payload["rows"]
+
+    return {
+        "status": "ok",
+        "title": CALCULATED_TITLE,
+        "client_cnpj": cnpj,
+        "programa": programa,
+        "categoria": categoria,
+        "rows": rows,
+    }
+
+
+@router.post("/sync")
+def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    try:
+        stats = _load_sources_to_db(db)
+        test_user = db.query(models.User).filter(models.User.cnpj == TEST_CNPJ).first()
+        rebuilt_cache = False
+        if test_user and test_user.uf:
+            programa, categoria, rows = _compute_rows_from_db(db, TEST_CNPJ, str(test_user.uf).strip().upper())
+            _upsert_cache(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria, rows, source="db")
+            rebuilt_cache = True
+        db.commit()
+        return {"status": "ok", "rebuilt_cache": rebuilt_cache, **stats}
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"pricing-v2 sync error: {str(exc)}")
 
 
 @router.get("/my-table")
 def my_table_v2(db: Session = Depends(get_db), user=Depends(get_current_user)):
     try:
-        return _build_pricing_payload(user)
+        return _build_pricing_payload(user, db)
     except HTTPException:
         raise
     except Exception as exc:
@@ -249,7 +584,7 @@ def my_table_v2_data(
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, strict_test_user=True)
+        payload = _build_pricing_payload(user, db, strict_test_user=True)
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         if search:
             if col and col in df.columns:
@@ -273,7 +608,7 @@ def my_table_v2_download(
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, strict_test_user=True)
+        payload = _build_pricing_payload(user, db, strict_test_user=True)
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         safe_title = re.sub(r"[^\w\- ]", "", payload.get("title") or CALCULATED_TITLE).strip().replace(" ", "_")
 

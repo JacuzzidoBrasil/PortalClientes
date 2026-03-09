@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime, Date, Numeric
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Table, Boolean, DateTime, Date, Numeric, Float, UniqueConstraint, Index
 from sqlalchemy.orm import relationship
 from app.db import Base
 
@@ -81,3 +81,108 @@ class Invoice(Base):
     created_at = Column(DateTime, nullable=True)
 
     user = relationship("User")
+
+
+class PricingMasterItem(Base):
+    __tablename__ = "pricing_master_items"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    uf = Column(String(2), nullable=False)
+    num_list = Column(String(20), nullable=True)
+    den_list = Column(String(50), nullable=True)
+    cod_item = Column(String(30), nullable=False)
+    den_item = Column(String(255), nullable=True)
+    um = Column(String(20), nullable=True)
+    cla_fisc = Column(String(30), nullable=True)
+    pre_unit = Column(Float, nullable=False, default=0.0)
+    aliq_ipi = Column(Float, nullable=False, default=0.0)
+    iva = Column(Float, nullable=False, default=0.0)
+    aliq_st = Column(Float, nullable=False, default=0.0)
+
+    __table_args__ = (
+        Index("ix_pricing_master_uf_cod_item", "uf", "cod_item"),
+    )
+
+
+class PricingClientProgram(Base):
+    __tablename__ = "pricing_client_programs"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cod_empresa = Column(String(10), nullable=True)
+    cod_cliente = Column(String(20), nullable=False)
+    programa = Column(String(60), nullable=False)
+    categoria = Column(String(60), nullable=False)
+
+    __table_args__ = (
+        Index("ix_pricing_client_program_cod_cliente", "cod_cliente"),
+        UniqueConstraint("cod_cliente", name="uq_pricing_client_program_cod_cliente"),
+    )
+
+
+class PricingProgramItemDiscount(Base):
+    __tablename__ = "pricing_program_item_discounts"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cod_empresa = Column(String(10), nullable=True)
+    programa = Column(String(60), nullable=False)
+    categoria = Column(String(60), nullable=False)
+    cod_item = Column(String(30), nullable=False)
+    desc_base = Column(String(100), nullable=True)
+    desc_redu = Column(String(100), nullable=True)
+    desc_prog = Column(String(100), nullable=True)
+    desc_camp = Column(String(100), nullable=True)
+    vald_camp = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        Index("ix_pricing_program_item_programa_categoria_item", "programa", "categoria", "cod_item"),
+    )
+
+
+class PricingClientItemDiscount(Base):
+    __tablename__ = "pricing_client_item_discounts"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cod_empresa = Column(String(10), nullable=True)
+    cod_cliente = Column(String(20), nullable=False)
+    cod_item = Column(String(30), nullable=False)
+    desc_cli = Column(String(100), nullable=True)
+
+    __table_args__ = (
+        Index("ix_pricing_client_item_cod_cliente_item", "cod_cliente", "cod_item"),
+    )
+
+
+class PricingUfItemDiscount(Base):
+    __tablename__ = "pricing_uf_item_discounts"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cod_empresa = Column(String(10), nullable=True)
+    cod_uf = Column(String(2), nullable=False)
+    cod_item = Column(String(30), nullable=False)
+    desc_uf = Column(String(100), nullable=True)
+
+    __table_args__ = (
+        Index("ix_pricing_uf_item_cod_uf_item", "cod_uf", "cod_item"),
+    )
+
+
+class PricingResultCache(Base):
+    __tablename__ = "pricing_result_cache"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cnpj = Column(String(20), nullable=False)
+    uf = Column(String(2), nullable=False)
+    cod_item = Column(String(30), nullable=False)
+    den_item = Column(String(255), nullable=True)
+    pre_unit = Column(Float, nullable=False, default=0.0)
+    descontos_cascata = Column(String(255), nullable=True)
+    base_liquida = Column(Float, nullable=False, default=0.0)
+    aliq_ipi = Column(Float, nullable=False, default=0.0)
+    aliq_st = Column(Float, nullable=False, default=0.0)
+    valor_ipi = Column(Float, nullable=False, default=0.0)
+    valor_st = Column(Float, nullable=False, default=0.0)
+    valor_final = Column(Float, nullable=False, default=0.0)
+    programa = Column(String(60), nullable=False)
+    categoria = Column(String(60), nullable=False)
+    source = Column(String(30), nullable=False, default="db")
+    updated_at = Column(DateTime, nullable=False)
+
+    __table_args__ = (
+        Index("ix_pricing_cache_cnpj_uf", "cnpj", "uf"),
+        UniqueConstraint("cnpj", "uf", "cod_item", name="uq_pricing_cache_cnpj_uf_item"),
+    )
+
