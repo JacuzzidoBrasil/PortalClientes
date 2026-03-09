@@ -1,4 +1,4 @@
-﻿from datetime import datetime
+from datetime import datetime
 import os
 import re
 
@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.dependencies import get_current_user, get_db
 
 router = APIRouter(prefix="/pricing-v2", tags=["pricing-v2"])
-TEST_CNPJ = "11111111111111"
+TEST_CNPJ = "058352792000143"
 
 
 def _normalize_cnpj(value: str) -> str:
