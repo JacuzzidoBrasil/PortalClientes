@@ -18,5 +18,8 @@ class Settings(BaseModel):
     smtp_user: str = os.getenv("SMTP_USER", "")
     smtp_pass: str = os.getenv("SMTP_PASS", "")
     smtp_from: str = os.getenv("SMTP_FROM", "")
+    pricing_master_path: str = os.getenv("PRICING_MASTER_PATH", "/app/TABELA_PRECOS_UF.xlsx")
+    pricing_discounts_path: str = os.getenv("PRICING_DISCOUNTS_PATH", "/app/DESCONTOS_PARA_CARGA.xlsm")
+    pricing_client_program_path: str = os.getenv("PRICING_CLIENT_PROGRAM_PATH", "/app/JAC_PROG_DESC_CLIENTE.csv")
 
 settings = Settings()

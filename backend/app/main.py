@@ -5,7 +5,7 @@ import os
 from app import models
 from app.constants import UF_CODES
 from app.db import SessionLocal
-from app.routers import auth, admin, spreadsheets, invoices
+from app.routers import auth, admin, spreadsheets, invoices, pricing_v2
 
 app = FastAPI(title="Portal Clientes")
 
@@ -33,6 +33,7 @@ app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(spreadsheets.router)
 app.include_router(invoices.router)
+app.include_router(pricing_v2.router)
 
 
 @app.on_event("startup")
