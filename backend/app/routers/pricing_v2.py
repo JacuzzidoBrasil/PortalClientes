@@ -160,19 +160,18 @@ def _load_sources_to_db(db: Session):
             }
         )
 
-    client_rows = []
+    client_rows_map = {}
     for _, row in client_prog.iterrows():
         cnpj = _normalize_cnpj(row.get("COD_CLIENTE"))
         if not cnpj:
             continue
-        client_rows.append(
-            {
-                "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
-                "cod_cliente": cnpj,
-                "programa": str(row.get("PROGRAMA", "")).strip().upper(),
-                "categoria": str(row.get("CATEGORIA", "")).strip().upper(),
-            }
-        )
+        client_rows_map[cnpj] = {
+            "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
+            "cod_cliente": cnpj,
+            "programa": str(row.get("PROGRAMA", "")).strip().upper(),
+            "categoria": str(row.get("CATEGORIA", "")).strip().upper(),
+        }
+    client_rows = list(client_rows_map.values())
 
     prog_rows = []
     for _, row in prog_desc.iterrows():
