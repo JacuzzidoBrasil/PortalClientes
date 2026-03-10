@@ -8,6 +8,7 @@ import secrets
 from app.core.config import settings
 import os
 import uuid
+import re
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -30,6 +31,53 @@ def _sync_user_uf_access_levels(db: Session, user: models.User, selected_access_
     if user_uf_level:
         selected_ids.add(user_uf_level.id)
     user.access_levels = [level for level in levels if level.id in selected_ids]
+
+
+def _access_level_to_pricing(level_name: str) -> tuple[str, str] | None:
+    if not level_name:
+        return None
+    name = re.sub(r"\s+", " ", level_name.strip().lower())
+    name = name.replace("regional", "").strip()
+    if "deep dive" in name:
+        category = name.replace("deep dive", "").strip().upper()
+        return ("DEEPDIVE", category or "STANDARD")
+    if "restore you" in name:
+        category = name.replace("restore you", "").strip().upper()
+        return ("RESTOREYOU", category or "STANDARD")
+    if "grow2gether" in name:
+        return ("GROW2GETHER", "STANDARD")
+    if "express" in name:
+        return ("EXPRESS", "STANDARD")
+    if "ecommerce" in name:
+        return ("ECOMMERCE", "STANDARD")
+    return None
+
+
+def _sync_pricing_programs(db: Session, user: models.User):
+    cnpj = re.sub(r"\D", "", user.cnpj or "")
+    if not cnpj:
+        return
+    programs = []
+    for level in user.access_levels:
+        mapped = _access_level_to_pricing(level.name)
+        if mapped:
+            programs.append(mapped)
+    # unique preserve order
+    seen = set()
+    uniq = []
+    for p in programs:
+        if p in seen:
+            continue
+        seen.add(p)
+        uniq.append(p)
+    db.query(models.PricingClientProgram).filter(models.PricingClientProgram.cod_cliente == cnpj).delete()
+    for programa, categoria in uniq:
+        db.add(models.PricingClientProgram(
+            cod_empresa="01",
+            cod_cliente=cnpj,
+            programa=programa,
+            categoria=categoria,
+        ))
 
 
 @router.get("/access-levels", response_model=list[schemas.AccessLevelItem])
@@ -75,6 +123,9 @@ def create_user(payload: schemas.UserCreate, db: Session = Depends(get_db), admi
     db.add(user)
     db.commit()
     db.refresh(user)
+    _sync_pricing_programs(db, user)
+    db.commit()
+    db.refresh(user)
     return {"id": user.id}
 
 @router.put("/users/{user_id}/access-levels")
@@ -88,6 +139,8 @@ def update_user_access_levels(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     _sync_user_uf_access_levels(db, user, payload.access_level_ids)
+    db.commit()
+    _sync_pricing_programs(db, user)
     db.commit()
     return {"status": "ok"}
 
