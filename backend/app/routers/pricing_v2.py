@@ -69,6 +69,14 @@ def _campaign_valid(vald_camp) -> bool:
     except Exception:
         return False
 
+def _category_fallback(categoria: str) -> str | None:
+    if not categoria:
+        return None
+    if categoria.strip().upper() == "STANDARD":
+        return "PADRAO"
+    return None
+
+
 
 def _read_client_programs(path_csv: str) -> pd.DataFrame:
     if not os.path.exists(path_csv):
@@ -274,6 +282,16 @@ def _compute_rows_from_db(db: Session, cnpj: str, uf: str, programa: str, catego
             models.PricingProgramItemDiscount.categoria == categoria,
         ).all()
     }
+    if not pmap:
+        fallback = _category_fallback(categoria)
+        if fallback:
+            pmap = {
+                item.cod_item: item
+                for item in db.query(models.PricingProgramItemDiscount).filter(
+                    models.PricingProgramItemDiscount.programa == programa,
+                    models.PricingProgramItemDiscount.categoria == fallback,
+                ).all()
+            }
     cmap = {
         item.cod_item: item
         for item in db.query(models.PricingClientItemDiscount).filter(
@@ -434,6 +452,10 @@ def _build_payload_from_files(user, programa: str, categoria: str) -> dict:
 
     if all(c in prog_desc.columns for c in ["PROGRAMA", "CATEGORIA", "COD_ITEM"]):
         pmap = prog_desc[(prog_desc["PROGRAMA"].str.upper() == programa) & (prog_desc["CATEGORIA"].str.upper() == categoria)]
+        if pmap.empty:
+            fallback = _category_fallback(categoria)
+            if fallback:
+                pmap = prog_desc[(prog_desc["PROGRAMA"].str.upper() == programa) & (prog_desc["CATEGORIA"].str.upper() == fallback)]
         pmap = pmap.set_index("COD_ITEM") if not pmap.empty else pd.DataFrame()
     else:
         pmap = pd.DataFrame()
