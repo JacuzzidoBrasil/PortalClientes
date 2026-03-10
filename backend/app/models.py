@@ -118,7 +118,6 @@ class PricingClientProgram(Base):
 
 
 class PricingProgramItemDiscount(Base):
-(Base):
     __tablename__ = "pricing_program_item_discounts"
     id = Column(Integer, primary_key=True, autoincrement=True)
     cod_empresa = Column(String(10), nullable=True)
