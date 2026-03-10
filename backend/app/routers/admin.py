@@ -45,9 +45,9 @@ def _access_level_to_pricing(level_name: str) -> tuple[str, str] | None:
         category = name.replace("restore you", "").strip().upper()
         return ("RESTOREYOU", category or "STANDARD")
     if "grow2gether" in name:
-        return ("GROW2GETHER", "STANDARD")
+        return ("GROW2GETHER", "GROW2GETHER")
     if "express" in name:
-        return ("EXPRESS", "STANDARD")
+        return ("EXPRESS", "EXPRESS")
     if "ecommerce" in name:
         return ("ECOMMERCE", "STANDARD")
     return None
