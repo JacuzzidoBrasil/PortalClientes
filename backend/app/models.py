@@ -113,11 +113,12 @@ class PricingClientProgram(Base):
 
     __table_args__ = (
         Index("ix_pricing_client_program_cod_cliente", "cod_cliente"),
-        UniqueConstraint("cod_cliente", name="uq_pricing_client_program_cod_cliente"),
+        Index("ix_pricing_client_program_cod_cliente_prog_cat", "cod_cliente", "programa", "categoria"),
     )
 
 
 class PricingProgramItemDiscount(Base):
+(Base):
     __tablename__ = "pricing_program_item_discounts"
     id = Column(Integer, primary_key=True, autoincrement=True)
     cod_empresa = Column(String(10), nullable=True)
@@ -183,6 +184,6 @@ class PricingResultCache(Base):
 
     __table_args__ = (
         Index("ix_pricing_cache_cnpj_uf", "cnpj", "uf"),
-        UniqueConstraint("cnpj", "uf", "cod_item", name="uq_pricing_cache_cnpj_uf_item"),
+        UniqueConstraint("cnpj", "uf", "programa", "categoria", "cod_item", name="uq_pricing_cache_cnpj_uf_prog_cat_item"),
     )
 

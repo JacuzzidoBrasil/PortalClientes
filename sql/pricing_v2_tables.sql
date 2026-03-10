@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS pricing_client_programs (
   cod_cliente VARCHAR(20) NOT NULL,
   programa VARCHAR(60) NOT NULL,
   categoria VARCHAR(60) NOT NULL,
-  UNIQUE KEY uq_pricing_client_program_cod_cliente (cod_cliente),
-  KEY ix_pricing_client_program_cod_cliente (cod_cliente)
+  KEY ix_pricing_client_program_cod_cliente (cod_cliente),
+  KEY ix_pricing_client_program_cod_cliente_prog_cat (cod_cliente, programa, categoria)
 );
 
 CREATE TABLE IF NOT EXISTS pricing_program_item_discounts (
@@ -76,6 +76,6 @@ CREATE TABLE IF NOT EXISTS pricing_result_cache (
   categoria VARCHAR(60) NOT NULL,
   source VARCHAR(30) NOT NULL DEFAULT 'db',
   updated_at DATETIME NOT NULL,
-  UNIQUE KEY uq_pricing_cache_cnpj_uf_item (cnpj, uf, cod_item),
+  UNIQUE KEY uq_pricing_cache_cnpj_uf_prog_cat_item (cnpj, uf, programa, categoria, cod_item),
   KEY ix_pricing_cache_cnpj_uf (cnpj, uf)
 );

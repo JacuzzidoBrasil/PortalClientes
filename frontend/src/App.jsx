@@ -49,6 +49,15 @@ function normalizeCnpj(value) {
   return String(value || "").replace(/\D/g, "");
 }
 
+function isCalculatedSheetId(id) {
+  return String(id || "").startsWith("pricing-v2:");
+}
+
+function getCalcParams(id) {
+  const parts = String(id || "").split(":");
+  return { programa: parts[1] || "", categoria: parts[2] || "" };
+}
+
 function getProgramLogos(accessLevels = []) {
   const normalized = accessLevels.map((level) =>
     String(level || "")
@@ -205,10 +214,11 @@ export default function App() {
       const res = await axios.get(`${API_URL}/spreadsheets`, authHeaders(token));
       const baseItems = Array.isArray(res.data) ? [...res.data] : [];
       if (!me?.is_admin && normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ) {
-        const hasCalculated = baseItems.some((item) => String(item.id) === CALCULATED_SHEET_ID);
-        if (!hasCalculated) {
-          baseItems.unshift({ id: CALCULATED_SHEET_ID, title: CALCULATED_SHEET_TITLE });
-        }
+        const calcRes = await axios.get(`${API_URL}/pricing-v2/my-tables`, authHeaders(token));
+        const calcItems = Array.isArray(calcRes.data?.items) ? calcRes.data.items : [];
+        const merged = [...calcItems, ...baseItems];
+        setSpreadsheets(merged);
+        return;
       }
       setSpreadsheets(baseItems);
     } catch {
@@ -226,10 +236,13 @@ export default function App() {
     if (search) params.search = search;
     if (searchCol) params.col = searchCol;
     try {
-      const endpoint =
-        String(id) === CALCULATED_SHEET_ID
-          ? `${API_URL}/pricing-v2/my-table/data`
-          : `${API_URL}/spreadsheets/${id}/data`;
+      let endpoint = `${API_URL}/spreadsheets/${id}/data`;
+      if (isCalculatedSheetId(id)) {
+        endpoint = `${API_URL}/pricing-v2/my-table/data`;
+        const calc = getCalcParams(id);
+        params.programa = calc.programa;
+        params.categoria = calc.categoria;
+      }
       const res = await axios.get(endpoint, {
         ...authHeaders(token),
         params,
@@ -249,10 +262,11 @@ export default function App() {
 
   async function downloadSheet(id, format) {
     try {
-      const endpoint =
-        String(id) === CALCULATED_SHEET_ID
-          ? `${API_URL}/pricing-v2/my-table/download?format=${format}`
-          : `${API_URL}/spreadsheets/${id}/download?format=${format}`;
+      let endpoint = `${API_URL}/spreadsheets/${id}/download?format=${format}`;
+      if (isCalculatedSheetId(id)) {
+        const calc = getCalcParams(id);
+        endpoint = `${API_URL}/pricing-v2/my-table/download?format=${format}&programa=${encodeURIComponent(calc.programa)}&categoria=${encodeURIComponent(calc.categoria)}`;
+      }
       const res = await axios.get(endpoint, {
         ...authHeaders(token),
         responseType: "blob",

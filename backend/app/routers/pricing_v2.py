@@ -126,6 +126,28 @@ def _load_sources_to_db(db: Session):
     prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
     client_prog = _read_client_programs(settings.pricing_client_program_path)
 
+def _list_client_programs(db: Session, cnpj: str) -> list[tuple[str, str]]:
+    rows = db.query(models.PricingClientProgram).filter(
+        models.PricingClientProgram.cod_cliente == cnpj
+    ).all()
+    out = []
+    for r in rows:
+        prog = (r.programa or "").strip().upper()
+        cat = (r.categoria or "").strip().upper()
+        if prog and cat:
+            out.append((prog, cat))
+    # unique preserve order
+    seen = set()
+    uniq = []
+    for p, c in out:
+        key = (p, c)
+        if key in seen:
+            continue
+        seen.add(key)
+        uniq.append(key)
+    return uniq
+
+
     db.query(models.PricingMasterItem).delete()
     db.query(models.PricingClientProgram).delete()
     db.query(models.PricingProgramItemDiscount).delete()
@@ -157,13 +179,16 @@ def _load_sources_to_db(db: Session):
     client_rows_map = {}
     for _, row in client_prog.iterrows():
         cnpj = _normalize_cnpj(row.get("COD_CLIENTE"))
-        if not cnpj:
+        programa = str(row.get("PROGRAMA", "")).strip().upper()
+        categoria = str(row.get("CATEGORIA", "")).strip().upper()
+        if not cnpj or not programa or not categoria:
             continue
-        client_rows_map[cnpj] = {
+        key = (cnpj, programa, categoria)
+        client_rows_map[key] = {
             "cod_empresa": str(row.get("COD_EMPRESA", "")).strip() or None,
             "cod_cliente": cnpj,
-            "programa": str(row.get("PROGRAMA", "")).strip().upper(),
-            "categoria": str(row.get("CATEGORIA", "")).strip().upper(),
+            "programa": programa,
+            "categoria": categoria,
         }
     client_rows = list(client_rows_map.values())
 
@@ -233,13 +258,7 @@ def _load_sources_to_db(db: Session):
     }
 
 
-def _compute_rows_from_db(db: Session, cnpj: str, uf: str) -> tuple[str, str, list[dict]]:
-    cp = db.query(models.PricingClientProgram).filter(models.PricingClientProgram.cod_cliente == cnpj).first()
-    if not cp:
-        raise HTTPException(status_code=404, detail="Program/categoria not found for client")
-
-    programa = cp.programa
-    categoria = cp.categoria
+def _compute_rows_from_db(db: Session, cnpj: str, uf: str, programa: str, categoria: str) -> tuple[str, str, list[dict]]:
 
     base_items = db.query(models.PricingMasterItem).filter(models.PricingMasterItem.uf == uf).all()
     if not base_items:
@@ -320,6 +339,8 @@ def _upsert_cache(db: Session, cnpj: str, uf: str, programa: str, categoria: str
     db.query(models.PricingResultCache).filter(
         models.PricingResultCache.cnpj == cnpj,
         models.PricingResultCache.uf == uf,
+        models.PricingResultCache.programa == programa,
+        models.PricingResultCache.categoria == categoria,
     ).delete()
 
     now = datetime.utcnow()
@@ -348,17 +369,17 @@ def _upsert_cache(db: Session, cnpj: str, uf: str, programa: str, categoria: str
     _bulk_insert(db, models.PricingResultCache, payload)
 
 
-def _get_cached_rows(db: Session, cnpj: str, uf: str) -> tuple[str, str, list[dict]]:
+def _get_cached_rows(db: Session, cnpj: str, uf: str, programa: str, categoria: str) -> tuple[str, str, list[dict]]:
     cache_rows = db.query(models.PricingResultCache).filter(
         models.PricingResultCache.cnpj == cnpj,
         models.PricingResultCache.uf == uf,
+        models.PricingResultCache.programa == programa,
+        models.PricingResultCache.categoria == categoria,
     ).order_by(models.PricingResultCache.cod_item.asc()).all()
 
     if not cache_rows:
         return "", "", []
 
-    programa = cache_rows[0].programa
-    categoria = cache_rows[0].categoria
     rows = []
     for r in cache_rows:
         rows.append(
@@ -381,7 +402,7 @@ def _get_cached_rows(db: Session, cnpj: str, uf: str) -> tuple[str, str, list[di
     return programa, categoria, rows
 
 
-def _build_payload_from_files(user) -> dict:
+def _build_payload_from_files(user, programa: str, categoria: str) -> dict:
     if not user.uf:
         raise HTTPException(status_code=400, detail="User UF not set")
 
@@ -401,8 +422,8 @@ def _build_payload_from_files(user) -> dict:
     if cp.empty:
         raise HTTPException(status_code=404, detail="Program/categoria not found for client")
 
-    programa = str(cp.iloc[0]["PROGRAMA"]).strip().upper()
-    categoria = str(cp.iloc[0]["CATEGORIA"]).strip().upper()
+    programa = str(programa).strip().upper()
+    categoria = str(categoria).strip().upper()
 
     base = master[master["UF"].astype(str).str.strip().str.upper() == uf].copy()
     if base.empty:
@@ -493,7 +514,7 @@ def _build_payload_from_files(user) -> dict:
     }
 
 
-def _build_pricing_payload(user, db: Session, strict_test_user: bool = False) -> dict:
+def _build_pricing_payload(user, db: Session, programa: str | None = None, categoria: str | None = None, strict_test_user: bool = False) -> dict:
     if not _is_test_user(user):
         if strict_test_user:
             raise HTTPException(status_code=403, detail="em desenvolvimento")
@@ -504,15 +525,26 @@ def _build_pricing_payload(user, db: Session, strict_test_user: bool = False) ->
     if not uf:
         raise HTTPException(status_code=400, detail="User UF not set")
 
-    programa, categoria, rows = _get_cached_rows(db, cnpj, uf)
+    programs = _list_client_programs(db, cnpj)
+    if not programs:
+        raise HTTPException(status_code=404, detail="Program/categoria not found for client")
+    if programa and categoria:
+        target = (str(programa).strip().upper(), str(categoria).strip().upper())
+        if target not in programs:
+            raise HTTPException(status_code=404, detail="Program/categoria not found for client")
+        programa, categoria = target
+    else:
+        programa, categoria = programs[0]
+
+    programa, categoria, rows = _get_cached_rows(db, cnpj, uf, programa, categoria)
     if not rows:
         try:
-            programa, categoria, rows = _compute_rows_from_db(db, cnpj, uf)
+            programa, categoria, rows = _compute_rows_from_db(db, cnpj, uf, programa, categoria)
             _upsert_cache(db, cnpj, uf, programa, categoria, rows, source="db")
             db.commit()
         except Exception:
             db.rollback()
-            file_payload = _build_payload_from_files(user)
+            file_payload = _build_payload_from_files(user, programa, categoria)
             _upsert_cache(
                 db,
                 cnpj,
@@ -544,9 +576,11 @@ def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_curren
         test_user = db.query(models.User).filter(models.User.cnpj == TEST_CNPJ).first()
         rebuilt_cache = False
         if test_user and test_user.uf:
-            programa, categoria, rows = _compute_rows_from_db(db, TEST_CNPJ, str(test_user.uf).strip().upper())
-            _upsert_cache(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria, rows, source="db")
-            rebuilt_cache = True
+            programs = _list_client_programs(db, TEST_CNPJ)
+            for programa, categoria in programs:
+                programa, categoria, rows = _compute_rows_from_db(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria)
+                _upsert_cache(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria, rows, source="db")
+            rebuilt_cache = bool(programs)
         db.commit()
         return {"status": "ok", "rebuilt_cache": rebuilt_cache, **stats}
     except HTTPException:
@@ -555,6 +589,19 @@ def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_curren
     except Exception as exc:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"pricing-v2 sync error: {str(exc)}")
+
+
+@router.get("/my-tables")
+def my_tables(db: Session = Depends(get_db), user=Depends(get_current_user)):
+    if not _is_test_user(user):
+        return {"status": "em desenvolvimento", "items": []}
+    cnpj = _normalize_cnpj(user.cnpj)
+    items = []
+    for programa, categoria in _list_client_programs(db, cnpj):
+        sheet_id = f"pricing-v2:{programa}:{categoria}"
+        title = f"TABELA DE PRECO {programa} {categoria}"
+        items.append({"id": sheet_id, "title": title, "programa": programa, "categoria": categoria})
+    return {"status": "ok", "items": items}
 
 
 @router.get("/my-table")
@@ -573,11 +620,13 @@ def my_table_v2_data(
     limit: int = Query(100, ge=1, le=500),
     search: str | None = None,
     col: str | None = None,
+    programa: str | None = None,
+    categoria: str | None = None,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, db, strict_test_user=True)
+        payload = _build_pricing_payload(user, db, programa=programa, categoria=categoria, strict_test_user=True)
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         if search:
             if col and col in df.columns:
@@ -597,11 +646,13 @@ def my_table_v2_data(
 @router.get("/my-table/download")
 def my_table_v2_download(
     format: str = Query("excel", pattern="^(excel|csv)$"),
+    programa: str | None = None,
+    categoria: str | None = None,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, db, strict_test_user=True)
+        payload = _build_pricing_payload(user, db, programa=programa, categoria=categoria, strict_test_user=True)
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         safe_title = re.sub(r"[^\w\- ]", "", payload.get("title") or CALCULATED_TITLE).strip().replace(" ", "_")
 
