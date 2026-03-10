@@ -190,7 +190,7 @@ def _load_sources_to_db(db: Session):
                 "desc_redu": str(row.get("DESC_REDU", "")).strip() or None,
                 "desc_prog": str(row.get("DESC_PROG", "")).strip() or None,
                 "desc_camp": str(row.get("DESC_CAMP", "")).strip() or None,
-                "vald_camp": pd.to_datetime(row.get("VALD_CAMP"), errors="coerce"),
+                "vald_camp": pd.to_datetime(row.get("VALD_CAMP"), errors="coerce") or None,
             }
         )
 
