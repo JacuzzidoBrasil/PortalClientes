@@ -116,8 +116,11 @@ def _is_test_user(user) -> bool:
 def _bulk_insert(db: Session, model_cls, rows: list[dict], chunk_size: int = 2000):
     if not rows:
         return
-    for i in range(0, len(rows), chunk_size):
-        chunk = rows[i:i + chunk_size]
+    safe_rows = [r for r in rows if isinstance(r, dict)]
+    if not safe_rows:
+        return
+    for i in range(0, len(safe_rows), chunk_size):
+        chunk = safe_rows[i:i + chunk_size]
         db.bulk_insert_mappings(model_cls, chunk)
 
 
