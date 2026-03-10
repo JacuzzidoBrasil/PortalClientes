@@ -575,7 +575,7 @@ def _build_pricing_payload(user, db: Session, programa: str | None = None, categ
 @router.post("/sync")
 def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     try:
-        stats = _load_sources_to_db(db)
+        stats = _load_sources_to_db(db) or {}
         test_user = db.query(models.User).filter(models.User.cnpj == TEST_CNPJ).first()
         rebuilt_cache = False
         if test_user and test_user.uf:
