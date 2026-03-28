@@ -532,6 +532,18 @@ select {
   gap: 8px;
 }
 
+.pricing-uf-picker {
+  display: grid;
+  gap: 6px;
+}
+
+.pricing-uf-label {
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .half-field {
   width: 100%;
 }

@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app import models
+from app.constants import UF_CODE_SET
 from app.core.config import settings
 from app.dependencies import get_current_admin, get_current_user, get_db
 
@@ -30,6 +31,10 @@ CALCULATED_COLUMNS = [
 
 def _normalize_cnpj(value: str) -> str:
     return re.sub(r"\D", "", value or "")
+
+
+def _normalize_uf(value: str | None) -> str:
+    return str(value or "").strip().upper()
 
 
 def _to_float(value) -> float:
@@ -123,6 +128,15 @@ def _is_test_user(user) -> bool:
     return _normalize_cnpj(user.cnpj) == TEST_CNPJ
 
 
+def _get_effective_pricing_uf(user, uf_override: str | None = None) -> str:
+    uf = _normalize_uf(uf_override) if uf_override else _normalize_uf(getattr(user, "uf", None))
+    if not uf:
+        raise HTTPException(status_code=400, detail="User UF not set")
+    if uf not in UF_CODE_SET:
+        raise HTTPException(status_code=400, detail="UF invalid")
+    return uf
+
+
 def _bulk_insert(db: Session, model_cls, rows: list[dict], chunk_size: int = 2000):
     if not rows:
         return
@@ -138,28 +152,6 @@ def _load_sources_to_db(db: Session):
     master = _read_master(settings.pricing_master_path)
     prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
     client_prog = _read_client_programs(settings.pricing_client_program_path)
-
-def _list_client_programs(db: Session, cnpj: str) -> list[tuple[str, str]]:
-    rows = db.query(models.PricingClientProgram).filter(
-        models.PricingClientProgram.cod_cliente == cnpj
-    ).all()
-    out = []
-    for r in rows:
-        prog = (r.programa or "").strip().upper()
-        cat = (r.categoria or "").strip().upper()
-        if prog and cat:
-            out.append((prog, cat))
-    # unique preserve order
-    seen = set()
-    uniq = []
-    for p, c in out:
-        key = (p, c)
-        if key in seen:
-            continue
-        seen.add(key)
-        uniq.append(key)
-    return uniq
-
 
     db.query(models.PricingMasterItem).delete()
     db.query(models.PricingClientProgram).delete()
@@ -269,6 +261,37 @@ def _list_client_programs(db: Session, cnpj: str) -> list[tuple[str, str]]:
         "client_discount_rows": len(cli_rows),
         "uf_discount_rows": len(uf_rows),
     }
+
+
+def _list_client_programs(db: Session, cnpj: str) -> list[tuple[str, str]]:
+    rows = db.query(models.PricingClientProgram).filter(
+        models.PricingClientProgram.cod_cliente == _normalize_cnpj(cnpj)
+    ).all()
+    out = []
+    for r in rows:
+        prog = (r.programa or "").strip().upper()
+        cat = (r.categoria or "").strip().upper()
+        if prog and cat:
+            out.append((prog, cat))
+    seen = set()
+    uniq = []
+    for p, c in out:
+        key = (p, c)
+        if key in seen:
+            continue
+        seen.add(key)
+        uniq.append(key)
+    return uniq
+
+
+def _list_master_ufs(db: Session) -> list[str]:
+    rows = db.query(models.PricingMasterItem.uf).distinct().order_by(models.PricingMasterItem.uf.asc()).all()
+    out = []
+    for raw_uf, in rows:
+        uf = _normalize_uf(raw_uf)
+        if uf:
+            out.append(uf)
+    return out
 
 
 def _compute_rows_from_db(db: Session, cnpj: str, uf: str, programa: str, categoria: str) -> tuple[str, str, list[dict]]:
@@ -425,10 +448,7 @@ def _get_cached_rows(db: Session, cnpj: str, uf: str, programa: str, categoria: 
     return programa, categoria, rows
 
 
-def _build_payload_from_files(user, programa: str, categoria: str) -> dict:
-    if not user.uf:
-        raise HTTPException(status_code=400, detail="User UF not set")
-
+def _build_payload_from_files(user, programa: str, categoria: str, uf_override: str | None = None) -> dict:
     master = _read_master(settings.pricing_master_path)
     prog_desc, cli_desc, uf_desc = _read_discounts(settings.pricing_discounts_path)
     client_prog = _read_client_programs(settings.pricing_client_program_path)
@@ -439,7 +459,7 @@ def _build_payload_from_files(user, programa: str, categoria: str) -> dict:
         raise HTTPException(status_code=500, detail=f"Missing columns in client program file: {', '.join(sorted(missing))}")
 
     cnpj = _normalize_cnpj(user.cnpj)
-    uf = str(user.uf).strip().upper()
+    uf = _get_effective_pricing_uf(user, uf_override)
 
     cp = client_prog[client_prog["COD_CLIENTE"].apply(_normalize_cnpj) == cnpj]
     if cp.empty:
@@ -541,16 +561,21 @@ def _build_payload_from_files(user, programa: str, categoria: str) -> dict:
     }
 
 
-def _build_pricing_payload(user, db: Session, programa: str | None = None, categoria: str | None = None, strict_test_user: bool = False) -> dict:
+def _build_pricing_payload(
+    user,
+    db: Session,
+    programa: str | None = None,
+    categoria: str | None = None,
+    strict_test_user: bool = False,
+    uf_override: str | None = None,
+) -> dict:
     if not _is_test_user(user):
         if strict_test_user:
             raise HTTPException(status_code=403, detail="em desenvolvimento")
         return {"status": "em desenvolvimento"}
 
     cnpj = _normalize_cnpj(user.cnpj)
-    uf = str(user.uf or "").strip().upper()
-    if not uf:
-        raise HTTPException(status_code=400, detail="User UF not set")
+    uf = _get_effective_pricing_uf(user, uf_override)
 
     programs = _list_client_programs(db, cnpj)
     if not programs:
@@ -571,7 +596,7 @@ def _build_pricing_payload(user, db: Session, programa: str | None = None, categ
             db.commit()
         except Exception:
             db.rollback()
-            file_payload = _build_payload_from_files(user, programa, categoria)
+            file_payload = _build_payload_from_files(user, programa, categoria, uf_override=uf)
             _upsert_cache(
                 db,
                 cnpj,
@@ -600,16 +625,29 @@ def _build_pricing_payload(user, db: Session, programa: str | None = None, categ
 def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     try:
         stats = _load_sources_to_db(db) or {}
+        db.query(models.PricingResultCache).delete()
         test_user = db.query(models.User).filter(models.User.cnpj == TEST_CNPJ).first()
         rebuilt_cache = False
-        if test_user and test_user.uf:
+        rebuilt_cache_states = []
+        rebuilt_cache_tables = 0
+        if test_user:
             programs = _list_client_programs(db, TEST_CNPJ)
-            for programa, categoria in programs:
-                programa, categoria, rows = _compute_rows_from_db(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria)
-                _upsert_cache(db, TEST_CNPJ, str(test_user.uf).strip().upper(), programa, categoria, rows, source="db")
-            rebuilt_cache = bool(programs)
+            for uf in _list_master_ufs(db):
+                for programa, categoria in programs:
+                    programa, categoria, rows = _compute_rows_from_db(db, TEST_CNPJ, uf, programa, categoria)
+                    _upsert_cache(db, TEST_CNPJ, uf, programa, categoria, rows, source="db")
+                    rebuilt_cache_tables += 1
+                if programs:
+                    rebuilt_cache_states.append(uf)
+            rebuilt_cache = rebuilt_cache_tables > 0
         db.commit()
-        return {"status": "ok", "rebuilt_cache": rebuilt_cache, **stats}
+        return {
+            "status": "ok",
+            "rebuilt_cache": rebuilt_cache,
+            "rebuilt_cache_states": rebuilt_cache_states,
+            "rebuilt_cache_tables": rebuilt_cache_tables,
+            **stats,
+        }
     except HTTPException:
         db.rollback()
         raise
@@ -633,9 +671,13 @@ def my_tables(db: Session = Depends(get_db), user=Depends(get_current_user)):
 
 
 @router.get("/my-table")
-def my_table_v2(db: Session = Depends(get_db), user=Depends(get_current_user)):
+def my_table_v2(
+    uf: str | None = Query(None, min_length=2, max_length=2),
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
     try:
-        return _build_pricing_payload(user, db)
+        return _build_pricing_payload(user, db, uf_override=uf)
     except HTTPException:
         raise
     except Exception as exc:
@@ -651,11 +693,19 @@ def my_table_v2_data(
     col: str | None = None,
     programa: str | None = None,
     categoria: str | None = None,
+    uf: str | None = Query(None, min_length=2, max_length=2),
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, db, programa=programa, categoria=categoria, strict_test_user=True)
+        payload = _build_pricing_payload(
+            user,
+            db,
+            programa=programa,
+            categoria=categoria,
+            strict_test_user=True,
+            uf_override=uf,
+        )
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         if search:
             if col and col in df.columns:
@@ -678,11 +728,19 @@ def my_table_v2_download(
     format: str = Query("excel", pattern="^(excel|csv)$"),
     programa: str | None = None,
     categoria: str | None = None,
+    uf: str | None = Query(None, min_length=2, max_length=2),
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
     try:
-        payload = _build_pricing_payload(user, db, programa=programa, categoria=categoria, strict_test_user=True)
+        payload = _build_pricing_payload(
+            user,
+            db,
+            programa=programa,
+            categoria=categoria,
+            strict_test_user=True,
+            uf_override=uf,
+        )
         df = pd.DataFrame(payload["rows"], columns=CALCULATED_COLUMNS)
         safe_title = re.sub(r"[^\w\- ]", "", payload.get("title") or CALCULATED_TITLE).strip().replace(" ", "_")
 

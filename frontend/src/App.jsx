@@ -120,6 +120,7 @@ export default function App() {
   const [spreadsheets, setSpreadsheets] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [table, setTable] = useState({ columns: [], rows: [] });
+  const [pricingUf, setPricingUf] = useState("");
   const [search, setSearch] = useState("");
   const [searchCol, setSearchCol] = useState("");
   const [offset, setOffset] = useState(0);
@@ -147,6 +148,7 @@ export default function App() {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadAccessIds, setUploadAccessIds] = useState([]);
   const programLogos = useMemo(() => getProgramLogos(me?.access_levels || []), [me]);
+  const canUseCalculatedPricing = normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ;
 
   useEffect(() => {
     if (token) {
@@ -170,6 +172,14 @@ export default function App() {
       loadAdminInvoices();
     }
   }, [token, me?.is_admin]);
+
+  useEffect(() => {
+    if (!me?.uf) {
+      setPricingUf("");
+      return;
+    }
+    setPricingUf((current) => current || me.uf);
+  }, [me?.uf]);
 
   function setError(msg) {
     setMessageTone("error");
@@ -288,6 +298,7 @@ export default function App() {
   function handleLogout() {
     setToken(null);
     setMe(null);
+    setPricingUf("");
     localStorage.removeItem("token");
   }
 
@@ -295,7 +306,7 @@ export default function App() {
     try {
       const res = await axios.get(`${API_URL}/spreadsheets`, authHeaders(token));
       const baseItems = Array.isArray(res.data) ? [...res.data] : [];
-      if (!me?.is_admin && normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ) {
+      if (!me?.is_admin && canUseCalculatedPricing) {
         const calcRes = await axios.get(`${API_URL}/pricing-v2/my-tables`, authHeaders(token));
         const calcItems = Array.isArray(calcRes.data?.items) ? calcRes.data.items : [];
         const merged = [...calcItems, ...baseItems];
@@ -308,7 +319,7 @@ export default function App() {
     }
   }
 
-  async function loadData(id, reset = false) {
+  async function loadData(id, reset = false, overrideUf = "") {
     const nextOffset = reset ? 0 : offset;
     setSelectedId(id);
     const params = {
@@ -324,6 +335,9 @@ export default function App() {
         const calc = getCalcParams(id);
         params.programa = calc.programa;
         params.categoria = calc.categoria;
+        if (overrideUf || pricingUf) {
+          params.uf = overrideUf || pricingUf;
+        }
       }
       const res = await axios.get(endpoint, {
         ...authHeaders(token),
@@ -348,6 +362,9 @@ export default function App() {
       if (isCalculatedSheetId(id)) {
         const calc = getCalcParams(id);
         endpoint = `${API_URL}/pricing-v2/my-table/download?format=${format}&programa=${encodeURIComponent(calc.programa)}&categoria=${encodeURIComponent(calc.categoria)}`;
+        if (pricingUf) {
+          endpoint += `&uf=${encodeURIComponent(pricingUf)}`;
+        }
       }
       const res = await axios.get(endpoint, {
         ...authHeaders(token),
@@ -776,6 +793,32 @@ export default function App() {
             <div className="planilha-toolbar">
               <div className="planilha-searches">
                 <div className="search-inputs">
+                  {canUseCalculatedPricing && (
+                    <div className="pricing-uf-picker">
+                      <label className="pricing-uf-label" htmlFor="pricing-uf-select">
+                        UF para teste da tabela calculada
+                      </label>
+                      <select
+                        id="pricing-uf-select"
+                        className="field half-field"
+                        value={pricingUf}
+                        onChange={(e) => {
+                          const nextUf = e.target.value;
+                          setPricingUf(nextUf);
+                          if (selectedId && isCalculatedSheetId(selectedId)) {
+                            loadData(selectedId, true, nextUf);
+                          }
+                        }}
+                      >
+                        <option value="">Selecione a UF</option>
+                        {UF_CODES.map((uf) => (
+                          <option key={uf} value={uf}>
+                            {uf}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <input
                     className="field half-field"
                     placeholder="Buscar na tabela"
