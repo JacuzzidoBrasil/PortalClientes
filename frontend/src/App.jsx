@@ -89,6 +89,14 @@ const BUSY_LABELS = {
   resetRequest: "Enviando codigo de redefinicao...",
   resetConfirm: "Atualizando sua senha...",
   createUser: "Criando usuario...",
+  loadSpreadsheets: "Carregando planilhas...",
+  loadTable: "Abrindo tabela...",
+  loadAdminData: "Carregando dados de administracao...",
+  updateUserAccess: "Atualizando permissoes...",
+  deleteUser: "Excluindo usuario...",
+  uploadSheet: "Enviando planilha...",
+  deleteSheet: "Excluindo planilha...",
+  loadInvoices: "Carregando notas...",
 };
 
 export default function App() {
@@ -175,6 +183,13 @@ export default function App() {
       ) || null,
     [calculatedSheets, selectedCalcPrograma, selectedCalcCategoria]
   );
+  const selectedSheet = useMemo(
+    () => spreadsheets.find((item) => String(item.id) === String(selectedId)) || selectedCalculatedSheet,
+    [spreadsheets, selectedId, selectedCalculatedSheet]
+  );
+  const currentPage = Math.floor(offset / limit) + 1;
+  const canGoPrevPage = offset > 0;
+  const canGoNextPage = table.rows.length === limit;
 
   useEffect(() => {
     if (token) {
@@ -231,8 +246,8 @@ export default function App() {
     if (!canUseCalculatedPricing || !pricingUf || !selectedCalculatedSheet) {
       return;
     }
-    if (selectedId && isCalculatedSheetId(selectedId)) {
-      loadData(selectedCalculatedSheet.id, true, pricingUf);
+    if (selectedId && isCalculatedSheetId(selectedId) && String(selectedId) !== String(selectedCalculatedSheet.id)) {
+      loadData(selectedCalculatedSheet.id, true, pricingUf, 0, true);
     }
   }, [canUseCalculatedPricing, pricingUf, selectedCalculatedSheet, selectedId, selectedCalcPrograma, selectedCalcCategoria]);
 
@@ -360,7 +375,8 @@ export default function App() {
     localStorage.removeItem("token");
   }
 
-  async function loadSpreadsheets() {
+  async function loadSpreadsheets(showLoading = false) {
+    if (showLoading) setBusyAction("loadSpreadsheets");
     try {
       const res = await axios.get(`${API_URL}/spreadsheets`, authHeaders(token));
       const baseItems = Array.isArray(res.data) ? [...res.data] : [];
@@ -376,6 +392,8 @@ export default function App() {
       setSpreadsheets(baseItems);
     } catch {
       setError("Erro ao carregar planilhas.");
+    } finally {
+      if (showLoading) setBusyAction("");
     }
   }
 
@@ -388,11 +406,12 @@ export default function App() {
       setError("Selecione um programa e uma categoria validos para abrir a tabela calculada.");
       return;
     }
-    loadData(selectedCalculatedSheet.id, true);
+    loadData(selectedCalculatedSheet.id, true, "", 0, true);
   }
 
-  async function loadData(id, reset = false, overrideUf = "") {
-    const nextOffset = reset ? 0 : offset;
+  async function loadData(id, reset = false, overrideUf = "", overrideOffset = null, showLoading = false) {
+    const nextOffset = reset ? 0 : overrideOffset ?? offset;
+    if (showLoading) setBusyAction("loadTable");
     setSelectedId(id);
     const params = {
       limit,
@@ -416,16 +435,24 @@ export default function App() {
         params,
       });
       setTable(res.data);
-      if (reset) setOffset(0);
+      setOffset(nextOffset);
     } catch {
       setError("Erro ao carregar dados da planilha.");
+    } finally {
+      if (showLoading) setBusyAction("");
     }
   }
 
+  function previousPage() {
+    if (!selectedId || !canGoPrevPage) return;
+    const prev = Math.max(0, offset - limit);
+    loadData(selectedId, false, "", prev, true);
+  }
+
   function nextPage() {
+    if (!selectedId) return;
     const next = offset + limit;
-    setOffset(next);
-    if (selectedId) loadData(selectedId);
+    loadData(selectedId, false, "", next, true);
   }
 
   async function downloadSheet(id, format) {
@@ -462,7 +489,8 @@ export default function App() {
     }
   }
 
-  async function loadAdminData() {
+  async function loadAdminData(showLoading = false) {
+    if (showLoading) setBusyAction("loadAdminData");
     try {
       const [levelsRes, usersRes, sheetsRes] = await Promise.all([
         axios.get(`${API_URL}/admin/access-levels`, authHeaders(token)),
@@ -474,6 +502,8 @@ export default function App() {
       setAdminSheets(sheetsRes.data);
     } catch {
       setError("Erro ao carregar dados de administracao.");
+    } finally {
+      if (showLoading) setBusyAction("");
     }
   }
 
@@ -501,6 +531,7 @@ export default function App() {
     e.preventDefault();
     if (!editUserId) return;
     setMessage("");
+    setBusyAction("updateUserAccess");
     try {
       await axios.put(
         `${API_URL}/admin/users/${editUserId}/access-levels`,
@@ -511,17 +542,22 @@ export default function App() {
       setSuccess("Permissoes atualizadas.");
     } catch {
       setError("Erro ao atualizar permissoes.");
+    } finally {
+      setBusyAction("");
     }
   }
 
   async function handleDeleteUser(id) {
     if (!window.confirm("Excluir este usuario?")) return;
+    setBusyAction("deleteUser");
     try {
       await axios.delete(`${API_URL}/admin/users/${id}`, authHeaders(token));
       await loadAdminData();
       setSuccess("Usuario excluido.");
     } catch {
       setError("Erro ao excluir usuario.");
+    } finally {
+      setBusyAction("");
     }
   }
 
@@ -537,6 +573,7 @@ export default function App() {
     form.append("file", uploadFile);
 
     setMessage("");
+    setBusyAction("uploadSheet");
     try {
       await axios.post(`${API_URL}/admin/spreadsheets`, form, authHeaders(token));
       setUploadTitle("");
@@ -546,26 +583,34 @@ export default function App() {
       setSuccess("Planilha enviada.");
     } catch {
       setError("Erro ao enviar planilha.");
+    } finally {
+      setBusyAction("");
     }
   }
 
   async function handleDeleteSheet(id) {
     if (!window.confirm("Excluir esta planilha?")) return;
+    setBusyAction("deleteSheet");
     try {
       await axios.delete(`${API_URL}/admin/spreadsheets/${id}`, authHeaders(token));
       await loadAdminData();
       setSuccess("Planilha excluida.");
     } catch {
       setError("Erro ao excluir planilha.");
+    } finally {
+      setBusyAction("");
     }
   }
 
-  async function loadAdminInvoices() {
+  async function loadAdminInvoices(showLoading = false) {
+    if (showLoading) setBusyAction("loadInvoices");
     try {
       const res = await axios.get(`${API_URL}/invoices/admin`, authHeaders(token));
       setAdminInvoices(res.data);
     } catch {
       setError("Erro ao carregar notas.");
+    } finally {
+      if (showLoading) setBusyAction("");
     }
   }
 
@@ -919,7 +964,7 @@ export default function App() {
                               const nextUf = e.target.value;
                               setPricingUf(nextUf);
                               if (selectedCalculatedSheet) {
-                                loadData(selectedCalculatedSheet.id, true, nextUf);
+                                loadData(selectedCalculatedSheet.id, true, nextUf, 0, true);
                               }
                             }}
                           >
@@ -970,10 +1015,10 @@ export default function App() {
                 </div>
               </div>
               <div className="row planilha-actions">
-                <button className="btn load-sheets" onClick={loadSpreadsheets}>
+                <button className="btn load-sheets" onClick={() => loadSpreadsheets(true)}>
                   Carregar planilhas
                 </button>
-                <button className="btn" onClick={() => selectedId && loadData(selectedId, true)}>
+                <button className="btn" onClick={() => selectedId && loadData(selectedId, true, "", 0, true)}>
                   Buscar
                 </button>
                 <p className="confidential-note">
@@ -982,61 +1027,90 @@ export default function App() {
               </div>
             </div>
 
-            <ul className="list">
-              {spreadsheets.map((it) => (
-                <li className="item" key={it.id}>
-                  <strong className="sheet-title">{it.title}</strong>
-                  <div className="row">
-                    <button className="btn ghost" onClick={() => loadData(it.id, true)}>
-                      Abrir
-                    </button>
-                    <button className="btn alt" onClick={() => downloadSheet(it.id, "excel")}>
-                      Excel
-                    </button>
-                    <button className="btn alt" onClick={() => downloadSheet(it.id, "csv")}>
-                      CSV
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <div className="planilhas-layout">
+              <div className="sheet-list-panel">
+                <div className="sheet-list-header">
+                  <strong>Tabelas disponiveis</strong>
+                  <span>{spreadsheets.length} itens</span>
+                </div>
+                <ul className="list sheet-list">
+                  {spreadsheets.map((it) => (
+                    <li className={`item ${String(selectedId) === String(it.id) ? "active" : ""}`} key={it.id}>
+                      <strong className="sheet-title">{it.title}</strong>
+                      <div className="row">
+                        <button className="btn ghost" onClick={() => loadData(it.id, true, "", 0, true)}>
+                          Abrir
+                        </button>
+                        <button className="btn alt" onClick={() => downloadSheet(it.id, "excel")}>
+                          Excel
+                        </button>
+                        <button className="btn alt" onClick={() => downloadSheet(it.id, "csv")}>
+                          CSV
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            {selectedId && (
-              <>
-                <div className="table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        {table.columns.map((c) => (
-                          <th key={c}>{c}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {table.rows.map((row, idx) => (
-                        <tr key={idx}>
+              <div className="table-panel">
+                <div className="table-panel-header">
+                  <div>
+                    <strong>{selectedSheet?.title || "Visualizacao da tabela"}</strong>
+                    <p>
+                      {selectedId
+                        ? `Pagina ${currentPage} - exibindo ${table.rows.length} registros`
+                        : "Selecione uma tabela para visualizar os dados."}
+                    </p>
+                  </div>
+                  {selectedId && (
+                    <div className="pagination-controls">
+                      <button className="btn ghost" onClick={previousPage} disabled={!canGoPrevPage}>
+                        Pagina anterior
+                      </button>
+                      <span className="pagination-badge">Pagina {currentPage}</span>
+                      <button className="btn" onClick={nextPage} disabled={!canGoNextPage}>
+                        Proxima pagina
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {selectedId ? (
+                  <div className="table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
                           {table.columns.map((c) => (
-                            <td key={c}>{row[c]}</td>
+                            <th key={c}>{c}</th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div style={{ marginTop: 10 }}>
-                  <button className="btn" onClick={nextPage}>
-                    Proxima pagina
-                  </button>
-                </div>
-              </>
-            )}
+                      </thead>
+                      <tbody>
+                        {table.rows.map((row, idx) => (
+                          <tr key={idx}>
+                            {table.columns.map((c) => (
+                              <td key={c}>{row[c]}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="empty-table-state">
+                    Escolha uma tabela na lista ao lado para abrir a visualizacao.
+                  </div>
+                )}
+              </div>
+            </div>
 
             <div className="notes-section">
               <h3>Minhas notas</h3>
               {me?.is_admin ? (
                 <>
                   <div className="row" style={{ marginBottom: 8 }}>
-                    <button className="btn alt" type="button" onClick={loadAdminInvoices}>
+                    <button className="btn alt" type="button" onClick={() => loadAdminInvoices(true)}>
                       Atualizar notas
                     </button>
                   </div>
@@ -1065,7 +1139,7 @@ export default function App() {
             <section className="card">
               <div className="row">
                 <h2>Administracao</h2>
-                <button className="btn load-admin" onClick={loadAdminData}>
+                <button className="btn load-admin" onClick={() => loadAdminData(true)}>
                   Carregar dados admin
                 </button>
               </div>
@@ -1173,8 +1247,8 @@ export default function App() {
                       </label>
                     ))}
                   </div>
-                  <button className="btn alt" type="submit">
-                    Salvar permissoes
+                  <button className="btn alt" type="submit" disabled={busyAction === "updateUserAccess"}>
+                    {busyAction === "updateUserAccess" ? "Atualizando..." : "Salvar permissoes"}
                   </button>
                 </form>
               </div>
@@ -1209,8 +1283,8 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-                  <button className="btn" type="submit">
-                    Enviar planilha
+                  <button className="btn" type="submit" disabled={busyAction === "uploadSheet"}>
+                    {busyAction === "uploadSheet" ? "Enviando planilha..." : "Enviar planilha"}
                   </button>
                 </form>
               </div>

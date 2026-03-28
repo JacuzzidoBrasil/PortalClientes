@@ -470,6 +470,11 @@ select {
   gap: 10px;
 }
 
+.item.active {
+  border-color: rgba(40, 148, 255, 0.75);
+  box-shadow: 0 0 0 3px rgba(40, 148, 255, 0.12);
+}
+
 .form-grid {
   display: grid;
   gap: 8px;
@@ -607,6 +612,77 @@ select {
   flex-wrap: wrap;
 }
 
+.planilhas-layout {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.sheet-list-panel,
+.table-panel {
+  border: 1px solid rgba(214, 229, 245, 0.3);
+  border-radius: 16px;
+  background: rgba(6, 18, 31, 0.24);
+  padding: 12px;
+}
+
+.sheet-list-header,
+.table-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sheet-list-header strong,
+.table-panel-header strong {
+  color: #ffffff;
+}
+
+.sheet-list-header span,
+.table-panel-header p {
+  color: #d7e6f6;
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.sheet-list {
+  margin-top: 0;
+  max-height: 680px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.sheet-list .item {
+  align-items: flex-start;
+}
+
+.table-panel {
+  min-height: 100%;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pagination-badge {
+  min-width: 92px;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
 .access-logo-large {
   height: 92px;
 }
@@ -624,8 +700,18 @@ select {
   overflow: auto;
   border: 1px solid #d6e5f5;
   border-radius: 12px;
-  margin-top: 10px;
   background: #ffffff;
+}
+
+.empty-table-state {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(214, 229, 245, 0.42);
+  border-radius: 14px;
+  color: #d7e6f6;
+  text-align: center;
+  padding: 24px;
 }
 
 .notes-section {
@@ -834,6 +920,10 @@ th {
     grid-template-columns: 1fr;
   }
 
+  .planilhas-layout {
+    grid-template-columns: 1fr;
+  }
+
   .programa-info {
     justify-self: start;
     text-align: left;
@@ -863,6 +953,13 @@ th {
 
   .planilha-actions .btn {
     flex: 1;
+  }
+
+  .sheet-list-header,
+  .table-panel-header,
+  .pagination-controls {
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .confidential-note {
