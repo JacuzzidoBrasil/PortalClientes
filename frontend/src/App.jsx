@@ -11,6 +11,14 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const TEST_CALCULATED_CNPJ = "058352792000143";
 const CALCULATED_SHEET_ID = "pricing-v2-calculated";
 const CALCULATED_SHEET_TITLE = "TABELA DE PRECO CALCULADA";
+const PRICING_BREAKDOWN_COLUMNS = [
+  "DESCONTOS_CASCATA",
+  "BASE_LIQUIDA",
+  "ALIQ_IPI",
+  "VALOR_IPI",
+  "ALIQ_ST",
+  "VALOR_ST",
+];
 const UF_CODES = [
   "AC",
   "AL",
@@ -160,6 +168,7 @@ export default function App() {
   const [uploadAccessIds, setUploadAccessIds] = useState([]);
   const programLogos = useMemo(() => getProgramLogos(me?.access_levels || []), [me]);
   const canUseCalculatedPricing = normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ;
+  const canViewPricingBreakdown = Boolean(me?.is_admin || canUseCalculatedPricing);
   const availableCalcPrograms = useMemo(
     () => [...new Set(calculatedSheets.map((item) => item.programa).filter(Boolean))],
     [calculatedSheets]
@@ -190,6 +199,12 @@ export default function App() {
   const currentPage = Math.floor(offset / limit) + 1;
   const canGoPrevPage = offset > 0;
   const canGoNextPage = table.rows.length === limit;
+  const visibleTableColumns = useMemo(() => {
+    if (canViewPricingBreakdown) {
+      return table.columns;
+    }
+    return table.columns.filter((column) => !PRICING_BREAKDOWN_COLUMNS.includes(column));
+  }, [canViewPricingBreakdown, table.columns]);
 
   useEffect(() => {
     if (token) {
@@ -1081,7 +1096,7 @@ export default function App() {
                     <table>
                       <thead>
                         <tr>
-                          {table.columns.map((c) => (
+                          {visibleTableColumns.map((c) => (
                             <th key={c}>{c}</th>
                           ))}
                         </tr>
@@ -1089,7 +1104,7 @@ export default function App() {
                       <tbody>
                         {table.rows.map((row, idx) => (
                           <tr key={idx}>
-                            {table.columns.map((c) => (
+                            {visibleTableColumns.map((c) => (
                               <td key={c}>{row[c]}</td>
                             ))}
                           </tr>
