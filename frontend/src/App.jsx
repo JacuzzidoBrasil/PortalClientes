@@ -227,6 +227,15 @@ export default function App() {
     }
   }, [availableCalcCategories, canUseCalculatedPricing, selectedCalcCategoria]);
 
+  useEffect(() => {
+    if (!canUseCalculatedPricing || !pricingUf || !selectedCalculatedSheet) {
+      return;
+    }
+    if (selectedId && isCalculatedSheetId(selectedId)) {
+      loadData(selectedCalculatedSheet.id, true, pricingUf);
+    }
+  }, [canUseCalculatedPricing, pricingUf, selectedCalculatedSheet, selectedId, selectedCalcPrograma, selectedCalcCategoria]);
+
   function setError(msg) {
     setMessageTone("error");
     setMessage(msg);
@@ -909,8 +918,8 @@ export default function App() {
                             onChange={(e) => {
                               const nextUf = e.target.value;
                               setPricingUf(nextUf);
-                              if (selectedId && isCalculatedSheetId(selectedId)) {
-                                loadData(selectedId, true, nextUf);
+                              if (selectedCalculatedSheet) {
+                                loadData(selectedCalculatedSheet.id, true, nextUf);
                               }
                             }}
                           >
