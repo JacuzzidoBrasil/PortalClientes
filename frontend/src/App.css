@@ -135,6 +135,13 @@ select {
   transform: translateY(0);
 }
 
+.btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
+}
+
 .btn.alt {
   background: var(--primary-soft);
   color: #1f7ad4;
@@ -274,6 +281,45 @@ select {
 .terms-modal h3,
 .terms-modal p {
   margin: 0;
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(3, 10, 20, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loading-card {
+  min-width: min(360px, 100%);
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  padding: 22px 24px;
+  border-radius: 18px;
+  background: rgba(14, 28, 46, 0.92);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.loading-card span {
+  color: #d7e6f6;
+  font-size: 0.95rem;
+}
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.24);
+  border-top-color: var(--accent-yellow);
+  animation: spin 0.85s linear infinite;
 }
 
 .app-shell {
@@ -678,6 +724,15 @@ th {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

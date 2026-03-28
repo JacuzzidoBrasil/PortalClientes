@@ -82,6 +82,15 @@ function getProgramLogos(accessLevels = []) {
   return logos;
 }
 
+const BUSY_LABELS = {
+  login: "Entrando no portal...",
+  firstAccessRequest: "Enviando codigo de primeiro acesso...",
+  firstAccessConfirm: "Definindo sua nova senha...",
+  resetRequest: "Enviando codigo de redefinicao...",
+  resetConfirm: "Atualizando sua senha...",
+  createUser: "Criando usuario...",
+};
+
 export default function App() {
   const [cnpj, setCnpj] = useState("");
   const [password, setPassword] = useState("");
@@ -89,6 +98,7 @@ export default function App() {
   const [me, setMe] = useState(null);
   const [message, setMessage] = useState("");
   const [messageTone, setMessageTone] = useState("error");
+  const [busyAction, setBusyAction] = useState("");
 
   const [showFirstAccess, setShowFirstAccess] = useState(false);
   const [showReset, setShowReset] = useState(false);
@@ -171,6 +181,75 @@ export default function App() {
     setMessage(msg);
   }
 
+  function getErrorDetail(err) {
+    const detail = err?.response?.data?.detail;
+    return typeof detail === "string" ? detail : "";
+  }
+
+  function getLoginMessage(err) {
+    const detail = getErrorDetail(err);
+    if (detail === "User inactive") {
+      return "Seu usuario esta inativo. Fale com o administrador para reativar o acesso.";
+    }
+    return "CNPJ ou senha invalidos. Se este for seu primeiro acesso, use o botao 'Primeiro acesso'.";
+  }
+
+  function getCreateUserMessage(err) {
+    const detail = getErrorDetail(err);
+    if (detail === "CNPJ already exists") {
+      return "Ja existe um usuario cadastrado com esse CNPJ.";
+    }
+    if (detail === "UF invalid") {
+      return "A UF informada e invalida. Escolha uma UF valida para concluir o cadastro.";
+    }
+    return "Nao foi possivel criar o usuario. Revise os dados obrigatorios e tente novamente.";
+  }
+
+  function getFirstAccessConfirmMessage(err) {
+    const detail = getErrorDetail(err);
+    if (detail === "User not found") {
+      return "Nao encontramos um usuario ativo com esse CNPJ e email para concluir o primeiro acesso.";
+    }
+    if (detail === "First access code not requested") {
+      return "Solicite o codigo de primeiro acesso antes de tentar definir a senha.";
+    }
+    if (detail === "Code expired") {
+      return "O codigo de primeiro acesso expirou. Solicite um novo codigo.";
+    }
+    if (detail === "Invalid code") {
+      return "O codigo de primeiro acesso informado nao confere. Revise e tente novamente.";
+    }
+    return "Nao foi possivel concluir o primeiro acesso. Confira CNPJ, email, codigo e a nova senha.";
+  }
+
+  function getResetConfirmMessage(err) {
+    const detail = getErrorDetail(err);
+    if (detail === "User not found") {
+      return "Nao encontramos um usuario ativo com esse CNPJ e email para redefinir a senha.";
+    }
+    if (detail === "Reset code not requested") {
+      return "Solicite o codigo de redefinicao antes de tentar trocar a senha.";
+    }
+    if (detail === "Code expired") {
+      return "O codigo de redefinicao expirou. Solicite um novo codigo.";
+    }
+    if (detail === "Invalid code") {
+      return "O codigo de redefinicao informado nao confere. Revise e tente novamente.";
+    }
+    return "Nao foi possivel redefinir a senha. Confira CNPJ, email, codigo e a nova senha.";
+  }
+
+  const busyLabel = busyAction ? BUSY_LABELS[busyAction] || "Carregando..." : "";
+  const loadingOverlay = busyAction ? (
+    <div className="loading-overlay">
+      <div className="loading-card">
+        <div className="loading-spinner" />
+        <strong>{busyLabel}</strong>
+        <span>Aguarde alguns instantes.</span>
+      </div>
+    </div>
+  ) : null;
+
   async function loadMe() {
     try {
       const res = await axios.get(`${API_URL}/auth/me`, authHeaders(token));
@@ -185,6 +264,7 @@ export default function App() {
   async function handleLogin(e) {
     e.preventDefault();
     setMessage("");
+    setBusyAction("login");
     try {
       const res = await axios.post(`${API_URL}/auth/login`, { cnpj, password });
       setToken(res.data.access_token);
@@ -199,7 +279,9 @@ export default function App() {
         setFirstAccessForm((old) => ({ ...old, cnpj, email: "" }));
         return;
       }
-      setError("Login invalido.");
+      setError(getLoginMessage(err));
+    } finally {
+      setBusyAction("");
     }
   }
 
@@ -313,13 +395,16 @@ export default function App() {
       setError("Selecione a UF do usuario.");
       return;
     }
+    setBusyAction("createUser");
     try {
       await axios.post(`${API_URL}/admin/users`, newUser, authHeaders(token));
       setNewUser({ cnpj: "", name: "", email: "", uf: "", password: "", is_admin: false, access_level_ids: [] });
       await loadAdminData();
-      setSuccess("Usuario criado.");
-    } catch {
-      setError("Erro ao criar usuario.");
+      setSuccess("Usuario criado com sucesso. Ele ainda precisara concluir o primeiro acesso para definir a senha final.");
+    } catch (err) {
+      setError(getCreateUserMessage(err));
+    } finally {
+      setBusyAction("");
     }
   }
 
@@ -417,14 +502,17 @@ export default function App() {
 
   async function requestFirstAccessCode() {
     setMessage("");
+    setBusyAction("firstAccessRequest");
     try {
       await axios.post(`${API_URL}/auth/first-access/request`, {
         cnpj: firstAccessForm.cnpj,
         email: firstAccessForm.email,
       });
-      setSuccess("Codigo de primeiro acesso enviado por email.");
-    } catch {
-      setError("Erro ao solicitar primeiro acesso.");
+      setSuccess("Se o CNPJ e o email estiverem cadastrados e ativos, o codigo de primeiro acesso foi enviado para o email informado.");
+    } catch (err) {
+      setError(getErrorDetail(err) || "Nao foi possivel solicitar o primeiro acesso. Verifique a configuracao de email do servidor.");
+    } finally {
+      setBusyAction("");
     }
   }
 
@@ -434,37 +522,46 @@ export default function App() {
       return;
     }
     setMessage("");
+    setBusyAction("firstAccessConfirm");
     try {
       await axios.post(`${API_URL}/auth/first-access/confirm`, firstAccessForm);
-      setSuccess("Senha definida. Voce ja pode fazer login.");
+      setSuccess("Senha definida com sucesso. Agora voce ja pode entrar no portal com a nova senha.");
       setShowFirstAccess(false);
       setFirstAccessTermsAccepted(false);
-    } catch {
-      setError("Erro ao confirmar primeiro acesso.");
+    } catch (err) {
+      setError(getFirstAccessConfirmMessage(err));
+    } finally {
+      setBusyAction("");
     }
   }
 
   async function requestResetCode() {
     setMessage("");
+    setBusyAction("resetRequest");
     try {
       await axios.post(`${API_URL}/auth/password-reset/request`, {
         cnpj: resetForm.cnpj,
         email: resetForm.email,
       });
-      setSuccess("Codigo de recuperacao enviado por email.");
-    } catch {
-      setError("Erro ao solicitar recuperacao.");
+      setSuccess("Se o CNPJ e o email estiverem cadastrados e ativos, o codigo de redefinicao foi enviado para o email informado.");
+    } catch (err) {
+      setError(getErrorDetail(err) || "Nao foi possivel solicitar a redefinicao de senha. Verifique a configuracao de email do servidor.");
+    } finally {
+      setBusyAction("");
     }
   }
 
   async function confirmReset() {
     setMessage("");
+    setBusyAction("resetConfirm");
     try {
       await axios.post(`${API_URL}/auth/password-reset/confirm`, resetForm);
-      setSuccess("Senha atualizada. Voce ja pode fazer login.");
+      setSuccess("Senha atualizada com sucesso. Agora voce ja pode entrar com a nova senha.");
       setShowReset(false);
-    } catch {
-      setError("Erro ao confirmar recuperacao.");
+    } catch (err) {
+      setError(getResetConfirmMessage(err));
+    } finally {
+      setBusyAction("");
     }
   }
 
@@ -472,6 +569,7 @@ export default function App() {
   if (!token) {
     return (
       <div className="page">
+        {loadingOverlay}
         <div className="login-wrap">
           <section className="login-card">
             <div className="login-side">
@@ -487,8 +585,8 @@ export default function App() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="btn login-enter" type="submit">
-                  Entrar
+                <button className="btn login-enter" type="submit" disabled={busyAction === "login"}>
+                  {busyAction === "login" ? "Entrando..." : "Entrar"}
                 </button>
               </form>
 
@@ -535,8 +633,8 @@ export default function App() {
                     value={firstAccessForm.email}
                     onChange={(e) => setFirstAccessForm({ ...firstAccessForm, email: e.target.value })}
                   />
-                  <button className="btn alt" type="button" onClick={requestFirstAccessCode}>
-                    Enviar codigo
+                  <button className="btn alt" type="button" onClick={requestFirstAccessCode} disabled={busyAction === "firstAccessRequest"}>
+                    {busyAction === "firstAccessRequest" ? "Enviando codigo..." : "Enviar codigo"}
                   </button>
                   <input
                     className="field"
@@ -564,8 +662,13 @@ export default function App() {
                       </button>
                     </span>
                   </label>
-                  <button className="btn" type="button" onClick={confirmFirstAccess} disabled={!firstAccessTermsAccepted}>
-                    Confirmar primeiro acesso
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={confirmFirstAccess}
+                    disabled={!firstAccessTermsAccepted || busyAction === "firstAccessConfirm"}
+                  >
+                    {busyAction === "firstAccessConfirm" ? "Definindo senha..." : "Confirmar primeiro acesso"}
                   </button>
                 </div>
               )}
@@ -621,8 +724,8 @@ export default function App() {
                     value={resetForm.email}
                     onChange={(e) => setResetForm({ ...resetForm, email: e.target.value })}
                   />
-                  <button className="btn alt" type="button" onClick={requestResetCode}>
-                    Enviar codigo
+                  <button className="btn alt" type="button" onClick={requestResetCode} disabled={busyAction === "resetRequest"}>
+                    {busyAction === "resetRequest" ? "Enviando codigo..." : "Enviar codigo"}
                   </button>
                   <input
                     className="field"
@@ -637,8 +740,8 @@ export default function App() {
                     value={resetForm.new_password}
                     onChange={(e) => setResetForm({ ...resetForm, new_password: e.target.value })}
                   />
-                  <button className="btn" type="button" onClick={confirmReset}>
-                    Confirmar recuperacao
+                  <button className="btn" type="button" onClick={confirmReset} disabled={busyAction === "resetConfirm"}>
+                    {busyAction === "resetConfirm" ? "Atualizando senha..." : "Confirmar recuperacao"}
                   </button>
                 </div>
               )}
@@ -651,6 +754,7 @@ export default function App() {
 
   return (
     <div className="page">
+      {loadingOverlay}
       <div className="app-shell">
         <header className="topbar">
           <div className="topbar-main">
@@ -866,8 +970,8 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-                  <button className="btn" type="submit">
-                    Criar usuario
+                  <button className="btn" type="submit" disabled={busyAction === "createUser"}>
+                    {busyAction === "createUser" ? "Criando usuario..." : "Criar usuario"}
                   </button>
                 </form>
               </div>

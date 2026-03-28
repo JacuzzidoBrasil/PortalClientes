@@ -1,5 +1,6 @@
 from datetime import datetime
 import io
+import logging
 import os
 import re
 
@@ -13,6 +14,7 @@ from app.core.config import settings
 from app.dependencies import get_current_admin, get_current_user, get_db
 
 router = APIRouter(prefix="/pricing-v2", tags=["pricing-v2"])
+logger = logging.getLogger(__name__)
 TEST_CNPJ = "058352792000143"
 CALCULATED_TITLE = "TABELA DE PRECO CALCULADA"
 CALCULATED_COLUMNS = [
@@ -613,7 +615,8 @@ def sync_pricing_sources(db: Session = Depends(get_db), admin=Depends(get_curren
         raise
     except Exception as exc:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"pricing-v2 sync error: {str(exc)}")
+        logger.exception("Unexpected pricing-v2 sync error")
+        raise HTTPException(status_code=500, detail="Unexpected pricing sync error")
 
 
 @router.get("/my-tables")
@@ -636,7 +639,8 @@ def my_table_v2(db: Session = Depends(get_db), user=Depends(get_current_user)):
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"pricing-v2 error: {str(exc)}")
+        logger.exception("Unexpected pricing-v2 my-table error")
+        raise HTTPException(status_code=500, detail="Unexpected pricing error")
 
 
 @router.get("/my-table/data")
@@ -665,7 +669,8 @@ def my_table_v2_data(
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"pricing-v2 error: {str(exc)}")
+        logger.exception("Unexpected pricing-v2 data error")
+        raise HTTPException(status_code=500, detail="Unexpected pricing error")
 
 
 @router.get("/my-table/download")
@@ -701,4 +706,5 @@ def my_table_v2_download(
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"pricing-v2 error: {str(exc)}")
+        logger.exception("Unexpected pricing-v2 download error")
+        raise HTTPException(status_code=500, detail="Unexpected pricing error")
