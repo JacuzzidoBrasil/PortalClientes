@@ -430,7 +430,7 @@ def _get_cached_rows(db: Session, cnpj: str, uf: str, programa: str, categoria: 
     ).order_by(models.PricingResultCache.cod_item.asc()).all()
 
     if not cache_rows:
-        return "", "", []
+        return programa, categoria, []
 
     rows = []
     for r in cache_rows:
