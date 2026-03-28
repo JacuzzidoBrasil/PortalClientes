@@ -118,9 +118,12 @@ export default function App() {
   });
 
   const [spreadsheets, setSpreadsheets] = useState([]);
+  const [calculatedSheets, setCalculatedSheets] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [table, setTable] = useState({ columns: [], rows: [] });
   const [pricingUf, setPricingUf] = useState("");
+  const [selectedCalcPrograma, setSelectedCalcPrograma] = useState("");
+  const [selectedCalcCategoria, setSelectedCalcCategoria] = useState("");
   const [search, setSearch] = useState("");
   const [searchCol, setSearchCol] = useState("");
   const [offset, setOffset] = useState(0);
@@ -149,6 +152,29 @@ export default function App() {
   const [uploadAccessIds, setUploadAccessIds] = useState([]);
   const programLogos = useMemo(() => getProgramLogos(me?.access_levels || []), [me]);
   const canUseCalculatedPricing = normalizeCnpj(me?.cnpj) === TEST_CALCULATED_CNPJ;
+  const availableCalcPrograms = useMemo(
+    () => [...new Set(calculatedSheets.map((item) => item.programa).filter(Boolean))],
+    [calculatedSheets]
+  );
+  const availableCalcCategories = useMemo(
+    () =>
+      [
+        ...new Set(
+          calculatedSheets
+            .filter((item) => !selectedCalcPrograma || item.programa === selectedCalcPrograma)
+            .map((item) => item.categoria)
+            .filter(Boolean)
+        ),
+      ],
+    [calculatedSheets, selectedCalcPrograma]
+  );
+  const selectedCalculatedSheet = useMemo(
+    () =>
+      calculatedSheets.find(
+        (item) => item.programa === selectedCalcPrograma && item.categoria === selectedCalcCategoria
+      ) || null,
+    [calculatedSheets, selectedCalcPrograma, selectedCalcCategoria]
+  );
 
   useEffect(() => {
     if (token) {
@@ -180,6 +206,26 @@ export default function App() {
     }
     setPricingUf((current) => current || me.uf);
   }, [me?.uf]);
+
+  useEffect(() => {
+    if (!canUseCalculatedPricing || !availableCalcPrograms.length) {
+      setSelectedCalcPrograma("");
+      return;
+    }
+    if (!availableCalcPrograms.includes(selectedCalcPrograma)) {
+      setSelectedCalcPrograma(availableCalcPrograms[0]);
+    }
+  }, [availableCalcPrograms, canUseCalculatedPricing, selectedCalcPrograma]);
+
+  useEffect(() => {
+    if (!canUseCalculatedPricing || !availableCalcCategories.length) {
+      setSelectedCalcCategoria("");
+      return;
+    }
+    if (!availableCalcCategories.includes(selectedCalcCategoria)) {
+      setSelectedCalcCategoria(availableCalcCategories[0]);
+    }
+  }, [availableCalcCategories, canUseCalculatedPricing, selectedCalcCategoria]);
 
   function setError(msg) {
     setMessageTone("error");
@@ -299,6 +345,9 @@ export default function App() {
     setToken(null);
     setMe(null);
     setPricingUf("");
+    setCalculatedSheets([]);
+    setSelectedCalcPrograma("");
+    setSelectedCalcCategoria("");
     localStorage.removeItem("token");
   }
 
@@ -309,14 +358,28 @@ export default function App() {
       if (!me?.is_admin && canUseCalculatedPricing) {
         const calcRes = await axios.get(`${API_URL}/pricing-v2/my-tables`, authHeaders(token));
         const calcItems = Array.isArray(calcRes.data?.items) ? calcRes.data.items : [];
+        setCalculatedSheets(calcItems);
         const merged = [...calcItems, ...baseItems];
         setSpreadsheets(merged);
         return;
       }
+      setCalculatedSheets([]);
       setSpreadsheets(baseItems);
     } catch {
       setError("Erro ao carregar planilhas.");
     }
+  }
+
+  function openSelectedCalculatedTable() {
+    if (!pricingUf) {
+      setError("Selecione a UF que deseja auditar antes de abrir a tabela calculada.");
+      return;
+    }
+    if (!selectedCalculatedSheet) {
+      setError("Selecione um programa e uma categoria validos para abrir a tabela calculada.");
+      return;
+    }
+    loadData(selectedCalculatedSheet.id, true);
   }
 
   async function loadData(id, reset = false, overrideUf = "") {
@@ -794,29 +857,83 @@ export default function App() {
               <div className="planilha-searches">
                 <div className="search-inputs">
                   {canUseCalculatedPricing && (
-                    <div className="pricing-uf-picker">
-                      <label className="pricing-uf-label" htmlFor="pricing-uf-select">
-                        UF para teste da tabela calculada
-                      </label>
-                      <select
-                        id="pricing-uf-select"
-                        className="field half-field"
-                        value={pricingUf}
-                        onChange={(e) => {
-                          const nextUf = e.target.value;
-                          setPricingUf(nextUf);
-                          if (selectedId && isCalculatedSheetId(selectedId)) {
-                            loadData(selectedId, true, nextUf);
-                          }
-                        }}
-                      >
-                        <option value="">Selecione a UF</option>
-                        {UF_CODES.map((uf) => (
-                          <option key={uf} value={uf}>
-                            {uf}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="pricing-debug-panel">
+                      <strong>Auditoria da tabela calculada</strong>
+                      <div className="pricing-debug-grid">
+                        <div className="pricing-uf-picker">
+                          <label className="pricing-uf-label" htmlFor="pricing-programa-select">
+                            Programa
+                          </label>
+                          <select
+                            id="pricing-programa-select"
+                            className="field half-field"
+                            value={selectedCalcPrograma}
+                            onChange={(e) => setSelectedCalcPrograma(e.target.value)}
+                          >
+                            <option value="">Selecione o programa</option>
+                            {availableCalcPrograms.map((programa) => (
+                              <option key={programa} value={programa}>
+                                {programa}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="pricing-uf-picker">
+                          <label className="pricing-uf-label" htmlFor="pricing-categoria-select">
+                            Categoria
+                          </label>
+                          <select
+                            id="pricing-categoria-select"
+                            className="field half-field"
+                            value={selectedCalcCategoria}
+                            onChange={(e) => setSelectedCalcCategoria(e.target.value)}
+                          >
+                            <option value="">Selecione a categoria</option>
+                            {availableCalcCategories.map((categoria) => (
+                              <option key={categoria} value={categoria}>
+                                {categoria}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="pricing-uf-picker">
+                          <label className="pricing-uf-label" htmlFor="pricing-uf-select">
+                            Estado
+                          </label>
+                          <select
+                            id="pricing-uf-select"
+                            className="field half-field"
+                            value={pricingUf}
+                            onChange={(e) => {
+                              const nextUf = e.target.value;
+                              setPricingUf(nextUf);
+                              if (selectedId && isCalculatedSheetId(selectedId)) {
+                                loadData(selectedId, true, nextUf);
+                              }
+                            }}
+                          >
+                            <option value="">Selecione a UF</option>
+                            {UF_CODES.map((uf) => (
+                              <option key={uf} value={uf}>
+                                {uf}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="pricing-debug-actions">
+                        <button className="btn alt" type="button" onClick={openSelectedCalculatedTable}>
+                          Abrir calculo detalhado
+                        </button>
+                        {selectedCalculatedSheet && pricingUf && (
+                          <span className="pricing-debug-summary">
+                            Visualizando {selectedCalcPrograma} / {selectedCalcCategoria} em {pricingUf}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   )}
                   <input

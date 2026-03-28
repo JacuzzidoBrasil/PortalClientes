@@ -537,6 +537,39 @@ select {
   gap: 6px;
 }
 
+.pricing-debug-panel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(7, 18, 32, 0.26);
+  border: 1px solid rgba(214, 229, 245, 0.28);
+}
+
+.pricing-debug-panel strong {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.pricing-debug-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.pricing-debug-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.pricing-debug-summary {
+  color: #d9ebff;
+  font-size: 0.84rem;
+  line-height: 1.3;
+}
+
 .pricing-uf-label {
   color: #ffffff;
   font-size: 0.84rem;
@@ -805,6 +838,10 @@ th {
     justify-self: start;
     text-align: left;
     align-items: flex-start;
+  }
+
+  .pricing-debug-grid {
+    grid-template-columns: 1fr;
   }
 
   .half-field {
